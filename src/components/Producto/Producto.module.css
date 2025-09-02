@@ -1,0 +1,143 @@
+
+.producto-container {
+    display: flex;
+    margin-left: 10%;
+    margin-top: 20px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.columna-1 {
+    width: 40%;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start; 
+}
+
+.columna-1 img {
+    width: 100%;
+    height: auto;
+}
+
+.columna-2 {
+    width: 35%;
+    padding: 0 20px;
+}
+
+.columna-3 {
+    width: 25%;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    height: fit-content;
+}
+
+.producto-descripcion {
+    font-size: 1.5rem;
+    font-weight: 500;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+.producto-precio {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.linea-form {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.linea-form label {
+    font-size: 0.875rem;
+    margin-right: 10px;
+}
+
+.linea-form input {
+    width: 60px;
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.linea-form span {
+    font-size: 0.875rem;
+}
+
+.producto-detalles {
+    margin-bottom: 15px;
+}
+
+.producto-detalles .detalle-fila {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.producto-detalles .detalle-fila span {
+    font-size: 0.875rem;
+}
+
+.producto-detalles .detalle-fila .etiqueta {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.acerca-de {
+    margin-top: 20px;
+}
+
+.acerca-de h6 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.acerca-de p {
+    font-size: 0.875rem;
+    color: #555;
+}
+
+.columna-3 .precio {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.columna-3 .entrega {
+    font-size: 0.875rem;
+    margin-bottom: 15px;
+}
+
+.columna-3 .ubicacion {
+    display: flex;
+    align-items: center;
+    font-size: 0.875rem;
+    margin-bottom: 20px;
+    cursor: pointer;
+    color: #007bff;
+}
+
+.columna-3 .ubicacion:hover {
+    text-decoration: underline;
+}
+
+
+.columna-3 .btn-agregar {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 20px;
+    background-color: #ffd814;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.columna-3 .btn-agregar:hover {
+    background-color: #f7ca00;
+}

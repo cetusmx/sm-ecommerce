@@ -1,0 +1,79 @@
+.main-container-filtros{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #dedede;
+  width: 100%;
+}
+
+.leyenda-filtros{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 15%;
+}
+
+.leyenda-filtros h4 {
+  padding: 0;
+  margin: 0;
+  color: #033c86;
+  font-weight: 550;
+}
+
+.leyenda-filtros h6 {
+  padding: 0;
+  margin: 0;
+  color: #033c86;
+  font-weight: 500;
+}
+.filter-container {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  width: 90%; 
+  /* margin-left: -10%; */ /* Añade un margen del 10% a la izquierda y derecha para centrar */
+  justify-content: left;
+  padding: 10px 10px; /* Padding vertical, sin padding horizontal ya que lo maneja el margin */
+
+  background-color: #dedede;
+}
+
+.filter-box {
+  background-color: #f1efef;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 7px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  text-align: left;
+}
+
+.filter-box label {
+  font-weight: 600;
+  margin-right: 8px;
+  color: #333;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.filter-box select,
+.filter-box input {
+  width: 100%;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.large {
+  flex-basis: 20%;
+  min-width: 240px;
+}
+
+.small {
+  flex-basis: 12%;
+  min-width: 120px;
+}

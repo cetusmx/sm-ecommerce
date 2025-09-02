@@ -1,0 +1,84 @@
+/* --- Estilos para Tabletas y Escritorios --- */
+@media (min-width: 768px) {
+  .header {
+    /* background-color: #002b59; */
+    background-color: #131921;
+    /* background-color: #dde6ed; */
+    display: grid;
+    /* grid-template-columns: repeat(4, 1fr); */ /* Define 4 columnas iguales */
+    grid-template-columns: 1fr 2fr 1fr; /* Define 4 columnas iguales */
+    gap: 15px; /* Espacio entre las columnas */
+    width: 100%;
+    /* margin-bottom: 10px; */
+    align-items: center; /* Centra verticalmente los elementos de la cuadrícula (los botones) */
+    border-bottom: 1px solid #e0e0e0; /* Nuevo: Borde sutil inferior */
+    padding-bottom: 5px; /* Nuevo: Espacio debajo del borde */
+    padding-top: 5px;
+  }
+
+  .header-top {
+    /* display: contents; */ /* Para que sus hijos se conviertan en elementos directos del header */
+    grid-column: 1; /* Ubica en la primera columna */
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .search-bar-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    grid-column: 2; /* Ubica en la cuarta columna */
+  }
+
+  .session-state {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* Align items to the right */
+    grid-column: 3; /* Ubica en la cuarta columna */
+    gap: 15px;
+    padding-right: 20px; /* Add padding to the right */
+  }
+
+  .main-nav {
+    display: block; /* Mostrar la navegación */
+    order: 3; /* Asegura que se mantenga a la derecha */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .main-nav ul {
+    display: flex;
+    list-style: none;
+    gap: var(--spacing-md);
+  }
+
+  /* Usamos CSS Grid para el layout del header en desktop */
+  .header {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr; /* Logo (izq), Búsqueda (centro), Usuario/Carrito (der) */
+    align-items: center;
+    justify-content: center;
+    padding-top: 10% 0 10% 0;
+  }
+
+  .logo {
+    order: 1;
+  }
+
+  .logo img {
+    height: 50px;
+  }
+
+  
+  .search-bar {
+    width: 100%;
+  }
+
+  .user-cart {
+    order: 3;
+    justify-self: end; /* Alinea los elementos a la derecha */
+  }
+}

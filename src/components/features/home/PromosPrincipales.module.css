@@ -1,0 +1,93 @@
+.promo-container {
+  display: flex;
+  width: 100%;
+  padding: 24px;
+  gap: 24px;
+}
+
+.promo-box {
+  flex: 1;
+  border: 1px solid white;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-text);
+  padding: 10px;
+  gap: 10px; /* Added gap */
+}
+
+.promo-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.promo1-image {
+  width: 50%;
+  height: auto;
+}
+
+.promo-box p {
+  font-size: 0.8rem; /* Half of 1.5rem */
+  font-weight: 500; /* Remove bold */
+}
+
+.promo-box h5 {
+  font-weight: 550;
+  /* letter-spacing: -0.5px; */
+  /* Removed height: 12%; */
+}
+
+.promo-images-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  /* Removed margin-top: 15px; */
+  flex-grow: 1;
+}
+
+.promo-image-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  margin: 0 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-title-box {
+  background-color: red;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  font-size: 0.75rem;
+  width: 100%;
+}
+
+.promo-link-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.promo-link {
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: font-weight 0.3s ease;
+}
+
+.promo-link:hover {
+  font-weight: bold;
+}

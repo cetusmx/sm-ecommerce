@@ -1,0 +1,40 @@
+.user-session-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  cursor: pointer;
+  position: relative; /* For positioning the dropdown */
+  padding: 5px 15px;
+  border: 1px solid transparent; /* To match CartButton's border */
+  transition: border 0.3s ease;
+  min-width: 100px;
+}
+
+.user-session-container:hover {
+  border: 1px solid white;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.greeting {
+  font-size: 0.8rem; /* Smaller font size for "Hola," */
+  color: white;
+}
+
+.username {
+  font-size: 0.9rem; /* Larger font size for username/Identifícate */
+  font-weight: 600;
+  color: white;
+}
+
+.dropdown-arrow {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: white;
+  font-size: 1.2rem;
+}

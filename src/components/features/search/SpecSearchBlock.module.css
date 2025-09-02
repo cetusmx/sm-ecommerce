@@ -1,0 +1,70 @@
+.spec-search-block {
+  background-color: transparent;
+  padding: var(--spacing-lg);
+  margin: var(--spacing-lg) 0;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.spec-form {
+  display: flex;
+  flex-direction: column; /* Apilado en móvil */
+  gap: var(--spacing-md);
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.form-group label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: var(--color-text);
+  margin-bottom: 5px;
+}
+
+.form-group input {
+  padding: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.search-spec-btn {
+  width: 100%;
+  padding: var(--spacing-sm);
+  background-color: var(--color-secondary);
+  color: var(--color-text);
+  font-size: 1.1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-spec-btn:hover {
+  background-color: #f7b731;
+}
+
+/* Media Query para Tabletas y Escritorios */
+@media (min-width: 768px) {
+  .spec-form {
+    flex-direction: row; /* Horizontal en pantallas grandes */
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-end; /* Alinear los elementos en la parte inferior */
+  }
+
+  .form-group {
+    flex: 1 1 18%; /* Cada campo ocupa un 18% del espacio */
+    min-width: 150px; /* Ancho mínimo para legibilidad */
+  }
+
+  .search-spec-btn {
+    width: auto;
+    padding: 10px 20px;
+  }
+}

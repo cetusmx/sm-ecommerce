@@ -1,0 +1,65 @@
+.category-carousel-wrapper {
+  display: flex;
+  align-items: center;
+  width: 80%;
+  justify-content: center;
+ /*  padding-left: 10%; */
+  margin: 5px auto;
+}
+
+.carousel-container {
+  display: flex;
+  flex-grow: 1;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.carousel-container::-webkit-scrollbar {
+  display: none; /* Chrome, Safari and Opera */
+}
+
+.titulo-all-categories{
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  padding: 15px 50px;
+}
+.category-card {
+  flex: 0 0 10%;
+  min-width: 150px;
+  margin: 0 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.2s;
+  border: 1px solid #e3e6e6;
+  border-radius: 5px;
+  padding: 15px;
+}
+
+.category-card:hover {
+  transform: scale(1.05);
+}
+
+.category-card img {
+  width: 100%;
+  max-width: 100px;
+  height: auto;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.category-card p {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.carousel-arrow {
+  background-color: transparent;
+  color: gray;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  margin: 0 10px;
+}

@@ -1,0 +1,59 @@
+.featured-products {
+  padding: var(--spacing-lg) var(--spacing-sm);
+  text-align: center;
+}
+
+.featured-products h2 {
+  margin-bottom: var(--spacing-xl);
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+/* Contenedor de la cuadrícula de productos */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-md);
+  justify-items: center;
+}
+
+/* Estilos de la tarjeta de producto */
+.product-card {
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: var(--spacing-sm);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: 100%; /* Asegura que la tarjeta ocupe el espacio completo en la columna */
+  max-width: 300px;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-card img {
+  border-radius: 6px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.product-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.product-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: var(--spacing-xs);
+  color: var(--color-text);
+}
+
+.product-price {
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: var(--color-primary);
+  margin-bottom: var(--spacing-sm);
+}

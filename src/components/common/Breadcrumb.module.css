@@ -1,0 +1,26 @@
+.breadcrumb {
+    padding: 10px 0;
+    font-size: 0.9rem;
+}
+
+.breadcrumb span {
+    margin: 0 5px;
+}
+
+.parentCategory {
+    color: #2177c2;
+    text-decoration: none;
+}
+
+.parentCategory:hover {
+    text-decoration: underline;
+}
+
+.separator {
+    color: #131921;
+}
+
+.childCategory {
+    color: #c7562a;
+    font-weight: bold;
+}
