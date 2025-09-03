@@ -1,4 +1,26 @@
 .pageContainer {
-    margin: 0 10%;
+    margin: 0 10px 0 10%;
     padding: 20px 0;
+    /* background-color: aqua; */
+}
+
+.contentWrapper {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.sidebar {
+    width: 20%;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    height: fit-content;
+}
+
+.mainContent {
+    width: 80%;
 }

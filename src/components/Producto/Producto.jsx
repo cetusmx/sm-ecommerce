@@ -7,6 +7,8 @@ import styles from './Producto.module.css';
 // que devuelve el estado de autenticación y los datos del usuario.
 // const { isLoggedIn, user } = useAuth(); 
 
+import MedicionSellosVideo from '../features/product/MedicionSellosVideo';
+
 const Producto = ({ producto }) => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -100,18 +102,23 @@ const Producto = ({ producto }) => {
             </div>
 
             <div className={styles['columna-3']}>
-                <div className={styles.precio}>${producto.precio}</div>
-                <p className={styles.entrega}>
-                    Entrega para el día {getFechaEntrega()}. 
-                    Realiza el pedido en {getHorasParaPedido()}.
-                </p>
-                <div className={styles.ubicacion} onClick={handleLocationClick}>
-                    <FaMapMarkerAlt style={{ marginRight: '8px' }} />
-                    <span>
-                        {isLoggedIn ? `Enviar a ${user.domicilio}` : 'Enviar a'}
-                    </span>
+                <div className={styles['price-cart-container']}>
+                    <div className={styles.precio}>${producto.precio}</div>
+                    <p className={styles.entrega}>
+                        Entrega para el día {getFechaEntrega()}. 
+                        Realiza el pedido en {getHorasParaPedido()}.
+                    </p>
+                    <div className={styles.ubicacion} onClick={handleLocationClick}>
+                        <FaMapMarkerAlt style={{ marginRight: '8px' }} />
+                        <span>
+                            {isLoggedIn ? `Enviar a ${user.domicilio}` : 'Enviar a'}
+                        </span>
+                    </div>
+                    <button className={styles['btn-agregar']}>Agregar al carrito</button>
                 </div>
-                <button className={styles['btn-agregar']}>Agregar al carrito</button>
+                <div className={styles['video-container']}>
+                    <MedicionSellosVideo />
+                </div>
             </div>
         </div>
     );

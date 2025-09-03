@@ -1,0 +1,76 @@
+.container {
+  width: 100%;
+  margin-top: 30px;
+  padding: 10px;
+  /* border-radius: 15px; */
+  background-color: #f9f9f9;
+}
+
+.text {
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.videoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  margin-bottom: 15px;
+  cursor: pointer;
+}
+
+.thumbnail {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.playButton {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3em;
+  color: white;
+  background-color: rgba(0, 0, 0, 0.6);
+  border-radius: 50%;
+  padding: 10px 20px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.modalVideoWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+  height: 0;
+  overflow: hidden;
+  width: 80vw; /* Adjust as needed for modal size */
+  max-width: 800px; /* Max width for the video in modal */
+}
+
+.modalVideoFrame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.link {
+  display: block;
+  text-align: center;
+  margin-top: 10px;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.link:hover {
+  text-decoration: underline;
+}

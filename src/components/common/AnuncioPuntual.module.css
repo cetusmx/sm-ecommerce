@@ -1,0 +1,43 @@
+.container {
+  background-color: #f7f7f7;
+  padding: 10px;
+  margin-bottom: 15px;
+}
+
+.topSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.sloganContainer {
+  width: 50%;
+}
+
+.slogan {
+  font-size: 1em;
+  font-weight: bold;
+  margin: 0;
+}
+
+.imageContainer {
+  width: 50%;
+  text-align: right;
+}
+
+.image {
+  max-width: 100%;
+  height: auto;
+}
+
+.bottomSection {
+  text-align: center;
+}
+
+.precio {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #d9534f;
+  margin: 0;
+}

@@ -1,0 +1,18 @@
+.container {
+  width: 100%;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 15px;
+  margin-top: 20px;
+}
+
+.title {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.listContainer {
+  display: flex;
+  gap: 20px;
+}

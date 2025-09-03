@@ -5,6 +5,10 @@ import Producto from '../components/Producto/Producto';
 import Breadcrumb from '../components/common/Breadcrumb';
 import styles from './ProductDetailPage.module.css';
 
+import ArticulosRelacionados from '../components/features/product/ArticulosRelacionados';
+
+import AnuncioPuntual from '../components/common/AnuncioPuntual';
+
 const ProductDetailPage = () => {
   const { clave } = useParams();
 
@@ -12,7 +16,7 @@ const ProductDetailPage = () => {
   const { data: product, isLoading: isLoadingProduct, error: productError } = useQuery({
     queryKey: ['product', clave],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:3004/api/productos`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
       if (!response.ok) {
         throw new Error('Network response was not ok for products');
       }
@@ -57,7 +61,17 @@ const ProductDetailPage = () => {
   return (
     <div className={styles.pageContainer}>
       <Breadcrumb parent={parentCategory} child={product.categoria} />
-      <Producto producto={product} />
+      <div className={styles.contentWrapper}>
+        <main className={styles.mainContent}>
+          <Producto producto={product} />
+          <ArticulosRelacionados />
+        </main>
+        <aside className={styles.sidebar}>
+          <AnuncioPuntual linea="ANSME" slogan="¡Oferta especial!" precio="99.99" />
+          <AnuncioPuntual linea="BAKSN" slogan="¡Solo por hoy!" precio="149.50" />
+          <AnuncioPuntual linea="BAMVE" slogan="¡Últimas unidades!" precio="75.00" />
+        </aside>
+      </div>
     </div>
   );
 };
