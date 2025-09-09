@@ -1,7 +1,9 @@
 .breadcrumb {
-    padding: 10px 0;
+    padding: 10px 0 10px 10%;
     font-size: 0.9rem;
-    /* background-color: #f7f7f7; */
+    background-color: #f7f7f7;
+     margin: 0;
+    /* padding: 20px 0; */
 }
 
 .breadcrumb span {

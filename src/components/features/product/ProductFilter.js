@@ -1,7 +1,28 @@
 import React from 'react';
+import { useQuery } from '@tanstack/react-query';
 import styles from './ProductFilter.module.css';
 
+const fetchCategories = async () => {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/categorias`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  return response.json();
+};
+
+const excludedCategories = [
+  "Accesorios", "Adhesivos", "Estuches", "Gato", "Graseras", 
+  "Guías telescópicos", "Herramientas", "Kits telescópicos", 
+  "Pernos", "Seguros externos", "Seguros internos"
+];
+
 const ProductFilter = ({ filters, onFilterChange }) => {
+  const { data: categories, isLoading, error } = useQuery({
+    queryKey: ['categories'],
+    queryFn: fetchCategories,
+    select: (fetchedCategories) => 
+      fetchedCategories.filter(category => !excludedCategories.includes(category)),
+  });
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -20,7 +41,8 @@ const ProductFilter = ({ filters, onFilterChange }) => {
           <select
             id="medida"
             name="medida"
-            // El valor y el controlador para este campo se pueden agregar más tarde si es necesario
+            value={filters.medida}
+            onChange={handleInputChange}
           >
             <option value="Pulgadas">Pulgadas</option>
             <option value="Milímetros">Milímetros</option>
@@ -32,19 +54,15 @@ const ProductFilter = ({ filters, onFilterChange }) => {
           <select
             id="sello"
             name="sello"
-            // El valor y el controlador para este campo se pueden agregar más tarde si es necesario
+            value={filters.sello}
+            onChange={handleInputChange}
+            disabled={isLoading || error}
           >
             <option value="Todos">Todos</option>
-            <option value="Buffer">Buffer</option>
-            <option value="Sello de pistón">Sello de pistón</option>
-            <option value="Sello de vástago">Sello de vástago</option>
-            <option value="Sello U">Sello U</option>
-            <option value="Guías desgaste">Guías desgaste</option>
-            <option value="Limpiadores">Limpiadores</option>
-            <option value="Orings">Orings</option>
-            <option value="Respaldos">Respaldos</option>
-            <option value="Retenes">Retenes</option>
-            <option value="Chevron">Chevron</option>
+            {error && <option value="">Error al cargar</option>}
+            {!isLoading && !error && categories && categories.map(category => (
+              <option key={category} value={category}>{category}</option>
+            ))}
           </select>
         </div>
 

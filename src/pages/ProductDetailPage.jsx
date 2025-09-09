@@ -1,16 +1,18 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import Producto from '../components/Producto/Producto';
 import Breadcrumb from '../components/common/Breadcrumb';
 import styles from './ProductDetailPage.module.css';
 
 import ArticulosRelacionados from '../components/features/product/ArticulosRelacionados';
+import HerramientasSugeridas from '../components/features/product/HerramientasSugeridas';
 
 import AnuncioPuntual from '../components/common/AnuncioPuntual';
 
 const ProductDetailPage = () => {
   const { clave } = useParams();
+  const [searchParams] = useSearchParams();
 
   // Fetch the single product
   const { data: product, isLoading: isLoadingProduct, error: productError } = useQuery({
@@ -58,20 +60,29 @@ const ProductDetailPage = () => {
     return <div>Error: {productError?.message || categoriesError?.message}</div>;
   }
 
+  // Get imageUrl from query parameters, fallback to default
+  const imageUrlFromQuery = searchParams.get('imageUrl');
+  console.log(imageUrlFromQuery);
+  const finalImageUrl = imageUrlFromQuery || `/Perfiles/${product.linea}.jpg`;
+  console.log(finalImageUrl);
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.productContainer}>
+
       <Breadcrumb parent={parentCategory} child={product.categoria} />
+    <div className={styles.pageContainer}>
       <div className={styles.contentWrapper}>
         <main className={styles.mainContent}>
-          <Producto producto={product} />
-          <ArticulosRelacionados />
+          <Producto producto={product} imageUrl={finalImageUrl} />
         </main>
         <aside className={styles.sidebar}>
-          <AnuncioPuntual linea="ANSME" slogan="¡Oferta especial!" precio="99.99" />
-          <AnuncioPuntual linea="BAKSN" slogan="¡Solo por hoy!" precio="149.50" />
+          <AnuncioPuntual linea="ESTUC" slogan="¡Oferta especial!" precio="326" />
+          <AnuncioPuntual linea="ESTUC2" slogan="¡Estuches de Orings!" precio="326" />
           <AnuncioPuntual linea="BAMVE" slogan="¡Últimas unidades!" precio="75.00" />
         </aside>
       </div>
+          <ArticulosRelacionados productoPrincipal={product} />
+          <HerramientasSugeridas />
+    </div>
     </div>
   );
 };

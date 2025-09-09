@@ -1,17 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import styles from './Producto.module.css';
-
-// Asumimos que tienes un hook de autenticación personalizado
-// que devuelve el estado de autenticación y los datos del usuario.
-// const { isLoggedIn, user } = useAuth(); 
-
+import { calculateArrivalDate, calculateDeliveryDate, formatToSpanishDate } from '../../utils/dateUtils';
+import StockStatus from '../features/product/StockStatus';
 import MedicionSellosVideo from '../features/product/MedicionSellosVideo';
+import Modal from '../common/Modal'; // Importar el modal
 
-const Producto = ({ producto }) => {
+const Producto = ({ producto, imageUrl }) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const [quantity, setQuantity] = useState(1);
+    const [deliveryInfo, setDeliveryInfo] = useState({ message: '', date: '', warning: '' });
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalMessage, setModalMessage] = useState('');
 
     // --- Mock de datos de autenticación (reemplazar con tu lógica real) ---
     const isLoggedIn = false; // Cambia a true para simular un usuario logueado
@@ -20,30 +22,58 @@ const Producto = ({ producto }) => {
     };
     // ---------------------------------------------------------------------
 
+    useEffect(() => {
+        if (!producto) return;
+
+        const stock = producto.existencia || 0;
+        const requestedAmount = quantity * (producto.cant_por_empaque || 1);
+        let warningMessage = '';
+
+        // Escenario 3: No hay existencia inicial
+        if (stock === 0) {
+            const arrivalDate = calculateArrivalDate();
+            const finalDeliveryDate = calculateDeliveryDate(arrivalDate);
+            warningMessage = `El producto llegará a nuestro almacén el ${formatToSpanishDate(arrivalDate)}. Puedes comprarlo ahora y te lo enviaremos en cuanto llegue.`;
+            setDeliveryInfo({
+                message: `Producto sin stock. Cómpralo ahora y recíbelo para el`,
+                date: formatToSpanishDate(finalDeliveryDate),
+                warning: warningMessage
+            });
+            setModalMessage(warningMessage);
+            setIsModalOpen(true);
+        }
+        // Escenario 2: La cantidad deseada supera la existencia
+        else if (requestedAmount > stock) {
+            const arrivalDate = calculateArrivalDate();
+            const finalDeliveryDate = calculateDeliveryDate(arrivalDate);
+            warningMessage = `Actualmente tenemos ${stock} unidades. El resto llegará a nuestro almacén el ${formatToSpanishDate(arrivalDate)}. Tu pedido completo se enviará en esa fecha.`;
+            setDeliveryInfo({
+                message: `La cantidad solicitada supera el stock. Recibirás tu pedido para el`,
+                date: formatToSpanishDate(finalDeliveryDate),
+                warning: warningMessage
+            });
+            setModalMessage(warningMessage);
+            setIsModalOpen(true);
+        }
+        // Escenario 1: Hay suficiente existencia
+        else {
+            const deliveryDate = calculateDeliveryDate();
+            setDeliveryInfo({
+                message: 'Entrega para el día',
+                date: formatToSpanishDate(deliveryDate),
+                warning: ''
+            });
+        }
+
+    }, [quantity, producto]);
+
+
     const handleLocationClick = () => {
         if (isLoggedIn) {
-            // Aquí iría la lógica para que el usuario edite su domicilio.
-            // Por ahora, solo navegamos a una ruta hipotética.
-            navigate('/editar-domicilio');
+            navigate('/address-form');
         } else {
-            // Guardamos la página actual para redirigir después del login
             navigate('/login', { state: { from: location } });
         }
-    };
-
-    const getFechaEntrega = () => {
-        const hoy = new Date();
-        let diasHabiles = 0;
-        let fecha = new Date(hoy);
-
-        while (diasHabiles < 2) {
-            fecha.setDate(fecha.getDate() + 1);
-            const diaSemana = fecha.getDay();
-            if (diaSemana !== 0 && diaSemana !== 6) { // 0 = Domingo, 6 = Sábado
-                diasHabiles++;
-            }
-        }
-        return fecha.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
     };
 
     const getHorasParaPedido = () => {
@@ -63,36 +93,69 @@ const Producto = ({ producto }) => {
         return <div>Cargando producto...</div>;
     }
 
-    const imageUrl = `/Perfiles/${producto.linea}.jpg`;
+    const precioPorEmpaque = (producto.precio * producto.cant_por_empaque).toFixed(2);
+    const precioTotal = (precioPorEmpaque * quantity).toFixed(2);
+
+    const handleQuantityChange = (e) => {
+        const value = parseInt(e.target.value, 10);
+        if (value > 0) {
+            setQuantity(value);
+        }
+    };
+
+    const finalImageUrl = imageUrl || `/Sugeridos/${producto.clave}.jpg`;
+    const showStockStatus = producto.existencia === 0 && producto.ultima_compra === null;
+
 
     return (
         <div className={styles['producto-container']}>
             <div className={styles['columna-1']}>
-                <img src={imageUrl} alt={producto.descripcion} />
+                <img src={finalImageUrl} alt={producto.descripcion} />
             </div>
 
             <div className={styles['columna-2']}>
                 <h5 className={styles['producto-descripcion']}>{producto.descripcion}</h5>
-                <div className={styles['producto-precio']}>${producto.precio}</div>
+                <div className={styles['producto-precio']}>
+                    {showStockStatus ? <StockStatus /> : `$${precioPorEmpaque}`}
+                </div>
                 
                 <div className={styles['linea-form']}>
                     <label htmlFor="cantidad">Cantidad:</label>
-                    <input type="number" id="cantidad" name="cantidad" min="1" defaultValue="1" />
-                    <span>empaque con {producto.unidad_empaque}</span>
+                    <input type="number" id="cantidad" name="cantidad" min="1" value={quantity} onChange={handleQuantityChange} />
+                    <span>empaque con {producto.cant_por_empaque} {producto.unidad}</span>
                 </div>
 
                 <div className={styles['producto-detalles']}>
+                {producto.observaciones2 !== '' ? (
+                     <div className={styles['detalle-fila']}>
+                        <span><span className={styles.etiqueta}>Descripción:</span> {producto.observaciones2}</span>
+                    </div>):('')}
+                </div>
+
+                <div className={styles['producto-detalles']}>
+                    {producto.diam_int !== '' ? (
                     <div className={styles['detalle-fila']}>
-                        <span><span className={styles.etiqueta}>Diámetro interior:</span> {producto.diam_int}</span>
-                        <span><span className={styles.etiqueta}>Diámetro exterior:</span> {producto.diam_ext}</span>
-                        <span><span className={styles.etiqueta}>Altura:</span> {producto.altura}</span>
-                    </div>
+                        <span><span className={styles.etiqueta}>Diámetro interior:</span> {producto.diam_int} {producto.sistema_medicion === "std" ? "pulg." : "mm"}</span>
+                    </div>):('')}
+                    {producto.diam_ext !== '' ? (
+                    <div className={styles['detalle-fila']}>
+                        <span><span className={styles.etiqueta}>Diámetro exterior:</span> {producto.diam_ext} {producto.sistema_medicion === "std" ? "pulg." : "mm"}</span>
+                    </div>):('')}
+                    {producto.altura !== '' ? (
+                    <div className={styles['detalle-fila']}>
+                        <span><span className={styles.etiqueta}>Altura:</span> {producto.altura} {producto.sistema_medicion === "std" ? "pulg." : "mm"}</span>
+                    </div>):('')}
+                    {producto.seccion && (<div className={styles['detalle-fila']}>
+                         <span><span className={styles.etiqueta}>Sección:</span> {producto.seccion} {producto.sistema_medicion === "std" ? "pulg." : "mm"}</span>
+                    </div>)}
+                    {producto.material !== '' ? (
                      <div className={styles['detalle-fila']}>
                         <span><span className={styles.etiqueta}>Material:</span> {producto.material}</span>
-                    </div>
+                    </div>):('')}
+                    {producto.sistema_medicion !== '' ? (
                     <div className={styles['detalle-fila']}>
                          <span><span className={styles.etiqueta}>Sistema medición:</span> {producto.sistema_medicion}</span>
-                    </div>
+                    </div>):('')}
                 </div>
 
                 <div className={styles['acerca-de']}>
@@ -103,10 +166,10 @@ const Producto = ({ producto }) => {
 
             <div className={styles['columna-3']}>
                 <div className={styles['price-cart-container']}>
-                    <div className={styles.precio}>${producto.precio}</div>
+                    <div className={styles.precio}>${precioTotal}</div>
                     <p className={styles.entrega}>
-                        Entrega para el día {getFechaEntrega()}. 
-                        Realiza el pedido en {getHorasParaPedido()}.
+                        {deliveryInfo.message} <strong>{deliveryInfo.date}</strong>.
+                        {deliveryInfo.warning && <span className={styles.warning}><br/>{deliveryInfo.warning}</span>}
                     </p>
                     <div className={styles.ubicacion} onClick={handleLocationClick}>
                         <FaMapMarkerAlt style={{ marginRight: '8px' }} />
@@ -120,6 +183,12 @@ const Producto = ({ producto }) => {
                     <MedicionSellosVideo />
                 </div>
             </div>
+
+            <Modal 
+                isOpen={isModalOpen} 
+                onClose={() => setIsModalOpen(false)} 
+                message={modalMessage} 
+            />
         </div>
     );
 };

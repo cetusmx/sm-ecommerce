@@ -1,0 +1,32 @@
+.statusContainer {
+  border: 2px solid #f54900;
+  border-radius: 8px;
+  padding: 4px;
+  text-align: center;
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.topSection {
+  font-size: 0.8rem;
+  color: #f54900;
+  padding-bottom: 2px;
+  border-bottom: 1px solid #fde0d0;
+}
+
+.animatedText {
+  display: inline-block; /* Needed for animation to apply correctly */
+  animation: fadeInText 0.5s ease-in-out;
+}
+
+.bottomSection {
+  font-size: 0.9rem;
+  color: #333;
+  padding-top: 2px;
+}
+
+@keyframes fadeInText {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

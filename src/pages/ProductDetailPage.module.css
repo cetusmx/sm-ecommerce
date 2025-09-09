@@ -4,6 +4,9 @@
     /* background-color: aqua; */
 }
 
+.productContainer{
+    width: 100%;
+}
 .contentWrapper {
     display: flex;
     gap: 20px;

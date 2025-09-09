@@ -1,0 +1,42 @@
+.address-button {
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: 1px solid transparent;
+  cursor: pointer;
+  position: relative;
+  padding: 9px 6px 7px 6px;
+  color: #333;
+  font-size: 1rem;
+  transition: border 0.3s ease;
+  text-decoration: none; /* For Link component if used */
+  width: 35%;
+}
+
+.address-button:hover {
+  border: 1px solid white;
+}
+
+.address-icon-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40%;
+  height: 100%;
+}
+
+.address-icon {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.address-text {
+  margin-left: 5px;
+  font-size: 1rem;
+  height: 50%;
+  display: flex;
+  align-items: center;
+  color: white;
+  width: 100%;
+}

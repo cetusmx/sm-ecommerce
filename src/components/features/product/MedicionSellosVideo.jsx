@@ -15,7 +15,7 @@ const MedicionSellosVideo = () => {
 
   return (
     <div className={styles.container}>
-      <p className={styles.text}>¿Tienes dudas de las medidas de tu sello?</p>
+      <p className={styles.text}>¿Tienes duda de las medidas de tu sello?</p>
       <div className={styles.videoWrapper} onClick={openModal}>
         <img src={thumbnailUrl} alt="Video Thumbnail" className={styles.thumbnail} />
         <div className={styles.playButton}>▶</div>
@@ -24,7 +24,7 @@ const MedicionSellosVideo = () => {
         Mide tu sello de esta forma
       </a>
 
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal isOpen={isModalOpen} onClose={closeModal} size="video">
         <div className={styles.modalVideoWrapper}>
           <iframe
             className={styles.modalVideoFrame}

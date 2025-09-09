@@ -35,6 +35,7 @@ const AuthProvider = ({ children }) => {
 
   const value = {
     currentUser,
+    isLoggedIn: !!currentUser, // Add isLoggedIn
     signup,
     login,
     logout,

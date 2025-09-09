@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import logo from '@/assets/logo.png';
 import styles from './Login.module.css';
@@ -11,6 +11,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -18,7 +19,8 @@ const Login = () => {
     setLoading(true);
     try {
       await login(email, password);
-      navigate('/');
+      const from = location.state?.from || '/';
+      navigate(from);
     } catch (err) {
       setError('Failed to log in. Please check your email and password.');
     }

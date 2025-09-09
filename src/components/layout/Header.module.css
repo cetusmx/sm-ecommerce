@@ -6,7 +6,7 @@
     /* background-color: #dde6ed; */
     display: grid;
     /* grid-template-columns: repeat(4, 1fr); */ /* Define 4 columnas iguales */
-    grid-template-columns: 1fr 2fr 1fr; /* Define 4 columnas iguales */
+    grid-template-columns: 1fr 1fr 2fr 1fr; /* Logo, AddressButton, Búsqueda, Usuario/Carrito */
     gap: 15px; /* Espacio entre las columnas */
     width: 100%;
     /* margin-bottom: 10px; */
@@ -17,62 +17,54 @@
   }
 
   .header-top {
-    /* display: contents; */ /* Para que sus hijos se conviertan en elementos directos del header */
-    grid-column: 1; /* Ubica en la primera columna */
+    grid-column: 1 / span 2; /* Ubica en la primera y segunda columna */
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between; /* Align to start */
     width: 100%;
+   /*  gap: 15px; */ /* Gap between logo and address button */
+    padding-left: 50px;
+    /* padding-right: 10px; */
   }
 
   .search-bar-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    grid-column: 2; /* Ubica en la cuarta columna */
+    grid-column: 3; /* Ubica en la tercera columna */
   }
 
   .session-state {
     display: flex;
     align-items: center;
     justify-content: flex-end; /* Align items to the right */
-    grid-column: 3; /* Ubica en la cuarta columna */
+    grid-column: 4; /* Ubica en la cuarta columna */
     gap: 15px;
     padding-right: 20px; /* Add padding to the right */
   }
 
   .main-nav {
-    display: block; /* Mostrar la navegación */
-    order: 3; /* Asegura que se mantenga a la derecha */
-    align-items: center;
-    justify-content: center;
-  }
-
-  .main-nav ul {
-    display: flex;
-    list-style: none;
-    gap: var(--spacing-md);
+    display: none; /* Hide navigation */
   }
 
   /* Usamos CSS Grid para el layout del header en desktop */
   .header {
     display: grid;
-    grid-template-columns: 1fr 2fr 1fr; /* Logo (izq), Búsqueda (centro), Usuario/Carrito (der) */
+    grid-template-columns: 1fr 1fr 2fr 1fr; /* Logo, AddressButton, Búsqueda, Usuario/Carrito */
     align-items: center;
     justify-content: center;
     padding-top: 10% 0 10% 0;
   }
 
   .logo {
-    order: 1;
+    order: unset; /* Remove order */
   }
 
   .logo img {
     height: 50px;
   }
 
-  
   .search-bar {
     width: 100%;
   }

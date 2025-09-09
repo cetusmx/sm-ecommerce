@@ -1,0 +1,22 @@
+.container {
+  width: 100%;
+  border-top: 1px solid #e0e0e0;
+  padding-top: 15px;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  /* background-color: aqua; */
+}
+
+.titulo {
+   margin-top: 10px;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: left;
+}
+
+.listaArticulos {
+  display: flex;
+  justify-content: space-around;
+  gap: 20px;
+}
