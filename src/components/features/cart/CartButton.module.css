@@ -32,22 +32,23 @@
 .cart-item-count {
   position: absolute;
   top: -5px;
-  right: -5px;
-  background-color: var(--color-secondary);
+  right: 5px;
+  /* background-color: var(--color-secondary); */
   color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 0.7rem;
+  /* border-radius: 50%; */
+  padding: 2px 4px;
+  font-size: 0.8rem;
   font-weight: bold;
   min-width: 20px;
   text-align: center;
 }
 
 .cart-text {
-  margin-left: 5px;
-  font-size: 1rem;
+  margin-left: 4px;
+  font-size: 0.9rem;
   height: 50%; /* 50% of button height */
   display: flex;
-  align-items: center;
+ /*  align-items: center; */
+ padding-top: 7px;
   color: white;
 }
