@@ -2,18 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import styles from './Producto.module.css';
-import { calculateArrivalDate, calculateDeliveryDate, formatToSpanishDate } from '../../utils/dateUtils';
 import StockStatus from '../features/product/StockStatus';
 import MedicionSellosVideo from '../features/product/MedicionSellosVideo';
-import Modal from '../common/Modal'; // Importar el modal
+import { useCart } from '@/hooks/useCart';
+import { useDeliveryInfo } from '@/hooks/useDeliveryInfo'; // Import the new hook
+import Modal from '../common/Modal';
 
 const Producto = ({ producto, imageUrl }) => {
     const navigate = useNavigate();
     const location = useLocation();
+    const { addItem } = useCart();
     const [quantity, setQuantity] = useState(1);
-    const [deliveryInfo, setDeliveryInfo] = useState({ message: '', date: '', warning: '' });
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalMessage, setModalMessage] = useState('');
+    const [addedMessage, setAddedMessage] = useState('');
+
+    // Use the new hook to get delivery info
+    const deliveryInfo = useDeliveryInfo(producto, quantity);
 
     // --- Mock de datos de autenticación (reemplazar con tu lógica real) ---
     const isLoggedIn = false; // Cambia a true para simular un usuario logueado
@@ -22,51 +27,13 @@ const Producto = ({ producto, imageUrl }) => {
     };
     // ---------------------------------------------------------------------
 
+    // Effect to handle the warning modal
     useEffect(() => {
-        if (!producto) return;
-
-        const stock = producto.existencia || 0;
-        const requestedAmount = quantity * (producto.cant_por_empaque || 1);
-        let warningMessage = '';
-
-        // Escenario 3: No hay existencia inicial
-        if (stock === 0) {
-            const arrivalDate = calculateArrivalDate();
-            const finalDeliveryDate = calculateDeliveryDate(arrivalDate);
-            warningMessage = `El producto llegará a nuestro almacén el ${formatToSpanishDate(arrivalDate)}. Puedes comprarlo ahora y te lo enviaremos en cuanto llegue.`;
-            setDeliveryInfo({
-                message: `Producto sin stock. Cómpralo ahora y recíbelo para el`,
-                date: formatToSpanishDate(finalDeliveryDate),
-                warning: warningMessage
-            });
-            setModalMessage(warningMessage);
+        if (deliveryInfo.warning) {
+            setModalMessage(deliveryInfo.warning);
             setIsModalOpen(true);
         }
-        // Escenario 2: La cantidad deseada supera la existencia
-        else if (requestedAmount > stock) {
-            const arrivalDate = calculateArrivalDate();
-            const finalDeliveryDate = calculateDeliveryDate(arrivalDate);
-            warningMessage = `Actualmente tenemos ${stock} unidades. El resto llegará a nuestro almacén el ${formatToSpanishDate(arrivalDate)}. Tu pedido completo se enviará en esa fecha.`;
-            setDeliveryInfo({
-                message: `La cantidad solicitada supera el stock. Recibirás tu pedido para el`,
-                date: formatToSpanishDate(finalDeliveryDate),
-                warning: warningMessage
-            });
-            setModalMessage(warningMessage);
-            setIsModalOpen(true);
-        }
-        // Escenario 1: Hay suficiente existencia
-        else {
-            const deliveryDate = calculateDeliveryDate();
-            setDeliveryInfo({
-                message: 'Entrega para el día',
-                date: formatToSpanishDate(deliveryDate),
-                warning: ''
-            });
-        }
-
-    }, [quantity, producto]);
-
+    }, [deliveryInfo.warning]);
 
     const handleLocationClick = () => {
         if (isLoggedIn) {
@@ -101,6 +68,12 @@ const Producto = ({ producto, imageUrl }) => {
         if (value > 0) {
             setQuantity(value);
         }
+    };
+
+    const handleAddToCart = () => {
+        addItem(producto, quantity);
+        setAddedMessage(`${quantity} empaque(s) agregado(s) al carrito!`);
+        setTimeout(() => setAddedMessage(''), 3000); // Clear message after 3 seconds
     };
 
     const finalImageUrl = imageUrl || `/Sugeridos/${producto.clave}.jpg`;
@@ -177,7 +150,8 @@ const Producto = ({ producto, imageUrl }) => {
                             {isLoggedIn ? `Enviar a ${user.domicilio}` : 'Enviar a'}
                         </span>
                     </div>
-                    <button className={styles['btn-agregar']}>Agregar al carrito</button>
+                    <button className={styles['btn-agregar']} onClick={handleAddToCart}>Agregar al carrito</button>
+                    {addedMessage && <div className={styles['added-message']}>{addedMessage}</div>}
                 </div>
                 <div className={styles['video-container']}>
                     <MedicionSellosVideo />

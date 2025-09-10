@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import styles from './AddressFormPage.module.css';
 import { useAuth } from '@/context/AuthContext';
 
 const saveAddress = async (addressData) => {
-  console.log("Dentro saveAddress", addressData);
   const { id, ...data } = addressData;
   const method = id ? 'PUT' : 'POST';
-  const url = id ? `${process.env.REACT_APP_API_URL}/domicilios/${id}` : `${process.env.REACT_APP_API_URL}/domicilios`;
+  const url = id
+    ? `${process.env.REACT_APP_API_URL}/domicilios/${id}`
+    : `${process.env.REACT_APP_API_URL}/domicilios`;
 
   const response = await fetch(url, {
     method,
@@ -20,79 +21,43 @@ const saveAddress = async (addressData) => {
   if (!response.ok) {
     throw new Error('Error al guardar la dirección');
   }
-
-  const responseText = await response.text();
-  if (responseText) {
-    return JSON.parse(responseText);
-  }
-
-  return null;
+  return response.json().catch(() => ({})); // Handle empty responses
 };
+
+// Define the initial empty state outside the component
+const getInitialFormData = (email = '') => ({
+  nombre_completo: '',
+  calle: '',
+  numero_ext: '',
+  numero_int: '',
+  colonia: '',
+  ciudad: '',
+  estado: '',
+  codigo_postal: '',
+  pais: 'México',
+  referencia: '',
+  instrucciones_entrega: '',
+  clienteEmail: email,
+  numero_telefono: '',
+  orden_domicilio: '',
+});
 
 const AddressFormPage = ({ onSave, address }) => {
   const { currentUser } = useAuth();
   const userEmail = currentUser?.email;
 
-  const [formData, setFormData] = useState({
-    nombre_completo: '',
-    calle: '',
-    numero_ext: '',
-    numero_int: '',
-    colonia: '',
-    ciudad: '',
-    estado: '',
-    codigo_postal: '',
-    pais: 'México',
-    referencia: '',
-    instrucciones_entrega: '',
-    clienteEmail: userEmail,
-    numero_telefono: '',
-    orden_domicilio: '',
-  });
-
-  useEffect(() => {
+  // Initialize state directly from props. If an address is passed, use its data.
+  // Otherwise, use a clean initial state.
+  const [formData, setFormData] = useState(() => {
     if (address) {
-      setFormData({
-        id: address.id,
-        nombre_completo: address.nombre_completo || '',
-        calle: address.calle || '',
-        numero_ext: address.numero_ext || '',
-        numero_int: address.numero_int || '',
-        colonia: address.colonia || '',
-        ciudad: address.ciudad || '',
-        estado: address.estado || '',
-        codigo_postal: address.codigo_postal || '',
-        pais: address.pais || 'México',
-        referencia: address.referencia || '',
-        instrucciones_entrega: address.instrucciones_entrega || '',
-        clienteEmail: userEmail,
-        numero_telefono: address.numero_telefono || '',
-        orden_domicilio: address.orden_domicilio || '',
-      });
-    } else {
-      setFormData({
-        nombre_completo: '',
-        calle: '',
-        numero_ext: '',
-        numero_int: '',
-        colonia: '',
-        ciudad: '',
-        estado: '',
-        codigo_postal: '',
-        pais: 'México',
-        referencia: '',
-        instrucciones_entrega: '',
-        clienteEmail: userEmail,
-        numero_telefono: '',
-        orden_domicilio: '',
-      });
+      return { ...getInitialFormData(userEmail), ...address };
     }
-  }, [address, userEmail]);
+    return getInitialFormData(userEmail);
+  });
 
   const mutation = useMutation({ 
     mutationFn: saveAddress, 
     onSuccess: () => {
-      console.log('Dirección guardada con éxito!');
       alert('Dirección guardada con éxito!');
       if (onSave) {
         onSave();
@@ -110,7 +75,6 @@ const AddressFormPage = ({ onSave, address }) => {
       ...prevData,
       [name]: type === 'checkbox' ? (checked ? 'Predeterminado' : '') : value,
     }));
-    console.log(formData);
   };
 
   const handleSubmit = (e) => {
@@ -119,12 +83,13 @@ const AddressFormPage = ({ onSave, address }) => {
       alert('Debes iniciar sesión para guardar una dirección.');
       return;
     }
-    mutation.mutate(formData);
+    // Ensure the latest email is included before mutation
+    mutation.mutate({ ...formData, clienteEmail: userEmail });
   };
 
   return (
     <div className={styles.container}>
-      <h2>Captura tu Domicilio</h2>
+      <h2>{address ? 'Editar Domicilio' : 'Captura tu Domicilio'}</h2>
       <form onSubmit={handleSubmit} className={styles.form}>
         {/* Form fields remain the same */}
         <div className={styles.formGroup}>

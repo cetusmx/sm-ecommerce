@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ArticuloRelacionado from './ArticuloRelacionado';
 import styles from './ArticulosRelacionados.module.css';
 import { FaPlus } from 'react-icons/fa';
+import { useCart } from '@/hooks/useCart';
 
 // Fetch all products
 const fetchProducts = async () => {
@@ -23,6 +24,11 @@ const fetchRelatedCategories = async (category) => {
 };
 
 const ArticulosRelacionados = ({ productoPrincipal }) => {
+  const { addItem } = useCart();
+  const [selectedItems, setSelectedItems] = useState({});
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [addedMessage, setAddedMessage] = useState('');
+
   // Query for all products
   const { data: allProducts, isLoading: isLoadingProducts, error: productsError } = useQuery({
     queryKey: ['products'],
@@ -41,6 +47,7 @@ const ArticulosRelacionados = ({ productoPrincipal }) => {
       return [];
     }
 
+    // ... (toda la lógica de filtrado compleja se mantiene igual)
     // 1. First filter: by `colocado_en` (flexibly) and `sistema_medicion`
     const firstFilter = allProducts.filter(p => {
       if (p.clave === productoPrincipal.clave) return false;
@@ -125,7 +132,7 @@ const ArticulosRelacionados = ({ productoPrincipal }) => {
         const main_de = parseFloat(productoPrincipal.diam_ext);
         if (isNaN(main_de)) return null;
 
-        const excludedLineas = ['CPS1', 'CPS2', 'PMD1', 'PMD12', 'PMD2', 'PMD3', 'PMD4', 'PMS2', 'PSD1', 'PSS12'];
+        const excludedLineas = ['CPS1', 'CPS2', 'PMD1', 'PMD12', 'PMD2', 'PMD3', 'PMD4', 'PMS2', 'PSD1', 'PSS12', 'PSD3'];
 
         const candidates = allProducts.filter(p => 
           p.categoria === 'Sellos de pistón' && 
@@ -194,6 +201,48 @@ const ArticulosRelacionados = ({ productoPrincipal }) => {
 
   }, [productoPrincipal, allProducts, relatedCategories]);
 
+  useEffect(() => {
+    if (relatedProducts && relatedProducts.length > 0) {
+      const initialSelection = relatedProducts.reduce((acc, product) => {
+        acc[product.clave] = true;
+        return acc;
+      }, {});
+      setSelectedItems(initialSelection);
+    }
+  }, [relatedProducts]);
+
+  useEffect(() => {
+    const newTotal = relatedProducts.reduce((sum, product) => {
+      if (selectedItems[product.clave]) {
+        return sum + parseFloat(product.precio);
+      }
+      return sum;
+    }, 0);
+    setTotalPrice(newTotal);
+  }, [selectedItems, relatedProducts]);
+
+  const handleSelectionChange = (clave, isSelected) => {
+    setSelectedItems(prev => ({
+      ...prev,
+      [clave]: isSelected,
+    }));
+  };
+
+  const handleAddSelectedToCart = () => {
+    const itemsToAdd = relatedProducts.filter(p => selectedItems[p.clave]);
+    if (itemsToAdd.length === 0) {
+        setAddedMessage('Por favor, selecciona al menos un artículo.');
+        setTimeout(() => setAddedMessage(''), 3000);
+        return;
+    }
+    itemsToAdd.forEach(item => {
+      addItem(item, 1); // Assuming quantity of 1 for each related item
+    });
+    setAddedMessage(`${itemsToAdd.length} artículo(s) agregado(s) al carrito.`);
+    setTimeout(() => setAddedMessage(''), 3000);
+    setSelectedItems({}); // Reset selection after adding
+  };
+
   const isLoading = isLoadingProducts || isLoadingRelated;
   const error = productsError || relatedError;
 
@@ -201,15 +250,17 @@ const ArticulosRelacionados = ({ productoPrincipal }) => {
   if (error) return <div>Error al cargar artículos relacionados: {error.message}</div>;
   if (relatedProducts.length === 0) return null; // Don't render if no related products found
 
-  const totalPrice = relatedProducts.reduce((sum, product) => sum + parseFloat(product.precio), 0).toFixed(2);
-
   return (
     <div className={styles.container}>
       <h3 className={styles.title}>Quizá también necesites</h3>
       <div className={styles.listContainer}>
         {relatedProducts.map((product, index) => (
           <React.Fragment key={product.clave}>
-            <ArticuloRelacionado producto={product} />
+            <ArticuloRelacionado
+              producto={product}
+              isSelected={!!selectedItems[product.clave]} // Pass selection state to child
+              onSelectionChange={handleSelectionChange} // Pass handler to child
+            />
             {index < relatedProducts.length - 1 && (
               <div className={styles.plusIcon}>
                 <FaPlus />
@@ -218,8 +269,11 @@ const ArticulosRelacionados = ({ productoPrincipal }) => {
           </React.Fragment>
         ))}
         <div className={styles.totalContainer}>
-          <p className={styles.totalPrice}>Precio total: ${totalPrice}</p>
-          <button className={styles.addButton}>Agregar los artículos al carrito</button>
+          <p className={styles.totalPrice}>Total seleccionados: ${totalPrice.toFixed(2)}</p>
+          <button className={styles.addButton} onClick={handleAddSelectedToCart}>
+            Agregar seleccionados al carrito
+          </button>
+          {addedMessage && <p className={styles.addedMessage}>{addedMessage}</p>}
         </div>
       </div>
     </div>

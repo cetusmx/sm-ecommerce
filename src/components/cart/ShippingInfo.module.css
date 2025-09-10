@@ -1,0 +1,75 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.shippingMessage {
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #e3f2fd;
+  border: 1px solid #bbdefb;
+  color: #1e3a8a;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.shippingMessage.success {
+  background-color: #e8f5e9;
+  border-color: #c8e6c9;
+  color: #1b5e20;
+  font-weight: bold;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.addressBox {
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.addressTitle {
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  color: #333;
+}
+
+.addressName {
+    font-weight: bold;
+}
+
+.addressBox p {
+  margin: 0.25rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.link {
+  color: #007185;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 0.9rem;
+}
+
+.link:hover {
+  color: #C7511F;
+}
+
+.actionButton {
+    background-color: #FFD814;
+    border: 1px solid #FCD200;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.actionButton:hover {
+    background-color: #F7CA00;
+}

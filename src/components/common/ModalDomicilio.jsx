@@ -8,7 +8,11 @@ const ModalDomicilio = ({ isOpen, onClose, onSave, address }) => {
     <Modal isOpen={isOpen} onClose={onClose} size="lg">
       <div className={styles.container}>
         <h2 className={styles.title}>{address ? 'Editar Domicilio' : 'Agregar Domicilio'}</h2>
-        <AddressFormPage onSave={onSave} address={address} />
+        <AddressFormPage 
+          key={address ? address.id : 'new'} // Force re-mount on address change
+          onSave={onSave} 
+          address={address} 
+        />
       </div>
     </Modal>
   );

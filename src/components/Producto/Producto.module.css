@@ -149,3 +149,10 @@
 .video-container {
     margin-top: 20px;
 }
+
+.added-message {
+    text-align: center;
+    color: green;
+    font-weight: bold;
+    margin-top: 10px;
+  }

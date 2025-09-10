@@ -64,3 +64,11 @@
 .addButton:hover {
   background-color: #f7ca00;
 }
+
+.addedMessage {
+    margin-top: 10px;
+    color: green;
+    font-weight: bold;
+    font-size: 0.9rem;
+    text-align: center;
+  }
