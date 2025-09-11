@@ -72,10 +72,13 @@ const Producto = ({ producto, imageUrl }) => {
 
     const handleAddToCart = () => {
         addItem(producto, quantity);
-        setAddedMessage(`${quantity} empaque(s) agregado(s) al carrito!`);
+        setAddedMessage(`${quantity} producto(s) agregado(s) al carrito!`);
         setTimeout(() => setAddedMessage(''), 3000); // Clear message after 3 seconds
     };
 
+    if(producto.linea==="HER") {
+        imageUrl=`/Sugeridos/${producto.clave}.jpg`
+    }
     const finalImageUrl = imageUrl || `/Sugeridos/${producto.clave}.jpg`;
     const showStockStatus = producto.existencia === 0 && producto.ultima_compra === null;
 

@@ -16,9 +16,9 @@ const SearchInputWithDropdown = () => {
     return (
         <>
             <div class="input-group">
-                <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="basic-addon2"/>
+                <input type="text" className="form-control" placeholder="Buscar sello hidráulico" aria-label="Recipient's username" aria-describedby="basic-addon2"/>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="button">Button</button>
+                        <button className="btn" type="button" style={{backgroundColor: "#0458c7", color:"#fff", borderRadius:"0 5px 5px 0"}}>Buscar</button>
                     </div>
             </div>
             {/* <div className="input-group mb-3">

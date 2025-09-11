@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import styles from "./HeroSection.module.css";
-import banner1 from "@/assets/banner1.jpg";
+/* import banner1 from "@/assets/banner1.jpg"; */
 import banner2 from "@/assets/banner2.jpg";
-import banner3 from "@/assets/banner3.jpg";
+/* import banner3 from "@/assets/banner3.jpg"; */
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const images = [banner1, banner2, banner3];
+  //const images = [banner1, banner2, banner3];
+  const images = [banner2];
 
   const goToPreviousSlide = () => {
     setCurrentIndex((prevIndex) =>

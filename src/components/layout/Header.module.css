@@ -59,10 +59,12 @@
 
   .logo {
     order: unset; /* Remove order */
+    color: #057aff;
   }
 
   .logo img {
     height: 50px;
+    color: #057aff;
   }
 
   .search-bar {
@@ -73,4 +75,22 @@
     order: 3;
     justify-self: end; /* Alinea los elementos a la derecha */
   }
+
+  
+}
+
+.exo-2-font{
+  font-family: "Exo 2", sans-serif;
+  font-size: 2em;
+  text-decoration: none;
+  color: #fff;
+  padding: 1px 10px 2px 10px;
+}
+
+.exo-2-font:hover{
+  border: solid 1px #fff;
+}
+
+.logo {
+  color: #057aff;
 }

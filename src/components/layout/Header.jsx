@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./Header.module.css";
 /* import logo from "../assets/logo.png"; */
-import logo from "@/assets/LogoNegro.png";
+import logo from "@/assets/logo.png";
 import SearchInputWithDropdown from "@/utils/SearchInputWithDropdown.js";
 import CartButton from "@/components/features/cart/CartButton";
 import UserSession from "@/components/features/user/UserSession";
@@ -12,9 +12,10 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles['header-top']}>
-        <a href="/" className={styles.logo}>
+        <a href="/" className={styles['logo']}>
           <img src={logo} alt="Logotipo de la marca" />
         </a>
+        <a href="/" className={styles['exo-2-font']}>Seal Market</a>
         <AddressButton />
       </div>
       <div className={styles['search-bar-container']}>

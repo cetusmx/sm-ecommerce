@@ -3,6 +3,14 @@ import { useQuery } from '@tanstack/react-query';
 import ArticuloSugerido from './ArticuloSugerido';
 import styles from './HerramientasSugeridas.module.css';
 
+const fetchProducts = async () => {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok for products');
+  }
+  return response.json();
+};
+
 const HerramientasSugeridas = () => {
   const { data: sugeridos, isLoading: isLoadingSugeridos, error: errorSugeridos } = useQuery({
     queryKey: ['sugeridos'],
@@ -15,7 +23,10 @@ const HerramientasSugeridas = () => {
     },
   });
 
-  const { data: allProducts, isLoading: isLoadingProducts, error: errorProducts } = useQuery({ queryKey: ['products'] });
+  const { data: allProducts, isLoading: isLoadingProducts, error: errorProducts } = useQuery({
+    queryKey: ['products'],
+    queryFn: fetchProducts,
+  });
 
   if (isLoadingSugeridos || isLoadingProducts) return <div>Cargando...</div>;
   if (errorSugeridos || errorProducts) return <div>Error: {errorSugeridos?.message || errorProducts?.message}</div>;

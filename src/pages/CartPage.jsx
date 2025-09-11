@@ -5,6 +5,7 @@ import styles from './CartPage.module.css'; // Use its own dedicated styles
 import CartItem from '@/components/cart/CartItem';
 import ShippingInfo from '@/components/cart/ShippingInfo'; // Import the new ShippingInfo component
 import Breadcrumb from '@/components/common/Breadcrumb'; // Import Breadcrumb component
+import HerramientasSugeridas from '@/components/features/product/HerramientasSugeridas';
 
 const CartPage = () => {
   const { cart, cartTotal, cartItemCount } = useCart();
@@ -57,6 +58,7 @@ const CartPage = () => {
           </div>
         )}
       </div>
+      <HerramientasSugeridas />
     </div>
   );
 };
