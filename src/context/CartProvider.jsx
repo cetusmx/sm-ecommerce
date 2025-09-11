@@ -1,10 +1,10 @@
-
 import React, { createContext, useState, useMemo } from 'react';
 
 export const CartContext = createContext();
 
 const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
+  const [shippingAddress, setShippingAddress] = useState(null); // State for selected shipping address
 
   const addItem = (item, quantity) => {
     setCart(prevCart => {
@@ -55,6 +55,8 @@ const CartProvider = ({ children }) => {
     updateItemQuantity,
     cartTotal,
     cartItemCount,
+    shippingAddress, // Expose shipping address state
+    setShippingAddress, // Expose setter for shipping address
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

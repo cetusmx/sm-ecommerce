@@ -1,36 +1,38 @@
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import AuthProvider from '@/context/AuthProvider';
-import CartProvider from '@/context/CartProvider'; // Import CartProvider
+import CartProvider from '@/context/CartProvider';
+import ScrollToTop from '@/components/common/ScrollToTop';
 import HomePage from '@/HomePage';
 import Login from '@/pages/Login';
 import SignUp from '@/pages/SignUp';
-import Pedido from './pages/Pedido'; // Import the new Pedido component
-import ProductDetailPage from './pages/ProductDetailPage'; // Import the new Product Detail Page component
-import AddressFormPage from './pages/AddressFormPage'; // Import the new Address Form Page component
-import UserAddressesPage from './pages/UserAddressesPage'; // Import the new User Addresses Page component
-import CartPage from './pages/CartPage'; // Import the new Cart Page component
-import Layout from './components/layout/Layout'; // Import the new Layout component
+import Pedido from './pages/Pedido';
+import ProductDetailPage from './pages/ProductDetailPage';
+import AddressFormPage from './pages/AddressFormPage';
+import UserAddressesPage from './pages/UserAddressesPage';
+import CartPage from './pages/CartPage';
+import Layout from './components/layout/Layout';
 import "./App.css";
 
-// Forcing a re-render to clear potential cached errors
 function App() {
   return (
-    <AuthProvider>
-      <CartProvider> {/* Wrap routes with CartProvider */}
+    <CartProvider>
+      <AuthProvider>
+        <ScrollToTop />
         <Routes>
-          <Route path="/" element={<Layout />}> {/* Parent route for layout */}
-            <Route index element={<HomePage />} /> {/* Default child route for "/" */}
+          <Route path="/" element={<Layout />}>
+            <Route index element={<HomePage />} />
             <Route path="login" element={<Login />} />
             <Route path="signup" element={<SignUp />} />
             <Route path="orders" element={<Pedido />} />
             <Route path="producto/:clave" element={<ProductDetailPage />} />
             <Route path="address-form" element={<AddressFormPage />} />
             <Route path="user-addresses" element={<UserAddressesPage />} />
-            <Route path="cart" element={<CartPage />} /> {/* Add CartPage route */}
+            <Route path="cart" element={<CartPage />} />
           </Route>
         </Routes>
-      </CartProvider>
-    </AuthProvider>
+      </AuthProvider>
+    </CartProvider>
   );
 }
 

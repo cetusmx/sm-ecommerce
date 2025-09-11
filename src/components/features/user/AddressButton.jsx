@@ -1,23 +1,48 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FaMapMarkerAlt } from 'react-icons/fa';
 import styles from './AddressButton.module.css';
-// Assuming useAuth is available from AuthProvider context
-import { useAuth } from '@/context/AuthContext'; 
+import { useAuth } from '@/context/AuthContext';
+import { useCart } from '@/hooks/useCart'; // Import useCart
 
 const AddressButton = () => {
   const navigate = useNavigate();
-  const { isLoggedIn, user } = useAuth(); // Uncomment when useAuth is implemented
+  const { isLoggedIn } = useAuth();
+  const { shippingAddress } = useCart(); // Get the global shipping address
 
   const handleClick = () => {
     if (isLoggedIn) {
-      console.log("Logueado");
       navigate('/user-addresses');
     } else {
-      // Store current location to redirect after login/signup
       navigate('/login', { state: { from: '/user-addresses' } });
-      // Or if no account, navigate('/signup', { state: { from: '/user-addresses' } });
     }
+  };
+
+  const getButtonContent = () => {
+    if (!isLoggedIn) {
+      return (
+        <span className={styles.addressText}>
+          Hola, identifícate
+          <span className={styles.subText}>Elige tu dirección</span>
+        </span>
+      );
+    }
+
+    if (!shippingAddress) {
+      return (
+        <span className={styles.addressText}>
+          Hola
+          <span className={styles.subText}>Elige tu dirección</span>
+        </span>
+      );
+    }
+
+    return (
+      <span className={styles.addressText}>
+       <span> Enviar a {shippingAddress.nombre_completo.split(' ')[0]}</span>
+        <span className={styles.subText}>{shippingAddress.ciudad}, {shippingAddress.codigo_postal}</span>
+      </span>
+    );
   };
 
   return (
@@ -25,7 +50,7 @@ const AddressButton = () => {
       <div className={styles['address-icon-wrapper']}>
         <FaMapMarkerAlt className={styles['address-icon']} />
       </div>
-      <span className={styles['address-text']}>Enviar a</span>
+      {getButtonContent()}
     </button>
   );
 };

@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
+import { useCart } from '@/hooks/useCart';
 import { useNavigate } from 'react-router-dom';
 import styles from './ShippingInfo.module.css';
+import AddressSelectionModal from './AddressSelectionModal';
 
 const fetchAddresses = async (userEmail) => {
   if (!userEmail) return [];
   const response = await fetch(`${process.env.REACT_APP_API_URL}/domicilios/email/${userEmail}`);
   if (!response.ok) {
-    if (response.status === 404) return []; // No addresses found is not an error
+    if (response.status === 404) return [];
     throw new Error('Network response was not ok');
   }
   return response.json();
@@ -16,17 +18,24 @@ const fetchAddresses = async (userEmail) => {
 
 const ShippingInfo = ({ cartTotal }) => {
   const { currentUser } = useAuth();
+  const { shippingAddress, setShippingAddress } = useCart();
   const navigate = useNavigate();
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const FREE_SHIPPING_THRESHOLD = 1500;
 
-  const { data: addresses, isLoading } = useQuery({
+  // Fetch addresses to set an initial default, but only if no address is already set in the context.
+  useQuery({
     queryKey: ['userAddresses', currentUser?.email],
     queryFn: () => fetchAddresses(currentUser?.email),
-    enabled: !!currentUser, // Only run if user is logged in
+    enabled: !!currentUser && !shippingAddress, // Only run if user is logged in AND no address is set
+    onSuccess: (addresses) => {
+      if (addresses && addresses.length > 0) {
+        // Set the most recent address as the default when the component loads
+        setShippingAddress(addresses[addresses.length - 1]);
+      }
+    },
   });
-
-  // Find the most recent address (assuming the last one in the array is the most recent)
-  const recentAddress = addresses && addresses.length > 0 ? addresses[addresses.length - 1] : null;
 
   const renderShippingAddress = () => {
     if (!currentUser) {
@@ -37,15 +46,11 @@ const ShippingInfo = ({ cartTotal }) => {
       );
     }
 
-    if (isLoading) {
-      return <div className={styles.addressBox}>Cargando dirección...</div>;
-    }
-
-    if (!recentAddress) {
+    if (!shippingAddress) {
       return (
         <div className={styles.addressBox}>
-          <p>No tienes direcciones guardadas.</p>
-          <button className={styles.actionButton} onClick={() => navigate('/user-addresses')}>Agregar Dirección</button>
+          <p>No tienes una dirección de envío seleccionada.</p>
+          <button className={styles.actionButton} onClick={() => setIsModalOpen(true)}>Elegir Dirección</button>
         </div>
       );
     }
@@ -53,10 +58,10 @@ const ShippingInfo = ({ cartTotal }) => {
     return (
       <div className={styles.addressBox}>
         <p className={styles.addressTitle}>Enviar a:</p>
-        <p className={styles.addressName}>{recentAddress.nombre_completo}</p>
-        <p>{recentAddress.calle} {recentAddress.numero_ext}, {recentAddress.colonia}</p>
-        <p>{recentAddress.ciudad}, {recentAddress.estado}, {recentAddress.postalCode}</p>
-        <span className={styles.link} onClick={() => navigate('/user-addresses')}>Cambiar dirección</span>
+        <p className={styles.addressName}>{shippingAddress.nombre_completo}</p>
+        <p>{shippingAddress.calle} {shippingAddress.numero_ext}, {shippingAddress.colonia}</p>
+        <p>{shippingAddress.ciudad}, {shippingAddress.estado}, {shippingAddress.postalCode}</p>
+        <span className={styles.link} onClick={() => setIsModalOpen(true)}>Cambiar dirección</span>
       </div>
     );
   };
@@ -82,6 +87,7 @@ const ShippingInfo = ({ cartTotal }) => {
     <div className={styles.container}>
       {renderFreeShippingMessage()}
       {renderShippingAddress()}
+      {isModalOpen && <AddressSelectionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
     </div>
   );
 };

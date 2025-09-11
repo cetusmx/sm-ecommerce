@@ -40,14 +40,14 @@ const getInitialFormData = (email = '') => ({
   clienteEmail: email,
   numero_telefono: '',
   orden_domicilio: '',
+  tipo_domicilio: 'Envío', // Add the required field with a default value
 });
 
 const AddressFormPage = ({ onSave, address }) => {
   const { currentUser } = useAuth();
   const userEmail = currentUser?.email;
 
-  // Initialize state directly from props. If an address is passed, use its data.
-  // Otherwise, use a clean initial state.
+  // Initialize state directly from props
   const [formData, setFormData] = useState(() => {
     if (address) {
       return { ...getInitialFormData(userEmail), ...address };
