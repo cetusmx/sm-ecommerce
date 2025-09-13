@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import HeroSection from "@/components/features/home/HeroSection";
 import SpecSearchBlock from "@/components/features/search/SpecSearchBlock";
 import FeaturedProducts from "@/components/features/product/FeaturedProducts";
-import ProductFilter from "@/components/features/product/ProductFilter";
+import ProductFilter from "@/components/features/product/ProductFilter.js";
 import PromosPrincipales from "@/components/features/home/PromosPrincipales";
 import CarouselCategorias from "@/components/features/home/CarouselCategorias";
 import SearchResults from "@/components/features/product/SearchResults";
@@ -22,7 +22,6 @@ const fetchProducts = async () => {
 const HomePage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Initialize filters from URL search params
   const initialFilters = useMemo(() => ({
     diamInt: searchParams.get('diamInt') || '',
     diamExt: searchParams.get('diamExt') || '',
@@ -44,7 +43,6 @@ const HomePage = () => {
   });
 
   useEffect(() => {
-    // Update URL when debounced filters change
     const newSearchParams = new URLSearchParams();
     Object.entries(debouncedFilters).forEach(([key, value]) => {
       if (value && value !== 'Todos' && value !== 'Pulgadas') {
@@ -97,6 +95,7 @@ const HomePage = () => {
             if (productValue < filterValue - tolerance || productValue > filterValue + tolerance) return false;
           }
         }
+       
         return true;
       });
       setSearchResults(results);
@@ -106,7 +105,6 @@ const HomePage = () => {
     }
   }, [debouncedFilters, products, setSearchParams]);
 
-  // When the component mounts, re-initialize the filter state from the URL
   useEffect(() => {
     setFilters(initialFilters);
   }, [initialFilters]);

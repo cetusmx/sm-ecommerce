@@ -1,21 +1,21 @@
 import React from "react";
+import { Link } from "react-router-dom"; // Import Link
 import styles from "./Header.module.css";
-/* import logo from "../assets/logo.png"; */
 import logo from "@/assets/logo.png";
 import SearchInputWithDropdown from "@/utils/SearchInputWithDropdown.js";
 import CartButton from "@/components/features/cart/CartButton";
 import UserSession from "@/components/features/user/UserSession";
-import OrdersButton from "@/components/features/user/OrdersButton"; // Import the new component
-import AddressButton from "@/components/features/user/AddressButton"; // Import the new AddressButton component
+import OrdersButton from "@/components/features/user/OrdersButton";
+import AddressButton from "@/components/features/user/AddressButton";
 
 const Header = () => {
   return (
     <header className={styles.header}>
       <div className={styles['header-top']}>
-        <a href="/" className={styles['logo']}>
+        <Link to="/" className={styles['logo']}> {/* Changed to Link */}
           <img src={logo} alt="Logotipo de la marca" />
-        </a>
-        <a href="/" className={styles['exo-2-font']}>Seal Market</a>
+        </Link>
+        <Link to="/" className={styles['exo-2-font']}>Seal Market</Link> {/* Changed to Link */}
         <AddressButton />
       </div>
       <div className={styles['search-bar-container']}>

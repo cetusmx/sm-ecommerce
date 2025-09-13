@@ -60,9 +60,14 @@ const ProductFilter = ({ filters, onFilterChange }) => {
           >
             <option value="Todos">Todos</option>
             {error && <option value="">Error al cargar</option>}
-            {!isLoading && !error && categories && categories.map(category => (
-              <option key={category} value={category}>{category}</option>
-            ))}
+                        {!isLoading && !error && categories && categories.map(category => {
+              // Handle both string and object types due to cache interactions
+              if (typeof category === 'object' && category !== null && category.categoria) {
+                return <option key={category.categoria} value={category.categoria}>{category.categoria}</option>;
+              }
+              // Handle the normal string case
+              return <option key={category} value={category}>{category}</option>;
+            })}
           </select>
         </div>
 

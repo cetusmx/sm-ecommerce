@@ -11,13 +11,14 @@ import ProductDetailPage from './pages/ProductDetailPage';
 import AddressFormPage from './pages/AddressFormPage';
 import UserAddressesPage from './pages/UserAddressesPage';
 import CartPage from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
 import Layout from './components/layout/Layout';
 import "./App.css";
 
 function App() {
   return (
-    <CartProvider>
-      <AuthProvider>
+    <AuthProvider>
+      <CartProvider>
         <ScrollToTop />
         <Routes>
           <Route path="/" element={<Layout />}>
@@ -29,10 +30,11 @@ function App() {
             <Route path="address-form" element={<AddressFormPage />} />
             <Route path="user-addresses" element={<UserAddressesPage />} />
             <Route path="cart" element={<CartPage />} />
+            <Route path="checkout" element={<CheckoutPage />} />
           </Route>
         </Routes>
-      </AuthProvider>
-    </CartProvider>
+      </CartProvider>
+    </AuthProvider>
   );
 }
 

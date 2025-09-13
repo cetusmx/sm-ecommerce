@@ -54,27 +54,39 @@ const AddressSelectionModal = ({ isOpen, onClose }) => {
         <div className={styles.addressList}>
           {isLoading && <p>Cargando direcciones...</p>}
           {error && <p>Error al cargar direcciones.</p>}
-          {addresses && addresses.map(addr => (
-            <label key={addr.id} className={`${styles.addressCard} ${selectedId === addr.id ? styles.selected : ''}`}>
-              <input
-                type="radio"
-                name="address"
-                checked={selectedId === addr.id}
-                onChange={() => setSelectedId(addr.id)}
-              />
-              <div className={styles.addressInfo}>
-                <p className={styles.name}>{addr.nombre_completo}</p>
-                <p>{addr.calle} {addr.numero_ext}</p>
-                <p>{addr.ciudad}, {addr.estado} {addr.codigo_postal}</p>
-              </div>
-            </label>
-          ))}
+          {addresses && addresses.length > 0 ? (
+            addresses.map(addr => (
+              <label key={addr.id} className={`${selectedId === addr.id ? styles.selected : ''}`}>
+                <input
+                  type="radio"
+                  name="address"
+                  checked={selectedId === addr.id}
+                  onChange={() => setSelectedId(addr.id)}
+                />
+                <div className={styles.addressCard}> {/* Apply addressCard styles here */}
+                  <div className={styles.addressInfo}>
+                    <p className={styles.name}>{addr.nombre_completo}</p>
+                    <p>{addr.calle} {addr.numero_ext}</p>
+                    <p>{addr.ciudad}, {addr.estado} {addr.codigo_postal}</p>
+                  </div>
+                </div>
+              </label>
+            ))
+          ) : (
+            <div className={styles.noAddresses}>
+              <p>No tienes direcciones registradas.</p>
+            </div>
+          )}
         </div>
         <div className={styles.actions}>
           <button className={styles.addButton} onClick={handleAddNew}>+ Agregar nueva dirección</button>
-          <button className={styles.confirmButton} onClick={handleSelect} disabled={!selectedId}>
-            Usar esta dirección
-          </button>
+          {addresses && addresses.length > 0 && (
+            <button className={styles.confirmButton} onClick={handleSelect} disabled={!selectedId}>
+              Usar esta dirección
+            </button>
+          )}
+          {console.log("Renderizando botón Cancelar...")}
+          <button className={styles.cancelButton} onClick={onClose}>Cancelar</button>
         </div>
       </div>
     </Modal>
