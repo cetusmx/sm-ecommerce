@@ -270,7 +270,7 @@ const ArticulosRelacionados = ({ productoPrincipal }) => {
         ))}
         <div className={styles.totalContainer}>
           <p className={styles.totalPrice}>Total seleccionados: ${totalPrice.toFixed(2)}</p>
-          <button className={styles.addButton} onClick={handleAddSelectedToCart}>
+          <button className="sm-btn sm-btn-primary" onClick={handleAddSelectedToCart}>
             Agregar seleccionados al carrito
           </button>
           {addedMessage && <p className={styles.addedMessage}>{addedMessage}</p>}

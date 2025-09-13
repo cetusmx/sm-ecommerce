@@ -49,11 +49,11 @@
 }
 
 .carouselControl.prev {
-  left: -20px;
+  left: 10px;
 }
 
 .carouselControl.next {
-  right: -20px;
+  right: 10px;
 }
 
 .carouselControl:hover {

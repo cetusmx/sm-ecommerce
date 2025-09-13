@@ -5,14 +5,7 @@ import ProductoVisto from './ProductoVisto';
 import styles from './ProductosVistos.module.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-const fetchProductosVistos = async (email) => {
-  if (!email) return [];
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/productosvistos/email/${email}`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
-};
+import { fetchProductosVistos } from '@/api/productosVistosApi';
 
 const ProductosVistos = () => {
   const { currentUser } = useContext(AuthContext);
@@ -22,6 +15,7 @@ const ProductosVistos = () => {
     queryKey: ['productosVistos', currentUser?.email],
     queryFn: () => fetchProductosVistos(currentUser?.email),
     enabled: !!currentUser?.email,
+    staleTime: 60 * 1000, // Data is considered fresh for 1 minute
   });
 
   if (isLoading) return <div className={styles.container}>Cargando productos vistos...</div>;

@@ -153,7 +153,7 @@ const Producto = ({ producto, imageUrl }) => {
                             {isLoggedIn ? `Enviar a ${user.domicilio}` : 'Enviar a'}
                         </span>
                     </div>
-                    <button className={styles['btn-agregar']} onClick={handleAddToCart}>Agregar al carrito</button>
+                    <button className="sm-btn sm-btn-primary" onClick={handleAddToCart}>Agregar al carrito</button>
                     {addedMessage && <div className={styles['added-message']}>{addedMessage}</div>}
                 </div>
                 <div className={styles['video-container']}>

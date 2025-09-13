@@ -1,0 +1,11 @@
+Resumen de actividades del día:
+
+1.  Análisis y corrección de `ProductosVistos.jsx`:
+    *   Se confirmó el uso de `@tanstack/react-query` para el caché de productos.
+    *   Se identificó y corrigió un desbordamiento lateral derecho en el componente `ProductosVistos` ajustando la posición de los controles del carrusel en `ProductosVistos.module.css`.
+
+2.  Homologación de estilos de botones:
+    *   Se analizaron los estilos de botones en `global.css`, `Producto.jsx` y `ArticulosRelacionados.jsx`.
+    *   Se aclaró con el usuario la preferencia de color para el botón primario (`sm-btn-primary`), optando por el color azul ya definido en `global.css`.
+    *   Se eliminaron los estilos de botón específicos de `Producto.module.css` y `ArticulosRelacionados.module.css`.
+    *   Se actualizaron los componentes `Producto.jsx` y `ArticulosRelacionados.jsx` para utilizar las clases globales `sm-btn sm-btn-primary` en sus botones, alineándolos con el estilo primario de la aplicación.
