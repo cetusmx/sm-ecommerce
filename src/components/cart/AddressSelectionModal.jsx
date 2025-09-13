@@ -79,14 +79,13 @@ const AddressSelectionModal = ({ isOpen, onClose }) => {
           )}
         </div>
         <div className={styles.actions}>
-          <button className={styles.addButton} onClick={handleAddNew}>+ Agregar nueva dirección</button>
+          <button className="sm-btn sm-btn-secondary" onClick={handleAddNew}>+ Agregar nueva dirección</button>
           {addresses && addresses.length > 0 && (
-            <button className={styles.confirmButton} onClick={handleSelect} disabled={!selectedId}>
+            <button className="sm-btn sm-btn-primary" onClick={handleSelect} disabled={!selectedId}>
               Usar esta dirección
             </button>
           )}
-          {console.log("Renderizando botón Cancelar...")}
-          <button className={styles.cancelButton} onClick={onClose}>Cancelar</button>
+          
         </div>
       </div>
     </Modal>

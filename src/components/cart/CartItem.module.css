@@ -32,18 +32,18 @@
 }
 
 .price {
-  color: #B12704;
+  color: #071b4a;
   font-weight: bold;
   margin: 0.5rem 0;
 }
 
 .deliveryInfoContainer {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     margin-top: 10px;
     padding: 8px;
-    background-color: #f3f3f3;
-    border-radius: 4px;
-}
+    /* background-color: #f3f3f3;
+    border-radius: 4px; */
+} 
 
 .deliveryMessage {
     margin: 0;
@@ -53,7 +53,6 @@
 .deliveryWarning {
     margin: 5px 0 0 0;
     color: #C45500;
-    font-size: 0.85rem;
 }
 
 .actions {

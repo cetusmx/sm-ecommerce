@@ -9,6 +9,7 @@ import styles from './ProductDetailPage.module.css';
 
 import ArticulosRelacionados from '../components/features/product/ArticulosRelacionados';
 import HerramientasSugeridas from '../components/features/product/HerramientasSugeridas';
+import ProductosVistos from '../components/features/product/ProductosVistos';
 
 import AnuncioPuntual from '../components/common/AnuncioPuntual';
 
@@ -134,6 +135,7 @@ const ProductDetailPage = () => {
         </aside>
       </div>
           <ArticulosRelacionados productoPrincipal={product} />
+          <ProductosVistos />
           <HerramientasSugeridas />
     </div>
     </div>

@@ -29,10 +29,10 @@ const CartItem = ({ item }) => {
           <span>Clave: {item.clave}</span>
           <span className={styles.price}>Precio: ${parseFloat(item.precio).toFixed(2)}</span>
           <div className={styles.deliveryInfoContainer}>
-            <p className={styles.deliveryMessage}>
+            <p className={`${styles.deliveryMessage} notification-info-color`}>
                 {deliveryInfo.message} <strong>{deliveryInfo.date}</strong>
             </p>
-            {deliveryInfo.warning && <p className={styles.deliveryWarning}>{deliveryInfo.warning}</p>}
+            {deliveryInfo.warning && <p className={`${styles.deliveryWarning} notification-warning-color`}>{deliveryInfo.warning}</p>}
           </div>
         </div>
         <div className={styles.actions}>

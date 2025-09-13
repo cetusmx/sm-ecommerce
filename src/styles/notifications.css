@@ -1,0 +1,27 @@
+.notification-info-color {
+     color: #0458c7;
+    /*background-color: #e3f2fd;
+    border-color: #bbdefb; */
+    padding: 2px 10px;
+}
+
+.notification-success-color {
+    color: #071045;
+    background-color: #e8f5e9;
+    border-color: #c8e6c9;
+    animation: softBlink 2s infinite alternate;
+}
+
+@keyframes softBlink {
+    0% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+.notification-warning-color {
+    color: #071b4a;
+    /*  color: #ff001e; */
+    /*background-color: #fff9c4; */
+   /*  border: solid 1px #fff176; 
+    border-radius: 10px;*/
+    padding: 2px 10px; 
+} 

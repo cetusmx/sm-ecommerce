@@ -133,10 +133,10 @@ const CheckoutPage = () => {
           <p>No tienes direcciones guardadas.</p>
         )}
         <div className={styles.actionButtonsContainer}> {/* New container for buttons */}
-          <button onClick={() => setIsModalOpen(true)} className={styles.submitButton}>
+          <button onClick={() => setIsModalOpen(true)} className="sm-btn sm-btn-primary">
             Agregar Nueva Dirección
           </button>
-          <button onClick={handleCancelCheckout} className={styles.cancelButton}>
+          <button onClick={handleCancelCheckout} className="sm-btn sm-btn-secondary">
             Cancelar
           </button>
         </div>
@@ -183,7 +183,7 @@ const CheckoutPage = () => {
       )}
       <button 
         onClick={handleContinueToPayment} 
-        className={styles.submitButton} 
+        className="sm-btn sm-btn-primary" 
         disabled={!selectedShippingOption}
       >
         Continuar
@@ -223,7 +223,7 @@ const CheckoutPage = () => {
         <h4>Selecciona Método de Pago</h4>
         {/* Placeholder para botones de PayPal */}
         <p>Aquí irían los botones de PayPal.</p>
-        <button className={styles.submitButton} onClick={() => alert('Procesar pago con PayPal')}>Pagar con PayPal</button>
+        <button className="sm-btn sm-btn-primary" onClick={() => alert('Procesar pago con PayPal')}>Pagar con PayPal</button>
       </div>
     </div>
   );

@@ -1,10 +1,37 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SearchResults.module.css';
 import StockStatus from './StockStatus';
 import { calculateArrivalDate, formatToShortDate } from '../../../utils/dateUtils';
+import { useCart } from '@/hooks/useCart'; // Import useCart
 
 const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
+  const { addItem } = useCart(); // Get addItem from cart context
+  const [quantities, setQuantities] = useState({}); // State for quantities
+  const [addedMessage, setAddedMessage] = useState({}); // State for added message
+
+  const handleQuantityChange = (clave, quantity) => {
+    setQuantities(prevQuantities => ({
+      ...prevQuantities,
+      [clave]: quantity
+    }));
+  };
+
+  const handleAddToCart = (product) => {
+    const quantity = quantities[product.clave] || 1;
+    addItem(product, parseInt(quantity));
+    setAddedMessage(prevMessages => ({
+      ...prevMessages,
+      [product.clave]: 'Agregado al carrito'
+    }));
+    setTimeout(() => {
+      setAddedMessage(prevMessages => ({
+        ...prevMessages,
+        [product.clave]: ''
+      }));
+    }, 3000);
+  };
+
   if (results.length === 0) {
     return null;
   }
@@ -63,8 +90,20 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
                 <td>{product.unidad}</td>
                 <td>{product.cant_por_empaque}</td>
                 <td className={styles.actionsCell}>
-                  <input type="number" min="1" defaultValue="1" className={styles.quantityInput} />
-                  <button className={styles.addToCartButton}>Agregar al carrito</button>
+                  <input 
+                    type="number" 
+                    min="1" 
+                    value={quantities[product.clave] || 1} 
+                    onChange={(e) => handleQuantityChange(product.clave, e.target.value)}
+                    className={styles.quantityInput} 
+                  />
+                  <button 
+                    onClick={() => handleAddToCart(product)}
+                    className={styles.addToCartButton}
+                  >
+                    Agregar al carrito
+                  </button>
+                  {addedMessage[product.clave] && <div className={styles.addedMessage}>{addedMessage[product.clave]}</div>}
                 </td>
               </tr>
             );

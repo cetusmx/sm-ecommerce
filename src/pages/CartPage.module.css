@@ -135,15 +135,7 @@
   margin-bottom: 15px;
 }
 
-.promo-button {
-  padding: 10px 20px;
-  background-color: #28a745; /* Example green */
-  color: white;
-  border: none;
-  border-radius: 20px; /* Rounded */
-  cursor: pointer;
-  font-weight: bold;
-}
+
 
 .order-card {
   border: 1px solid #e0e0e0;

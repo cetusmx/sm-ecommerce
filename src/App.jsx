@@ -13,6 +13,8 @@ import UserAddressesPage from './pages/UserAddressesPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import Layout from './components/layout/Layout';
+import "./styles/notifications.css";
+import "./styles/global.css";
 import "./App.css";
 
 function App() {

@@ -32,7 +32,7 @@ const ArticuloSugerido = ({ producto }) => {
       <div className={styles.promocion}>Promoción</div>
       <div className={styles.precio}>${producto.precio} {addedMessage && <span className={styles.inCartMessage}>{addedMessage}</span>}</div>
       <div className={styles.entrega}>Entrega para el <strong>{calcularFechaEntrega()}</strong></div>
-      <button className={styles.boton} onClick={handleAddToCart}>Agregar al carrito</button>
+      <button className={`sm-btn sm-btn-primary ${styles.fullWidthButton}`} onClick={handleAddToCart}>Agregar al carrito</button>
     </div>
   );
 };

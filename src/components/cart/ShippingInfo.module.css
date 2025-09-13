@@ -13,12 +13,14 @@
   color: #1e3a8a;
   text-align: center;
   font-size: 0.95rem;
-}
+} 
 
 .shippingMessage.success {
-  background-color: #e8f5e9;
+  /* background-color: #e8f5e9; */
+  background-color: #fff;
   border-color: #c8e6c9;
-  color: #1b5e20;
+  color: #02b90e;
+  /* color: #1b5e20; */
   font-weight: bold;
 }
 

@@ -34,15 +34,6 @@
   color: #C7511F;
 }
 
-.promocion {
-  background-color: #cc0c39; /* Yellow */
-  color: #fff;
-  font-size: 0.75rem;
-  padding: 3px 8px;
-  border-radius: 4px;
-  margin-bottom: 5px;
-}
-
 .precio {
   font-size: 1.2rem;
   font-weight: bold;
@@ -53,22 +44,8 @@
   gap: 5px;
 }
 
-.entrega {
-  font-size: 0.8rem;
-  color: #555;
-  margin-bottom: 10px;
-}
-
-.fullWidthButton {
-    width: 100%;
-    padding: 10px 10px;
-    font-size: 0.9em;
-}
-
-
 .inCartMessage {
   font-size: 0.8rem;
-  color: green;
   font-weight: bold;
   margin-left: 5px;
 }

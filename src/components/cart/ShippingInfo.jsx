@@ -69,7 +69,7 @@ const ShippingInfo = ({ cartTotal }) => {
   const renderFreeShippingMessage = () => {
     if (cartTotal >= FREE_SHIPPING_THRESHOLD) {
       return (
-        <div className={`${styles.shippingMessage} ${styles.success}`}>
+        <div className={`${styles.shippingMessage} ${styles.success} notification-success-color`}>
           ¡Felicidades! Tu pedido califica para envío gratis.
         </div>
       );
@@ -77,7 +77,7 @@ const ShippingInfo = ({ cartTotal }) => {
 
     const remaining = FREE_SHIPPING_THRESHOLD - cartTotal;
     return (
-      <div className={styles.shippingMessage}>
+      <div className={`${styles.shippingMessage} notification-info-color`}>
         Te faltan <span className={styles.bold}>${remaining.toFixed(2)}</span> para conseguir el envío gratis.
       </div>
     );

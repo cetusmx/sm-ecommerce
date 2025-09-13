@@ -6,6 +6,7 @@ import CartItem from '@/components/cart/CartItem';
 import ShippingInfo from '@/components/cart/ShippingInfo'; // Import the new ShippingInfo component
 import Breadcrumb from '@/components/common/Breadcrumb'; // Import Breadcrumb component
 import HerramientasSugeridas from '@/components/features/product/HerramientasSugeridas';
+import ProductosVistos from '@/components/features/product/ProductosVistos';
 
 const CartPage = () => {
   const { cart, cartTotal, cartItemCount } = useCart();
@@ -33,7 +34,7 @@ const CartPage = () => {
           {cart.length === 0 ? (
             <div className={styles['order-card']}>
               <p>Tu carrito está vacío.</p>
-              <button className={styles['promo-button']} onClick={() => navigate('/')}>Ver productos</button>
+              <button className="sm-btn sm-btn-primary" onClick={() => navigate('/')}>Ver productos</button>
             </div>
           ) : (
             cart.map(item => (
@@ -50,13 +51,14 @@ const CartPage = () => {
               <span>Subtotal ({cartItemCount} productos): </span>
               <span style={{ fontWeight: 'bold', paddingLeft:"5px" }}> ${cartTotal.toFixed(2)}</span>
             </div>
-            <button onClick={handleCheckout} className={styles['promo-button']} style={{ width: '100%' }}>
+            <button onClick={handleCheckout} className="sm-btn sm-btn-primary" style={{ width: '100%' }}>
               Proceder al Pago
             </button>
             <ShippingInfo cartTotal={cartTotal} />
           </div>
         )}
       </div>
+      <ProductosVistos />
       <HerramientasSugeridas />
     </div>
   );

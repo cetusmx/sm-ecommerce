@@ -161,11 +161,11 @@ const Producto = ({ producto, imageUrl }) => {
                 </div>
             </div>
 
-            <Modal 
-                isOpen={isModalOpen} 
-                onClose={() => setIsModalOpen(false)} 
-                message={modalMessage} 
-            />
+            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+                <h4>Atención</h4>
+                <p>{modalMessage}</p>
+                <button className="sm-btn sm-btn-primary" onClick={() => setIsModalOpen(false)}>Cerrar</button>
+            </Modal>
         </div>
     );
 };

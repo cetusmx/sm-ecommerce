@@ -249,7 +249,7 @@ const AddressFormPage = ({ onSave, address }) => {
           <label htmlFor="defaultAddress">Usar como mi dirección predeterminada</label>
         </div>
 
-        <button type="submit" className={styles.submitButton}>Guardar Dirección</button>
+        <button type="submit" className="sm-btn sm-btn-primary">Guardar Dirección</button>
       </form>
     </div>
   );
