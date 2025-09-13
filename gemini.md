@@ -36,6 +36,8 @@ Evita introducir nuevas dependencias externas, a menos que sea absolutamente nec
 
 -Siempre comienza dando un informe sobre las siguientes etapas en las que recomiendas trabajar.
 
+-Utiliza siempre el idioma español para interactuar con el usuario.
+
 
 
 \##Consideraciones finales

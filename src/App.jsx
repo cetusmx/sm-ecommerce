@@ -16,26 +16,13 @@ import Layout from './components/layout/Layout';
 import "./styles/notifications.css";
 import "./styles/global.css";
 import "./App.css";
+import AppContent from './AppContent';
 
 function App() {
+
   return (
     <AuthProvider>
-      <CartProvider>
-        <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<HomePage />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route path="orders" element={<Pedido />} />
-            <Route path="producto/:clave" element={<ProductDetailPage />} />
-            <Route path="address-form" element={<AddressFormPage />} />
-            <Route path="user-addresses" element={<UserAddressesPage />} />
-            <Route path="cart" element={<CartPage />} />
-            <Route path="checkout" element={<CheckoutPage />} />
-          </Route>
-        </Routes>
-      </CartProvider>
+      <AppContent />
     </AuthProvider>
   );
 }
