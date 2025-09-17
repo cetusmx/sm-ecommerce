@@ -22,7 +22,7 @@ const ProductosVistos = () => {
   if (error) return <div className={styles.container}>Error: {error.message}</div>;
   if (!viewedProducts || viewedProducts.length === 0) return null;
 
-  const productsPerPage = 4; // Adjust as needed
+  const productsPerPage = 5; // Adjust as needed
   const totalPages = Math.ceil(viewedProducts.length / productsPerPage);
 
   const goToPreviousSlide = () => {

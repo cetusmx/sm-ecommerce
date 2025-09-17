@@ -8,7 +8,7 @@ import UserSession from "@/components/features/user/UserSession";
 import OrdersButton from "@/components/features/user/OrdersButton";
 import AddressButton from "@/components/features/user/AddressButton";
 
-const Header = () => {
+const Header = ({ onFullSearch }) => {
   return (
     <header className={styles.header}>
       <div className={styles['header-top']}>
@@ -19,7 +19,7 @@ const Header = () => {
         <AddressButton />
       </div>
       <div className={styles['search-bar-container']}>
-        <SearchInputWithDropdown />
+        <SearchInputWithDropdown onFullSearch={onFullSearch} />
       </div>
       <div className={styles['session-state']}>
         <UserSession />

@@ -29,7 +29,7 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
 
         const lowerCaseQuery = query.toLowerCase();
 
-        const filtered = allProducts.filter(p => !(p.existencia == 0 && !p.ultima_compra)).filter(product => {
+        const filtered = allProducts.filter(product => {
             const { descripcion, clave, categoria, material, observaciones } = product;
             return (
                 (clave && clave.toLowerCase().includes(lowerCaseQuery)) ||

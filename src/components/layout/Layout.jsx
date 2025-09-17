@@ -4,10 +4,10 @@ import Header from './Header';
 import Footer from './Footer';
 import styles from './Layout.module.css';
 
-const Layout = () => {
+const Layout = ({ onFullSearch }) => {
   return (
     <div className={styles.layoutContainer}>
-      <Header />
+      <Header onFullSearch={onFullSearch} />
       <main className={styles.mainContent}>
         <Outlet />
       </main>

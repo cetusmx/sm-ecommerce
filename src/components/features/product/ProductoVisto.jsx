@@ -39,10 +39,18 @@ const ProductoVisto = ({ viewedProduct }) => {
   if (!product) return null; // Should not happen if error handling is correct
 
   const imageUrl = `/Perfiles/${product.linea}.jpg`; // Assuming image based on linea
+  const imageUrl2 = `/Sugeridos/${product.clave}.jpg`; // Assuming image based on linea
 
   return (
     <div className={styles.container}>
-      <img src={imageUrl} alt={product.descripcion} className={styles.imagen} />
+      {product.categoria === 'Herramientas' || product.categoria === 'Accesorios' ? (
+          <img src={imageUrl2} alt={product.descripcion} className={styles.imagen} />
+        ) : (
+          <img src={imageUrl} alt={product.descripcion} className={styles.imagen} />
+        )}
+
+
+      {/* <img src={imageUrl} alt={product.descripcion} className={styles.imagen} /> */}
       <Link to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(imageUrl)}`} className={styles.descripcion}>{product.descripcion}</Link>
       <div className={styles.precio}>${product.precio} {addedMessage && <span className={styles.inCartMessage}>{addedMessage}</span>}</div>
       <button className="sm-btn sm-btn-primary" onClick={handleAddToCart}>Agregar al carrito</button>

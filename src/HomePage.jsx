@@ -8,6 +8,7 @@ import ProductFilter from "@/components/features/product/ProductFilter.js";
 import PromosPrincipales from "@/components/features/home/PromosPrincipales";
 import CarouselCategorias from "@/components/features/home/CarouselCategorias";
 import SearchResults from "@/components/features/product/SearchResults";
+import GlobalSearchResultsComponent from "@/components/features/product/GlobalSearchResultsComponent";
 import useDebounce from "@/hooks/useDebounce";
 import "@/styles/global.css";
 
@@ -19,8 +20,9 @@ const fetchProducts = async () => {
   return response.json();
 };
 
-const HomePage = () => {
+const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilter, productFilterKey }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [globalFilteredProducts, setGlobalFilteredProducts] = useState([]);
 
   const initialFilters = useMemo(() => ({
     diamInt: searchParams.get('diamInt') || '',
@@ -41,6 +43,64 @@ const HomePage = () => {
     queryKey: ['products'], 
     queryFn: fetchProducts 
   });
+
+  // Effect for global search
+  useEffect(() => {
+    if (globalSearchQuery && products) {
+      // Clear product filter when global search is active
+      if (onClearProductFilter) {
+        onClearProductFilter();
+      }
+      const lowerCaseQuery = globalSearchQuery.toLowerCase();
+      const filtered = products.filter(p => !(p.existencia == 0 && !p.ultima_compra)).filter(product => {
+        const { descripcion, clave, categoria, material, observaciones } = product;
+        return (
+          (clave && clave.toLowerCase().includes(lowerCaseQuery)) ||
+          (descripcion && descripcion.toLowerCase().includes(lowerCaseQuery)) ||
+          (categoria && categoria.toLowerCase().includes(lowerCaseQuery)) ||
+          (material && material.toLowerCase().includes(lowerCaseQuery)) ||
+          (observaciones && observaciones.toLowerCase().includes(lowerCaseQuery))
+        );
+      });
+
+      filtered.sort((a, b) => {
+        const aClave = a.clave?.toLowerCase() || '';
+        const bClave = b.clave?.toLowerCase() || '';
+        const aDesc = a.descripcion?.toLowerCase() || '';
+        const bDesc = b.descripcion?.toLowerCase() || '';
+
+        const aClaveExact = aClave === lowerCaseQuery;
+        const bClaveExact = bClave === lowerCaseQuery;
+        if (aClaveExact && !bClaveExact) return -1;
+        if (!aClaveExact && bClaveExact) return 1;
+
+        const aClaveStartsWith = aClave.startsWith(lowerCaseQuery);
+        const bClaveStartsWith = bClave.startsWith(lowerCaseQuery);
+        if (aClaveStartsWith && !bClaveStartsWith) return -1;
+        if (!aClaveStartsWith && bClaveStartsWith) return 1;
+
+        const aClaveIncludes = aClave.includes(lowerCaseQuery);
+        const bClaveIncludes = bClave.includes(lowerCaseQuery);
+        if (aClaveIncludes && !bClaveIncludes) return -1;
+        if (!aClaveIncludes && bClaveIncludes) return 1;
+
+        const aDescStartsWith = aDesc.startsWith(lowerCaseQuery);
+        const bDescStartsWith = bDesc.startsWith(lowerCaseQuery);
+        if (aDescStartsWith && !bDescStartsWith) return -1;
+        if (!aDescStartsWith && bDescStartsWith) return 1;
+
+        const aDescIncludes = aDesc.includes(lowerCaseQuery);
+        const bDescIncludes = bDesc.includes(lowerCaseQuery);
+        if (aDescIncludes && !bDescIncludes) return -1;
+        if (!aDescIncludes && bDescIncludes) return 1;
+
+        return 0;
+      });
+      setGlobalFilteredProducts(filtered);
+    } else {
+      setGlobalFilteredProducts([]);
+    }
+  }, [globalSearchQuery, products]);
 
   useEffect(() => {
     const newSearchParams = new URLSearchParams();
@@ -111,6 +171,13 @@ const HomePage = () => {
 
   const handleFilterChange = (newFilters) => {
     setFilters(prevFilters => ({ ...prevFilters, ...newFilters }));
+    setGlobalSearchQuery(''); // Clear global search results when product filter is used
+  };
+
+  const handleClearProductFilter = () => {
+    setFilters(initialFilters); // Reset filters to initial state
+    setIsSearching(false); // Stop showing search results
+    setSearchResults([]); // Clear previous search results
   };
 
   if (isLoading) return <div>Cargando...</div>;
@@ -119,11 +186,19 @@ const HomePage = () => {
   return (
     <div className="home-page-container">
       <ProductFilter 
+        key={productFilterKey} // Add key to force remount/reset
         filters={filters} 
         onFilterChange={handleFilterChange} 
       />
       
-      {isSearching ? (
+      {globalSearchQuery ? (
+        <div className="fade-in">
+          <GlobalSearchResultsComponent 
+            results={globalFilteredProducts} 
+            searchQuery={globalSearchQuery} 
+          />
+        </div>
+      ) : isSearching ? (
         <div className="fade-in">
           <SearchResults 
             results={searchResults} 

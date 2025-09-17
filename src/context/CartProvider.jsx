@@ -1,11 +1,12 @@
 import React, { createContext, useState, useMemo, useEffect, useRef } from 'react';
-import { useAuth } from './AuthContext'; // Import useAuth
-import { getUserCart, saveUserCart } from '../api/cartService'; // Import API functions
+import { useAuth } from './AuthContext';
+import { getUserCart, saveUserCart } from '../api/cartService';
+import { useQuery } from '@tanstack/react-query'; // Import useQuery
 
 export const CartContext = createContext();
 
-// This function now lives here, as it's a cart-related concern.
-const fetchAddresses = async (userEmail) => {
+// We can keep fetchAddresses here or move it to a dedicated API file if it's used elsewhere
+const fetchUserAddresses = async (userEmail) => { // Renamed to avoid conflict if UserAddressesPage also has one
   if (!userEmail) return [];
   const response = await fetch(`${process.env.REACT_APP_API_URL}/domicilios/email/${userEmail}`);
   if (!response.ok) {
@@ -17,16 +18,31 @@ const fetchAddresses = async (userEmail) => {
 
 const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => JSON.parse(localStorage.getItem('cart')) || []);
-  const [shippingAddress, setShippingAddress] = useState(null);
-  const { currentUser } = useAuth(); // Get current user from AuthContext
+  // We will derive shippingAddress from the query data, so no need for useState here
+  // const [shippingAddress, setShippingAddress] = useState(null);
+  const { currentUser } = useAuth();
   const isInitialMount = useRef(true);
 
-  // Effect for loading cart AND shipping address on user state change
+  // Use useQuery to fetch addresses
+  const { data: addresses, isLoading: addressesLoading, error: addressesError } = useQuery({
+    queryKey: ['userAddresses', currentUser?.email],
+    queryFn: () => fetchUserAddresses(currentUser.email),
+    enabled: !!currentUser?.email,
+  });
+
+  // Derive shippingAddress from the fetched addresses
+  const shippingAddress = useMemo(() => {
+    if (addresses && addresses.length > 0) {
+      return addresses.find(addr => addr.orden_domicilio === 'Predeterminado') || addresses[addresses.length - 1];
+    }
+    return null;
+  }, [addresses]);
+
+  // Effect for loading cart on user state change
   useEffect(() => {
-    const loadData = async () => {
+    const loadCartData = async () => {
       if (currentUser) {
         // --- USER IS LOGGED IN ---
-
         // 1. Load remote cart and merge with local
         const remoteCart = await getUserCart(currentUser.email);
         const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -46,24 +62,18 @@ const CartProvider = ({ children }) => {
           setCart(remoteCart);
         }
 
-        // 2. Load shipping addresses
-        const addresses = await fetchAddresses(currentUser.email);
-        if (addresses && addresses.length > 0) {
-          const defaultAddress = addresses.find(addr => addr.orden_domicilio === 'Predeterminado') || addresses[addresses.length - 1];
-          setShippingAddress(defaultAddress);
-        }
+        // No need to load shipping addresses here anymore, useQuery handles it.
 
       } else {
         // --- USER IS LOGGED OUT ---
         // 1. Load cart from local storage
         const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
         setCart(localCart);
-        // 2. Clear shipping address
-        setShippingAddress(null);
+        // 2. shippingAddress will be null because currentUser is null, and useQuery is disabled.
       }
     };
 
-    loadData();
+    loadCartData();
   }, [currentUser]);
 
   // Effect for saving cart when it changes
@@ -130,8 +140,8 @@ const CartProvider = ({ children }) => {
     updateItemQuantity,
     cartTotal,
     cartItemCount,
-    shippingAddress,
-    setShippingAddress,
+    shippingAddress, // shippingAddress is now derived from useQuery
+    // setShippingAddress, // No longer needed as it's derived
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -1,11 +1,15 @@
-Resumen de actividades del día:
+En el día de hoy, se realizaron las siguientes modificaciones:
 
-1.  Análisis y corrección de `ProductosVistos.jsx`:
-    *   Se confirmó el uso de `@tanstack/react-query` para el caché de productos.
-    *   Se identificó y corrigió un desbordamiento lateral derecho en el componente `ProductosVistos` ajustando la posición de los controles del carrusel en `ProductosVistos.module.css`.
+1.  **Visualización de Dirección Predeterminada:** En la página de `UserAddressesPage.jsx`, se añadió una etiqueta "Predeterminado" a la tarjeta de la dirección que el usuario ha marcado como su preferida. Esto se logró añadiendo una simple lógica condicional que comprueba el campo `orden_domicilio`.
 
-2.  Homologación de estilos de botones:
-    *   Se analizaron los estilos de botones en `global.css`, `Producto.jsx` y `ArticulosRelacionados.jsx`.
-    *   Se aclaró con el usuario la preferencia de color para el botón primario (`sm-btn-primary`), optando por el color azul ya definido en `global.css`.
-    *   Se eliminaron los estilos de botón específicos de `Producto.module.css` y `ArticulosRelacionados.module.css`.
-    *   Se actualizaron los componentes `Producto.jsx` y `ArticulosRelacionados.jsx` para utilizar las clases globales `sm-btn sm-btn-primary` en sus botones, alineándolos con el estilo primario de la aplicación.
+2.  **Estilo de la Etiqueta:** Se añadió un estilo para la etiqueta "Predeterminado" en el archivo `UserAddressesPage.module.css` para que sea visualmente clara y no intrusiva.
+
+3.  **Funcionalidad para Establecer Dirección Predeterminada:** Se modificó el formulario de dirección en `AddressFormPage.jsx` para permitir al usuario establecer una dirección como predeterminada. Esto incluyó:
+    *   La modificación de la función `handleChange` para manejar el campo `orden_domicilio` como un número (1 para predeterminado, 0 para no).
+    *   La actualización del hook `useMutation` para que, al guardar una dirección como predeterminada, se llame a una nueva función `setDefaultAddress` que actualiza el resto de las direcciones del usuario.
+
+4.  **API para Direcciones:** Se creó un nuevo archivo `src/api/addresses.js` para centralizar las funciones de la API relacionadas con las direcciones. En este archivo se incluyeron:
+    *   La función `saveAddress` que guarda una nueva dirección o actualiza una existente.
+    *   La nueva función `setDefaultAddress` que establece una dirección como predeterminada y actualiza el resto de las direcciones del usuario.
+
+5.  **Endpoint de la API:** Se corrigió el endpoint de la función `setDefaultAddress` para que apunte a `/domicilios/predeterminado` y envíe el `addressId` en el cuerpo de la solicitud, como lo requiere el backend.

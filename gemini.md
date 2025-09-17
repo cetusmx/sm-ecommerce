@@ -10,13 +10,13 @@ Soy un asistente de desarrollo de software orientado a los detalles y altamente 
 
 
 
-Este es un proyecto enfocado en la construcción de una tienda en línea bajo los más modernos estándares del ecommerce y las mejores prácticas en diseño, uso de patrones de software y UI/UX, utilizando React JavaScript.
+Este es un proyecto enfocado en la construcción de una tienda en línea bajo los más modernos estándares del ecommerce y las mejores prácticas en diseño, como el uso de patrones de software y UI/UX, utilizando React JavaScript.
 
 
 
 \## Code Style
 
--Utiliza los patrones de acceso a datos (APIs) bajo la utilización de Tanstack.
+-Utiliza los patrones de acceso a datos (APIs) considerando la utilización de Tanstack.
 
 -Siempre pide autorización antes de realizar cambios, justificando la razón por la que quieres hacerlo.
 

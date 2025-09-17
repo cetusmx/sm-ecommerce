@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
@@ -37,12 +37,25 @@ function AppContent() {
     }
   }, [currentUser, queryClient]);
 
+  const [globalSearchQuery, setGlobalSearchQuery] = useState('');
+  const [productFilterKey, setProductFilterKey] = useState(0); // Key to force ProductFilter re-render
+
+  const handleGlobalSearch = (query) => {
+    setGlobalSearchQuery(query);
+    setProductFilterKey(prevKey => prevKey + 1); // Increment key to reset ProductFilter
+  };
+
+  const handleClearProductFilter = () => {
+    // This function will be passed to HomePage to clear its internal filter state
+    // HomePage will handle clearing its own filters
+  };
+
   return (
     <CartProvider>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route index element={<HomePage />} />
+        <Route path="/" element={<Layout onFullSearch={handleGlobalSearch} />}>
+          <Route index element={<HomePage globalSearchQuery={globalSearchQuery} setGlobalSearchQuery={setGlobalSearchQuery} onClearProductFilter={handleClearProductFilter} />} />
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="orders" element={<Pedido />} />

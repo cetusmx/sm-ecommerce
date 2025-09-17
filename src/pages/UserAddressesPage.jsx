@@ -7,6 +7,8 @@ import Breadcrumb from '../components/common/Breadcrumb';
 import AnuncioPuntual from '../components/common/AnuncioPuntual';
 import ModalDomicilio from '../components/common/ModalDomicilio';
 
+import { updateAddressOrder } from '@/api/addresses';
+
 const fetchAddresses = async (userEmail) => {
   if (!userEmail) {
     return [];
@@ -47,17 +49,42 @@ const UserAddressesPage = () => {
     },
   });
 
-  const handleDelete = (addressId) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar esta dirección?')) {
-      deleteMutation.mutate(addressId);
-    }
-  };
+  const updateOrderMutation = useMutation({
+    mutationFn: updateAddressOrder,
+    onSuccess: () => {
+      queryClient.invalidateQueries(['userAddresses', userEmail]);
+    },
+  });
 
   const { data: addresses, isLoading, error } = useQuery({
     queryKey: ['userAddresses', userEmail],
     queryFn: () => fetchAddresses(userEmail),
     enabled: !!userEmail,
   });
+
+  const handleDelete = (addressId) => {
+    if (window.confirm('¿Estás seguro de que quieres eliminar esta dirección?')) {
+      deleteMutation.mutate(addressId);
+    }
+  };
+
+  const handlePredeterminado = async (addressId) => {
+    const currentDefault = addresses.find(
+      (address) => address.orden_domicilio === 'Predeterminado'
+    );
+
+    if (currentDefault) {
+      await updateOrderMutation.mutateAsync({
+        id: currentDefault.id,
+        orden_domicilio: '',
+      });
+    }
+
+    await updateOrderMutation.mutateAsync({
+      id: addressId,
+      orden_domicilio: 'Predeterminado',
+    });
+  };
 
   const handleOpenModal = () => {
     setSelectedAddress(null);
@@ -96,13 +123,23 @@ const UserAddressesPage = () => {
                   <div className={styles.addressList}>
                     {addresses.map((address) => (
                       <div key={address.id} className={styles.addressCard}>
-                        <p className={styles.nombreCompleto}>{address.nombre_completo}</p>
-                        <p>Calle {address.calle} {address.numero_ext} {address.numero_int ? `Int. ${address.numero_int}` : ''}</p>
-                        <p>{address.colonia}</p>
-                        <p>{address.ciudad}, {address.estado} {address.postalCode}</p>
-                        <p>{address.pais}</p>
-                        <p>Número de teléfono: {address.numero_telefono}</p>
-                        <div className={styles.botones}><button className={styles.actionButton} onClick={() => handleEdit(address)}>Editar</button> <h6>|</h6> <button className={styles.actionButton} onClick={() => handleDelete(address.id)}>Descartar</button></div>
+                        <div>
+                          <div className={styles.defaultAddressLabel}>{address.orden_domicilio === 'Predeterminado' ? 'Predeterminado' : ''}</div>
+                          <p className={styles.nombreCompleto}>{address.nombre_completo}</p>
+                          <p>Calle {address.calle} {address.numero_ext} {address.numero_int ? `Int. ${address.numero_int}` : ''}</p>
+                          <p>{address.colonia}</p>
+                          <p>{address.ciudad}, {address.estado} {address.postalCode}</p>
+                          <p>{address.pais}</p>
+                          <p>Número de teléfono: {address.numero_telefono}</p>
+                        </div>
+                        <div className={styles.botones}><button className={styles.actionButton} onClick={() => handleEdit(address)}>Editar</button> <h6>|</h6> 
+                        <button className={styles.actionButton} onClick={() => handleDelete(address.id)}>Descartar</button>
+                        </div>
+                        <div>
+                          {address.orden_domicilio !== 'Predeterminado' && (
+                            <button className={styles.actionButton} style={{fontSize:"0.7em"}} onClick={() => handlePredeterminado(address.id)}>Establecer como predeterminado</button>
+                          )}
+                        </div>
                       </div>
                     ))}
                   </div>

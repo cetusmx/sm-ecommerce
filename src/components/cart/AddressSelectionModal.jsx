@@ -16,9 +16,9 @@ const fetchAddresses = async (userEmail) => {
   return response.json();
 };
 
-const AddressSelectionModal = ({ isOpen, onClose }) => {
+const AddressSelectionModal = ({ isOpen, onClose, onSelectAddress }) => {
   const { currentUser } = useAuth();
-  const { shippingAddress, setShippingAddress } = useCart();
+  const { shippingAddress } = useCart();
   const navigate = useNavigate();
 
   const [selectedId, setSelectedId] = useState(shippingAddress?.id);
@@ -37,7 +37,7 @@ const AddressSelectionModal = ({ isOpen, onClose }) => {
   const handleSelect = () => {
     const newAddress = addresses.find(addr => addr.id === selectedId);
     if (newAddress) {
-      setShippingAddress(newAddress);
+      onSelectAddress(newAddress); // Call the prop function
     }
     onClose();
   };

@@ -26,8 +26,8 @@
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   gap: 20px;
-  flex-grow: 1;
-  justify-content: space-around; /* Distribute items evenly */
+  flex-shrink: 0;
+  width: 100%;
 }
 
 .carouselControl {
@@ -48,14 +48,21 @@
   justify-content: center;
 }
 
-.carouselControl.prev {
-  left: 10px;
+.prev {
+  left: 0;
 }
 
-.carouselControl.next {
-  right: 10px;
+.next {
+  right: 0;
 }
 
-.carouselControl:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+/* Ajustes para las flechas de navegación */
+.productosVistosContainer :global(.slick-prev),
+.productosVistosContainer :global(.slick-next) {
+  z-index: 1;
+}
+
+/* Forzar que cada slide ocupe el 20% del ancho */
+:global(.slick-slide) {
+  width: 20% !important;
 }
