@@ -12,6 +12,7 @@ import HerramientasSugeridas from '../components/features/product/HerramientasSu
 import ProductosVistos from '../components/features/product/ProductosVistos';
 
 import AnuncioPuntual from '../components/common/AnuncioPuntual';
+import ProductosPromocion from '../components/features/product/ProductosPromocion';
 
 const ProductDetailPage = () => {
   const { clave } = useParams();
@@ -128,11 +129,7 @@ const ProductDetailPage = () => {
         <main className={styles.mainContent}>
           <Producto producto={product} imageUrl={finalImageUrl} />
         </main>
-        <aside className={styles.sidebar}>
-          <AnuncioPuntual linea="ESTUC" slogan="¡Oferta especial!" precio="326" />
-          <AnuncioPuntual linea="ESTUC2" slogan="¡Estuches de Orings!" precio="326" />
-          <AnuncioPuntual linea="BAMVE" slogan="¡Últimas unidades!" precio="75.00" />
-        </aside>
+        <ProductosPromocion className={styles.sidebar} />
       </div>
           <ArticulosRelacionados productoPrincipal={product} />
           <ProductosVistos />
