@@ -1,10 +1,11 @@
 .footer {
-  background-color: #333;
+  background-color: #131921;
   color: #fff;
   padding: var(--spacing-xl) var(--spacing-md);
   display: flex;
   flex-direction: column;
   text-align: center;
+  padding-top: 20px;
 }
 
 .footer-content {
@@ -16,6 +17,7 @@
 .footer-section h4 {
   color: var(--color-secondary);
   margin-bottom: var(--spacing-sm);
+
 }
 
 .footer-section ul {
@@ -26,6 +28,7 @@
 .footer-section a {
   color: #fff;
   transition: color 0.3s ease;
+  text-decoration: none;
 }
 
 .footer-section a:hover {

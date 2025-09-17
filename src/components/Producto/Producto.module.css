@@ -42,13 +42,14 @@
     font-weight: 500;
     border-bottom: 1px solid #ddd;
     padding-bottom: 15px;
-    margin-bottom: 15px;
+    margin-bottom: 0px;
 }
 
 .producto-precio {
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .linea-form {

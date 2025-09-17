@@ -111,6 +111,7 @@ const Producto = ({ producto, imageUrl }) => {
         <h5 className={styles["producto-descripcion"]}>
           {producto.descripcion}
         </h5>
+        <h7>SKU: {producto.clave}</h7>
         <div className={styles["producto-precio"]}>
           {showStockStatus ? <StockStatus /> : `$${precioPorEmpaque}`}
         </div>
@@ -180,7 +181,7 @@ const Producto = ({ producto, imageUrl }) => {
           {producto.seccion && (
             <div className={styles["detalle-fila"]}>
               <span>
-                <span className={styles.etiqueta}>Sección:</span>{" "}
+                <span className={styles.etiqueta}>Sección:</span>
                 {producto.seccion}{" "}
                 {producto.sistema_medicion === "std" ? "pulg." : "mm"}
               </span>
@@ -189,7 +190,7 @@ const Producto = ({ producto, imageUrl }) => {
           {producto.material !== "" ? (
             <div className={styles["detalle-fila"]}>
               <span>
-                <span className={styles.etiqueta}>Material:</span>{" "}
+                <span className={styles.etiqueta}>Material:</span>
                 {producto.material}
               </span>
             </div>
@@ -199,8 +200,7 @@ const Producto = ({ producto, imageUrl }) => {
           {producto.sistema_medicion !== "" ? (
             <div className={styles["detalle-fila"]}>
               <span>
-                <span className={styles.etiqueta}>Sistema medición:</span>{" "}
-                {producto.sistema_medicion}
+                <span className={styles.etiqueta}>Sistema medición: <span style={{fontWeight:400}} > {producto.sistema_medicion==="std" ? "Estándar" : "Milimétrico"}</span></span>
               </span>
             </div>
           ) : (

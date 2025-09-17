@@ -7,8 +7,8 @@ const Footer = () => {
       <div className={styles['footer-content']}>
         <div className={`${styles['footer-section']} ${styles.contact}`}>
           <h4>Contacto</h4>
-          <p>Email: info@ecommerce.com</p>
-          <p>Teléfono: +123 456 7890</p>
+          <p>Correo: contacto@sealmarket.mx</p>
+          <p>Whatsapp: 618 230 3777</p>
         </div>
         <div className={`${styles['footer-section']} ${styles.links}`}>
           <h4>Enlaces de interés</h4>

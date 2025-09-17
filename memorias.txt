@@ -1,15 +1,27 @@
-En el día de hoy, se realizaron las siguientes modificaciones:
+## Resumen de Actividades - 16 de septiembre de 2025
 
-1.  **Visualización de Dirección Predeterminada:** En la página de `UserAddressesPage.jsx`, se añadió una etiqueta "Predeterminado" a la tarjeta de la dirección que el usuario ha marcado como su preferida. Esto se logró añadiendo una simple lógica condicional que comprueba el campo `orden_domicilio`.
+Durante esta sesión, se realizaron las siguientes modificaciones y mejoras en el proyecto:
 
-2.  **Estilo de la Etiqueta:** Se añadió un estilo para la etiqueta "Predeterminado" en el archivo `UserAddressesPage.module.css` para que sea visualmente clara y no intrusiva.
+### 1. Ajuste de Tamaño de Ítems en Carrusel y Posicionamiento de Flechas
+- Se modificó `src/components/features/product/ProductosVistos.module.css` para asegurar que los ítems del carrusel ocupen el 20% del ancho, mostrando 5 ítems a la vez y corrigiendo el posicionamiento de las flechas de navegación.
+- Se ajustó `src/components/features/product/ProductoVisto.module.css` para establecer el ancho de cada ítem a `calc(20% - 16px)`.
 
-3.  **Funcionalidad para Establecer Dirección Predeterminada:** Se modificó el formulario de dirección en `AddressFormPage.jsx` para permitir al usuario establecer una dirección como predeterminada. Esto incluyó:
-    *   La modificación de la función `handleChange` para manejar el campo `orden_domicilio` como un número (1 para predeterminado, 0 para no).
-    *   La actualización del hook `useMutation` para que, al guardar una dirección como predeterminada, se llame a una nueva función `setDefaultAddress` que actualiza el resto de las direcciones del usuario.
+### 2. Creación e Integración del Componente `ProductosPromocion`
+- Se extrajo un elemento `aside` de `src/pages/ProductDetailPage.jsx` para crear un nuevo componente `src/components/features/product/ProductosPromocion.jsx`.
+- `src/pages/ProductDetailPage.jsx` fue modificado para importar y utilizar el nuevo componente `ProductosPromocion`.
+- Se integró `@tanstack/react-query` en `ProductosPromocion.jsx` para la obtención de datos de productos promocionales (desde `/productospromocion`) y la lista global de productos (desde `/productos`).
+- Se implementó la lógica para calcular precios con descuento y construir URLs de imágenes dinámicas basadas en la categoría del producto (Herramientas, Accesorios, Estuches vs. otras).
 
-4.  **API para Direcciones:** Se creó un nuevo archivo `src/api/addresses.js` para centralizar las funciones de la API relacionadas con las direcciones. En este archivo se incluyeron:
-    *   La función `saveAddress` que guarda una nueva dirección o actualiza una existente.
-    *   La nueva función `setDefaultAddress` que establece una dirección como predeterminada y actualiza el resto de las direcciones del usuario.
+### 3. Funcionalidad y UI "Agregar al Carrito" para `AnuncioPuntual`
+- Se modificó `src/components/common/AnuncioPuntual.jsx` para aceptar las props `imageUrl`, `originalPrice` y `productData`.
+- Se añadió un botón "Agregar al Carrito" con un icono `FaShoppingCart` y un tooltip "Agregar al carrito".
+- Se integró el hook `useCart` y se implementó la función `handleAddToCart` para añadir productos al carrito.
+- Se implementó un sistema de mensajes temporales (ej. "Agregado al carrito") que aparece debajo del botón.
+- Se modificó `src/components/features/product/ProductosPromocion.jsx` para pasar la información completa del `originalProduct` (incluyendo `descripcion`) y `originalPrice` al componente `AnuncioPuntual`.
+- Se corrigió un `SyntaxError` en la importación de `useState` en `AnuncioPuntual.jsx`.
+- Se ajustó el campo `nombre` en `productData` para usar `originalProduct.clave`.
+- Se añadió la visualización del precio original tachado encima del precio con descuento en `AnuncioPuntual.jsx` y se añadió el estilo correspondiente en `AnuncioPuntual.module.css`.
 
-5.  **Endpoint de la API:** Se corrigió el endpoint de la función `setDefaultAddress` para que apunte a `/domicilios/predeterminado` y envíe el `addressId` en el cuerpo de la solicitud, como lo requiere el backend.
+### 4. Ajustes de Estilo para `ProductosPromocion`
+- Se eliminaron las propiedades `border-radius` y `padding` de la clase `.sidebar` en `src/pages/ProductDetailPage.module.css` para expandir los productos promocionales.
+- Se eliminó la propiedad `border` de la clase `.sidebar` en `src/pages/ProductDetailPage.module.css`.

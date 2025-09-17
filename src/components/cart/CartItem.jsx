@@ -8,6 +8,7 @@ const CartItem = ({ item }) => {
   const { removeItem, updateItemQuantity } = useCart();
   const deliveryInfo = useDeliveryInfo(item, item.quantity);
 
+  //console.log("Item dentro CartItem: ", item)
   // Determine the correct image URL based on category
   const perfilesUrl = `/Perfiles/${item.linea}.jpg`;
   const sugeridosUrl = `/Sugeridos/${item.clave}.jpg`;
@@ -26,8 +27,8 @@ const CartItem = ({ item }) => {
         <img src={imageUrl} alt={item.descripcion} className={styles.image} />
         <div className={styles.productDetails}>
           <span className={styles.description}>{item.descripcion}</span>
-          <span>Clave: {item.clave}</span>
           <span className={styles.price}>Precio: ${parseFloat(item.precio).toFixed(2)}</span>
+          <span style={{fontSize:"0.70em"}}>SKU: {item.clave}</span>
           <div className={styles.deliveryInfoContainer}>
             <p className={`${styles.deliveryMessage} notification-info-color`}>
                 {deliveryInfo.message} <strong>{deliveryInfo.date}</strong>

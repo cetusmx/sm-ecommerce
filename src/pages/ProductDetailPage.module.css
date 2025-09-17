@@ -15,9 +15,9 @@
 
 .sidebar {
     width: 20%;
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    padding: 20px;
+    /* border: 1px solid #ddd; */ /* Removed */
+    /* border-radius: 15px; */ /* Removed */
+    /* padding: 20px; */      /* Removed */
     display: flex;
     flex-direction: column;
     gap: 15px;

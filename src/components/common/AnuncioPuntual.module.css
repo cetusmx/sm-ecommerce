@@ -32,7 +32,10 @@
 }
 
 .bottomSection {
-  text-align: center;
+  display: flex; /* Use flexbox */
+  justify-content: center; /* Center items horizontally */
+  align-items: center; /* Align items vertically */
+  gap: 10px; /* Space between price and button */
 }
 
 .precio {
@@ -41,3 +44,38 @@
   color: #d9534f;
   margin: 0;
 }
+
+.originalPriceStrikethrough {
+  text-decoration: line-through;
+  color: #888;
+  font-size: 0.9em;
+  margin-right: 5px;
+}
+
+.addToCartButton {
+  background-color: #0e3286; /* Blue background */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
+}
+ 
+.addToCartButton:hover {
+  background-color: #0b2664; /* Darker blue on hover */
+}
+
+.addedMessage {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 0.9em;
+  color: green;
+  font-weight: bold;
+}
+
+
