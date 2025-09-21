@@ -39,8 +39,13 @@
   flex: 0 0 70%; /* 75% width */
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Spacing between elements inside this container */
  /*  width: 100%; */
+}
+
+.cartItemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .contenedor-der-top {
@@ -277,4 +282,10 @@
   .action-buttons {
     flex: 0 0 100%;
   }
+}
+
+.clearCartContainer {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem 0;
 }

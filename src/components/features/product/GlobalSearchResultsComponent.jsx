@@ -4,24 +4,43 @@ import styles from './SearchResults.module.css';
 import StockStatus from './StockStatus';
 import { calculateArrivalDate, formatToShortDate } from '../../../utils/dateUtils';
 import { useCart } from '@/hooks/useCart'; // Import useCart
+import AvisoEscasez from '../../common/AvisoEscasez';
 
 const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
   const { addItem } = useCart(); // Get addItem from cart context
   const [quantities, setQuantities] = useState({}); // State for quantities
   const [addedMessage, setAddedMessage] = useState({}); // State for added message
+  const [isScarcityModalOpen, setIsScarcityModalOpen] = useState(false);
+  const [scarcityMessage, setScarcityMessage] = useState('');
 
   // Products are already filtered by existence/ultima_compra in HomePage.jsx
   const filteredForDisplay = results;
 
-  const handleQuantityChange = (clave, quantity) => {
+  const handleQuantityChange = (product, value) => {
+    const newQuantity = Math.max(0, Number(value));
     setQuantities(prevQuantities => ({
       ...prevQuantities,
-      [clave]: quantity
+      [product.clave]: newQuantity
     }));
+
+    if (newQuantity > product.existencia) {
+      setScarcityMessage(`La cantidad solicitada (${newQuantity}) excede la existencia (${product.existencia}).`);
+      setIsScarcityModalOpen(true);
+    } else {
+      setIsScarcityModalOpen(false);
+      setScarcityMessage('');
+    }
   };
 
   const handleAddToCart = (product) => {
     const quantity = quantities[product.clave] || 1;
+
+    if (quantity > product.existencia) {
+      setScarcityMessage(`La cantidad solicitada (${quantity}) excede la existencia (${product.existencia}).`);
+      setIsScarcityModalOpen(true);
+      return; // Prevent adding to cart if quantity exceeds stock
+    }
+
     addItem(product, parseInt(quantity));
     setAddedMessage(prevMessages => ({
       ...prevMessages,
@@ -106,12 +125,13 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
                     type="number" 
                     min="1" 
                     value={quantities[product.clave] || 1} 
-                    onChange={(e) => handleQuantityChange(product.clave, e.target.value)}
+                    onChange={(e) => handleQuantityChange(product, e.target.value)}
                     className={styles.quantityInput} 
                   />
                   <button 
                     onClick={() => handleAddToCart(product)}
-                    className={styles.addToCartButton}
+                    style={{padding:"8px 12px", fontSize:"0.8rem", transition: "background-color 0.2s"}}
+                    className='sm-btn sm-btn-primary'
                   >
                     Agregar al carrito
                   </button>
@@ -122,6 +142,11 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
           })}
         </tbody>
       </table>
+      <AvisoEscasez
+        isOpen={isScarcityModalOpen}
+        onClose={() => setIsScarcityModalOpen(false)}
+        message={scarcityMessage}
+      />
     </div>
   );
 };

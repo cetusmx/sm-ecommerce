@@ -148,12 +148,11 @@
 
 .contenedor-der-bot {
   flex: 0 0 23%; /* Same width as contenedor-der-top */
-  /* margin-left: 2%; */ /* Already handled by main-container gap */
+  align-self: flex-start; /* Added to prevent stretching */
   border: 1px solid #eee; /* Example border */
   border-radius: 8px;
 /*   padding: 15px; */
   background-color: #f9f9f9;
-  margin-left: 2%;
 }
 
 .order-card {
@@ -161,7 +160,6 @@
   border-radius: 8px;
   margin-bottom: 15px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .card-header {
@@ -173,11 +171,19 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
+.header-left {
+  display: flex;
+}
+
+.header-right {
+  display: flex;
+}
+
 .header-item {
-  flex: 1;
   display: flex;
   flex-direction: column;
   text-align: left;
+  margin-right: 20px;
 }
 
 .header-label {
@@ -194,6 +200,7 @@
 
 .card-body {
   display: flex;
+  flex-direction: column;
   padding: 15px;
   gap: 15px;
 }
@@ -240,9 +247,49 @@
   transition: all 0.3s ease;
 }
 
+.link-button {
+  background: none;
+  border: none;
+  color: #007bff;
+  cursor: pointer;
+  padding: 0;
+  font-size: 0.85rem;
+  text-align: right;
+  width: 100%;
+}
+
+.link-button:hover {
+  text-decoration: underline;
+}
+
 .action-button:hover {
   background-color: #007bff;
   color: white;
+}
+
+.card-footer {
+  padding: 10px 15px;
+  margin-bottom: -10px;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #333;
+  border-top: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.order-status {
+  font-weight: bold;
+  color: #007bff; /* Example color for status */
+}
+
+.footer-label {
+  font-size: 0.9rem;
+  color: #777;
+  margin-right: 5px;
 }
 
 /* Responsive adjustments */

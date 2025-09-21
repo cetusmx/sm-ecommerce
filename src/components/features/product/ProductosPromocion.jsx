@@ -1,20 +1,12 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import AnuncioPuntual from '../../common/AnuncioPuntual';
+import { fetchProducts } from '@/api/productsApi';
 
 const fetchProductosPromocion = async () => {
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productospromocion`);
   if (!response.ok) {
     throw new Error('Network response was not ok for promotional products');
-  }
-  return response.json();
-};
-
-// New function to fetch all products
-const fetchProductos = async () => {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok for all products');
   }
   return response.json();
 };
@@ -27,9 +19,10 @@ const ProductosPromocion = ({ className }) => {
 
   // New useQuery for all products
   const { data: allProducts, isLoading: isLoadingAllProducts, error: errorAllProducts } = useQuery({
-    queryKey: ['allProducts'],
-    queryFn: fetchProductos,
+    queryKey: ['products'],
+    queryFn: fetchProducts,
   });
+
 
   if (isLoadingPromotions || isLoadingAllProducts) {
     return <aside className={className}>Cargando promociones...</aside>;
@@ -63,18 +56,17 @@ const ProductosPromocion = ({ className }) => {
 
     return {
       ...promoProduct,
-      precio: discountedPrice.toFixed(2), // Format to 2 decimal places
-      originalProductCategory: originalProduct.categoria, // Add category for image URL logic
-      originalProductLinea: originalProduct.linea, // Add linea for image URL logic
-      originalPrice: originalProduct.precio, // Add original price here
-      productData: { // Pass the original product data for cart functionality
-        ...originalProduct, // Spread all properties from originalProduct
-        nombre: originalProduct.clave, // Ensure 'nombre' is set to 'clave' as per previous discussion
-        precio: discountedPrice.toFixed(2), // Override with the discounted price
-        // imageUrl will be added later in productDataForCart
+      precio: discountedPrice.toFixed(2),
+      originalProductCategory: originalProduct.categoria,
+      originalProductLinea: originalProduct.linea,
+      originalPrice: originalProduct.precio,
+      productData: {
+        ...originalProduct,
+        precio: discountedPrice.toFixed(2),
       },
     };
   }).filter(Boolean); // Remove any null entries
+
 
   if (productsWithDiscountedPrice.length === 0) {
     return null;
@@ -99,11 +91,11 @@ const ProductosPromocion = ({ className }) => {
         return (
           <AnuncioPuntual
             key={product.id}
-            imageUrl={imageUrl} // Pass the constructed imageUrl
+            imageUrl={imageUrl}
             slogan={product.slogan || `¡${product.descuento}% de descuento!`}
             precio={product.precio}
-            originalPrice={product.originalPrice} // Pass the original price
-            productData={productDataForCart} // Pass the product data for cart
+            originalPrice={product.originalPrice}
+            productData={productDataForCart}
           />
         );
       })}

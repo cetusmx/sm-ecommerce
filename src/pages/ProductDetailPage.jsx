@@ -14,6 +14,8 @@ import ProductosVistos from '../components/features/product/ProductosVistos';
 import AnuncioPuntual from '../components/common/AnuncioPuntual';
 import ProductosPromocion from '../components/features/product/ProductosPromocion';
 
+import { fetchProductosVistos } from '@/api/productosVistosApi';
+
 const ProductDetailPage = () => {
   const { clave } = useParams();
   const [searchParams] = useSearchParams();
@@ -72,16 +74,11 @@ const ProductDetailPage = () => {
   const { data: product, isLoading: isLoadingProduct, error: productError } = useQuery({
     queryKey: ['product', clave],
     queryFn: async () => {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/${clave}`);
       if (!response.ok) {
-        throw new Error('Network response was not ok for products');
-      }
-      const products = await response.json();
-      const singleProduct = products.find(p => p.clave === clave);
-      if (!singleProduct) {
         throw new Error('Product not found');
       }
-      return singleProduct;
+      return response.json();
     },
   });
 
@@ -95,6 +92,12 @@ const ProductDetailPage = () => {
         }
         return response.json();
     },
+  });
+
+  const { data: viewedProducts } = useQuery({
+    queryKey: ['productosVistos', currentUser?.email],
+    queryFn: () => fetchProductosVistos(currentUser?.email),
+    enabled: !!currentUser?.email,
   });
 
   // Determine parent category
@@ -132,7 +135,7 @@ const ProductDetailPage = () => {
         <ProductosPromocion className={styles.sidebar} />
       </div>
           <ArticulosRelacionados productoPrincipal={product} />
-          <ProductosVistos />
+          {viewedProducts && viewedProducts.length > 0 && <ProductosVistos viewedProducts={viewedProducts} />}
           <HerramientasSugeridas />
     </div>
     </div>

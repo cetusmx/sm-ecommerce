@@ -10,7 +10,7 @@
     display: inline-block;
     transition: background-color 0.3s ease;
 }
-
+ 
 .sm-btn-primary {
     background-color: #0e3286;
     color: #fff;
@@ -43,4 +43,8 @@
 .sm-btn-tertiary:hover {
     background-color: #007bff;
     color: #fff;
+}
+
+a:hover {
+  text-decoration: none !important;
 }

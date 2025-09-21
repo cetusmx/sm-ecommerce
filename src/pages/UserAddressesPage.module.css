@@ -137,3 +137,11 @@
 .botones h6 {
   margin-top: 0px;
 }
+
+.deletedCard {
+  justify-content: center;
+  align-items: center;
+  font-style: italic;
+  color: #888;
+  background-color: #f9f9f9;
+}

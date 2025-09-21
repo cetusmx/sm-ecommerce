@@ -9,16 +9,12 @@ import PromosPrincipales from "@/components/features/home/PromosPrincipales";
 import CarouselCategorias from "@/components/features/home/CarouselCategorias";
 import SearchResults from "@/components/features/product/SearchResults";
 import GlobalSearchResultsComponent from "@/components/features/product/GlobalSearchResultsComponent";
+import ProductosVistos from "@/components/features/product/ProductosVistos";
 import useDebounce from "@/hooks/useDebounce";
-import "@/styles/global.css";
+import { useAuth } from "@/context/AuthContext";
+import { fetchProductosVistos } from "@/api/productosVistosApi";
 
-const fetchProducts = async () => {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  return response.json();
-};
+import { fetchProducts } from "@/api/productsApi";
 
 const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilter, productFilterKey }) => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,6 +38,14 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
   const { data: products, isLoading, error } = useQuery({ 
     queryKey: ['products'], 
     queryFn: fetchProducts 
+  });
+
+  const { currentUser } = useAuth();
+
+  const { data: viewedProducts } = useQuery({
+    queryKey: ['productosVistos', currentUser?.email],
+    queryFn: () => fetchProductosVistos(currentUser?.email),
+    enabled: !!currentUser?.email,
   });
 
   // Effect for global search
@@ -214,6 +218,11 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
           </main>
           <CarouselCategorias />
           <FeaturedProducts />
+          {viewedProducts && viewedProducts.length > 0 && (
+            <div style={{ padding: '0 20px' }}>
+              <ProductosVistos viewedProducts={viewedProducts} />
+            </div>
+          )}
         </div>
       )}
     </div>

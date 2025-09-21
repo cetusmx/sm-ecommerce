@@ -37,4 +37,177 @@
   right: 0;
   color: white;
   font-size: 1.2rem;
+  z-index: 1001; /* Ensure arrow is above overlay */
+}
+
+/* New Dropdown Styles */
+.dropdownContainer {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  z-index: 1002; /* Ensure dropdown is above overlay */
+  width: 550px; /* Adjust width as needed */
+  padding: 1rem;
+  color: #333;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000; /* Below dropdown, above everything else */
+}
+
+.columnsContainer {
+  display: flex;
+  gap: 1rem;
+}
+
+.column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.divider {
+  width: 1px;
+  background-color: #e0e0e0;
+}
+
+.columnTitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  margin: 0 0 0.5rem 0;
+  color: #000;
+}
+
+.link {
+  font-size: 0.9rem;
+  color: #007bff;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.buyAgainList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem; /* Reduced space */
+}
+
+.buyAgainProduct {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start; /* Changed from center to flex-start */
+  gap: 0.5rem; /* Reduced gap */
+}
+
+.productImage {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  flex-shrink: 0;
+  padding-top: 5px;
+}
+
+.productInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  flex-grow: 1;
+}
+
+.productDescription {
+  font-size: 0.85rem; /* Reduced font size */
+  color: #297bff; /* New color */
+  margin: 0;
+  transition: color 0.2s ease; /* Smooth transition for hover */
+}
+
+.productDescription:hover {
+  color: #0056b3; /* Darker blue on hover */
+}
+
+.productDescriptionLink {
+  text-decoration: none;
+  color: inherit; /* Inherit color from .productDescription */
+}
+
+.productDescriptionLink:hover {
+  /* Removed text-decoration: underline; */
+}
+
+.priceRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price {
+  font-size: 0.9rem; /* Reduced font size */
+  font-weight: bold;
+  margin: 0;
+}
+
+.logo {
+  width: 14px;
+  height: 14px;
+}
+
+.addToCartBtnSmall {
+  padding: 4px 10px !important; /* Increased horizontal padding */
+  font-size: 0.75rem !important; /* Reduced font size */
+  border-radius: 15px !important;
+  align-self: flex-start;
+  font-weight: normal !important; /* Removed bold font */
+}
+
+.accountLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.accountLink {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  text-align: left;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  color: #333;
+  text-decoration: none;
+}
+
+.accountLink:hover {
+  background-color: #f0f0f0;
+}
+
+.loggedOutMenu {
+  padding: 1rem;
+  text-align: center;
+}
+
+.registerText {
+  margin-top: 1rem;
+  font-size: 0.9rem;
+}
+
+.noProducts {
+  font-size: 0.9rem;
+  color: #666;
 }

@@ -59,13 +59,53 @@
   white-space: nowrap;
 }
 
-.filter-box select,
+.filter-box select {
+  width: 100%;
+  padding: 8px 10px; /* Increased padding */
+  border: 1px solid #a0a0a0; /* Slightly darker border */
+  border-radius: 6px; /* Slightly more rounded corners */
+  font-size: 0.9rem; /* Slightly larger font */
+  color: #333;
+  background-color: #ffffff; /* White background */
+  -webkit-appearance: none; /* Remove default arrow for Chrome/Safari */
+  -moz-appearance: none; /* Remove default arrow for Firefox */
+  appearance: none; /* Remove default arrow */
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%204.9%201.8%209.2%205.4%2012.8l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.6%205.4-7.8%205.4-12.8%200-4.9-1.8-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E'); /* Custom arrow */
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-box select:hover {
+  border-color: #777;
+}
+
+.filter-box select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
 .filter-box input {
   width: 100%;
-  padding: 5px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 0.8rem;
+  padding: 8px 10px; /* Consistent with select */
+  border: 1px solid #a0a0a0; /* Consistent with select */
+  border-radius: 6px; /* Consistent with select */
+  font-size: 0.9rem; /* Consistent with select */
+  color: #333;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filter-box input:hover {
+  border-color: #777; /* Consistent with select */
+}
+
+.filter-box input:focus {
+  outline: none;
+  border-color: #007bff; /* Consistent with select */
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25); /* Consistent with select */
 }
 
 .large {

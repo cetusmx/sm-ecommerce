@@ -55,12 +55,11 @@ const AddressFormPage = ({ onSave, address }) => {
     return getInitialFormData(userEmail);
   });
 
-  const mutation = useMutation({ 
-    mutationFn: saveAddress, 
-    onSuccess: () => {
-      alert('Dirección guardada con éxito!');
+  const mutation = useMutation({
+    mutationFn: saveAddress,
+    onSuccess: (savedData) => {
       if (onSave) {
-        onSave();
+        onSave(savedData);
       }
     },
     onError: (error) => {
@@ -71,10 +70,21 @@ const AddressFormPage = ({ onSave, address }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: type === 'checkbox' ? (checked ? 'Predeterminado' : '') : value,
-    }));
+
+    if (name === 'numero_telefono') {
+      // Sanitize the input to allow only digits
+      const sanitizedValue = value.replace(/[^0-9]/g, '');
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: sanitizedValue,
+      }));
+    } else {
+      // Handle other inputs normally
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: type === 'checkbox' ? (checked ? 'Predeterminado' : '') : value,
+      }));
+    }
   };
 
   const handleSubmit = (e) => {
@@ -205,7 +215,7 @@ const AddressFormPage = ({ onSave, address }) => {
         </div>
 
         <div className={styles.formGroup}>
-          <label htmlFor="neighborhood">Teléfono</label>
+          <label htmlFor="telephone">Teléfono</label>
           <input
             type="text"
             id="telephone"
@@ -213,6 +223,10 @@ const AddressFormPage = ({ onSave, address }) => {
             value={formData.numero_telefono}
             onChange={handleChange}
             required
+            pattern="[0-9]{10}"
+            maxLength="10"
+            title="El número de teléfono debe contener 10 dígitos."
+            placeholder="Número con 10 dígitos"
           />
         </div>
 

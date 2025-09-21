@@ -5,14 +5,7 @@ import styles from './ArticulosRelacionados.module.css';
 import { FaPlus } from 'react-icons/fa';
 import { useCart } from '@/hooks/useCart';
 
-// Fetch all products
-const fetchProducts = async () => {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok for products');
-  }
-  return response.json();
-};
+import { fetchProducts } from '@/api/productsApi';
 
 // Fetch related categories
 const fetchRelatedCategories = async (category) => {

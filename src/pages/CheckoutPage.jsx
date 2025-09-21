@@ -6,7 +6,8 @@ import { getShippingRates } from '@/api/shippingService';
 import { convertStateToCode } from '@/utils/stateConverter';
 import styles from './CheckoutPage.module.css';
 import AddressSelectionModal from '@/components/cart/AddressSelectionModal';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
+import { v4 as uuidv4 } from 'uuid';
 
 // Helper function to fetch addresses
 const fetchAddresses = async (userEmail) => {
@@ -20,9 +21,9 @@ const fetchAddresses = async (userEmail) => {
 };
 
 const CheckoutPage = () => {
-  const { cart, cartTotal, shippingAddress, setShippingAddress } = useCart();
+  const { cart, cartTotal, shippingAddress, setShippingAddress, clearCart } = useCart();
   const { currentUser } = useAuth();
-  const navigate = useNavigate(); // Get navigate function
+  const navigate = useNavigate();
 
   const [step, setStep] = useState('loading');
   const [shippingRates, setShippingRates] = useState([]);
@@ -35,6 +36,17 @@ const CheckoutPage = () => {
     queryKey: ['userAddresses', currentUser?.email],
     queryFn: () => fetchAddresses(currentUser?.email),
     enabled: !!currentUser,
+  });
+
+  const { data: products, isLoading: isLoadingProducts } = useQuery({
+    queryKey: ['products'],
+    queryFn: async () => {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
+      if (!response.ok) {
+        throw new Error('Network response was not ok for products');
+      }
+      return response.json();
+    },
   });
 
   useEffect(() => {
@@ -101,11 +113,82 @@ const CheckoutPage = () => {
     setStep('payment');
   };
 
+  const handlePayment = async () => {
+    if (!products) {
+      setError("No se pudieron cargar los datos de los productos. Intente de nuevo.");
+      return;
+    }
+
+    const folio = uuidv4();
+    const pedidoItems = cart.map(item => ({
+      folio: folio,
+      email: currentUser.email,
+      enviar_a: shippingAddress.nombre_completo,
+      clave: item.clave,
+      descripcion: item.descripcion,
+      cantidad: item.quantity,
+      cant_por_empaque: item.cant_por_empaque,
+      total_partida: (item.precio * item.quantity).toFixed(2),
+      estatus: 'Pendiente de envío', // Add status to the order
+    }));
+
+    try {
+      // Step 1: Create the order
+      const orderResponse = await fetch(`http://localhost:3004/api/pedidos`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(pedidoItems),
+      });
+
+      if (!orderResponse.ok) {
+        throw new Error('Error al crear el pedido');
+      }
+
+      console.log('Pedido creado exitosamente');
+
+      // Step 2: Update stock
+      const stockUpdatePayload = cart.map(item => {
+        const product = products.find(p => p.clave === item.clave);
+        if (!product) {
+          throw new Error(`Producto con clave ${item.clave} no encontrado para actualizar stock.`);
+        }
+        const newStock = product.existencia - item.quantity;
+        return { clave: item.clave, existencia: newStock };
+      });
+
+      const stockResponse = await fetch(`http://localhost:3004/api/productos/existencias`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(stockUpdatePayload),
+      });
+
+      if (!stockResponse.ok) {
+        // Note: This is a potential inconsistency. The order is created but stock update failed.
+        // A more robust solution would involve a backend transaction.
+        throw new Error('El pedido fue creado, pero falló la actualización de existencias.');
+      }
+
+      console.log('Existencias actualizadas exitosamente');
+
+      // Step 3: Clear cart and navigate
+      clearCart();
+      navigate('/pedido', { state: { orderPlaced: true } });
+
+    } catch (error) {
+      setError(error.message);
+      console.error("Error en el proceso de pago:", error);
+    }
+  };
+
   const handleCancelCheckout = () => {
-    if (shippingAddress) { // If an address was already selected (came from shipping step)
+    if (shippingAddress) {
       setStep('shipping');
-    } else { // If no address was selected (came from cart, no address)
-      navigate('/cart'); // Go back to cart
+    } else {
+      navigate('/cart');
     }
   };
 
@@ -132,7 +215,7 @@ const CheckoutPage = () => {
         ) : (
           <p>No tienes direcciones guardadas.</p>
         )}
-        <div className={styles.actionButtonsContainer}> {/* New container for buttons */}
+        <div className={styles.actionButtonsContainer}>
           <button onClick={() => setIsModalOpen(true)} className="sm-btn sm-btn-primary">
             Agregar Nueva Dirección
           </button>
@@ -148,8 +231,7 @@ const CheckoutPage = () => {
     <div className={styles.shippingRates}>
       <h2>Paso 2: Opciones de Envío</h2>
       <div className={styles.addressSummary}>
-        {console.log("Contenido de shippingAddress en addressSummary:", shippingAddress)}
-        <div> {/* Wrapper for address details */}
+        <div>
           <strong style={{fontSize:"1.2em", fontWeight: 500}}>Enviar a</strong> <strong style={{fontSize:"1.2em", fontWeight: 500}}>{shippingAddress?.nombre_completo}</strong>
           <p>{shippingAddress?.calle} {shippingAddress?.numero_ext}, {shippingAddress?.colonia}, {shippingAddress?.ciudad}</p>
           <p>{shippingAddress?.estado}, {shippingAddress?.codigo_postal}, {shippingAddress?.pais}</p>
@@ -171,7 +253,7 @@ const CheckoutPage = () => {
                 name="shippingOption" 
                 value={`${rate.carrier}-${rate.service}`}
                 checked={selectedShippingOption === rate}
-                onChange={() => handleSelectShippingOption(rate)} // Redundant but good practice
+                onChange={() => handleSelectShippingOption(rate)}
               />
               <span>{rate.carrier.toUpperCase()} ({rate.serviceDescription})</span>
               <strong>${rate.totalPrice} {rate.currency}</strong>
@@ -191,42 +273,46 @@ const CheckoutPage = () => {
     </div>
   );
 
-  const renderPaymentStep = () => (
-    <div className={styles.paymentStep}>
-      <h2>Paso 3: Pago</h2>
-      <h3>Resumen del Pedido</h3>
-      <div className={styles.orderSummary}>
-        {cart.map(item => (
-          <div key={item.clave} className={styles.summaryItem}>
-            <div className={styles.itemDetails}>
-              <span>{item.clave} x {item.quantity}</span>
-              {item.descripcion && <p className={styles.productDescription}>{item.descripcion}</p>}
+  const renderPaymentStep = () => {
+    if (isLoadingProducts) {
+        return <p>Cargando datos de productos...</p>;
+    }
+    return (
+        <div className={styles.paymentStep}>
+        <h2>Paso 3: Pago</h2>
+        <h3>Resumen del Pedido</h3>
+        <div className={styles.orderSummary}>
+            {cart.map(item => (
+            <div key={item.clave} className={styles.summaryItem}>
+                <div className={styles.itemDetails}>
+                <span>{item.clave} x {item.quantity}</span>
+                {item.descripcion && <p className={styles.productDescription}>{item.descripcion}</p>}
+                </div>
+                <span className={styles.itemPrice}>${(item.precio * item.quantity).toFixed(2)}</span>
             </div>
-            <span className={styles.itemPrice}>${(item.precio * item.quantity).toFixed(2)}</span>
-          </div>
-        ))}
-        <div className={styles.summaryLine}>
-          <span>Subtotal:</span>
-          <span>${cartTotal.toFixed(2)}</span>
+            ))}
+            <div className={styles.summaryLine}>
+            <span>Subtotal:</span>
+            <span>${cartTotal.toFixed(2)}</span>
+            </div>
+            <div className={styles.summaryLine}>
+            <span>Envío ({selectedShippingOption?.carrier.toUpperCase()}):</span>
+            <span>${selectedShippingOption?.totalPrice.toFixed(2) || '0.00'}</span>
+            </div>
+            <div className={`${styles.summaryLine} ${styles.totalLine}`}>
+            <span>Total:</span>
+            <span>${calculateTotal.toFixed(2)}</span>
+            </div>
         </div>
-        <div className={styles.summaryLine}>
-          <span>Envío ({selectedShippingOption?.carrier.toUpperCase()}):</span>
-          <span>${selectedShippingOption?.totalPrice.toFixed(2) || '0.00'}</span>
+        
+        <div className={styles.paymentMethods}>
+            <h4>Selecciona Método de Pago</h4>
+            <p>Aquí irían los botones de PayPal.</p>
+            <button className="sm-btn sm-btn-primary" onClick={handlePayment}>Pagar con PayPal</button>
         </div>
-        <div className={`${styles.summaryLine} ${styles.totalLine}`}>
-          <span>Total:</span>
-          <span>${calculateTotal.toFixed(2)}</span>
         </div>
-      </div>
-      
-      <div className={styles.paymentMethods}>
-        <h4>Selecciona Método de Pago</h4>
-        {/* Placeholder para botones de PayPal */}
-        <p>Aquí irían los botones de PayPal.</p>
-        <button className="sm-btn sm-btn-primary" onClick={() => alert('Procesar pago con PayPal')}>Pagar con PayPal</button>
-      </div>
-    </div>
-  );
+    );
+  }
 
   const renderContent = () => {
     switch (step) {

@@ -3,13 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import ArticuloSugerido from './ArticuloSugerido';
 import styles from './HerramientasSugeridas.module.css';
 
-const fetchProducts = async () => {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok for products');
-  }
-  return response.json();
-};
+import { fetchProducts } from '@/api/productsApi';
 
 const HerramientasSugeridas = () => {
   const { data: sugeridos, isLoading: isLoadingSugeridos, error: errorSugeridos } = useQuery({

@@ -2,6 +2,7 @@ import React, { createContext, useState, useMemo, useEffect, useRef } from 'reac
 import { useAuth } from './AuthContext';
 import { getUserCart, saveUserCart } from '../api/cartService';
 import { useQuery } from '@tanstack/react-query'; // Import useQuery
+import { fetchProducts } from '../api/productsApi';
 
 export const CartContext = createContext();
 
@@ -10,18 +11,26 @@ const fetchUserAddresses = async (userEmail) => { // Renamed to avoid conflict i
   if (!userEmail) return [];
   const response = await fetch(`${process.env.REACT_APP_API_URL}/domicilios/email/${userEmail}`);
   if (!response.ok) {
-    if (response.status === 404) return [];
+    if (response.status === 404 || response.status === 500) return [];
     throw new Error('Network response was not ok');
   }
   return response.json();
 };
 
 const CartProvider = ({ children }) => {
-  const [cart, setCart] = useState(() => JSON.parse(localStorage.getItem('cart')) || []);
+  const [cart, setCart] = useState([]);
   // We will derive shippingAddress from the query data, so no need for useState here
   // const [shippingAddress, setShippingAddress] = useState(null);
   const { currentUser } = useAuth();
-  const isInitialMount = useRef(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [overrideAddress, setOverrideAddress] = useState(null);
+
+  // Fetch all products to enable cart hydration
+  const { data: allProducts } = useQuery({
+    queryKey: ['products'],
+    queryFn: fetchProducts,
+    staleTime: 1000 * 60 * 60, // Cache for 1 hour
+  });
 
   // Use useQuery to fetch addresses
   const { data: addresses, isLoading: addressesLoading, error: addressesError } = useQuery({
@@ -30,68 +39,86 @@ const CartProvider = ({ children }) => {
     enabled: !!currentUser?.email,
   });
 
-  // Derive shippingAddress from the fetched addresses
-  const shippingAddress = useMemo(() => {
+  // Derive default shippingAddress from the fetched addresses
+  const defaultAddress = useMemo(() => {
     if (addresses && addresses.length > 0) {
       return addresses.find(addr => addr.orden_domicilio === 'Predeterminado') || addresses[addresses.length - 1];
     }
     return null;
   }, [addresses]);
 
+  // The final shipping address is the override, or the default if no override is set.
+  const shippingAddress = overrideAddress || defaultAddress;
+
   // Effect for loading cart on user state change
   useEffect(() => {
     const loadCartData = async () => {
-      if (currentUser) {
+      // Wait until allProducts are loaded before processing the cart
+      if (currentUser && allProducts) {
         // --- USER IS LOGGED IN ---
-        // 1. Load remote cart and merge with local
         const remoteCart = await getUserCart(currentUser.email);
         const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
 
+        // Function to hydrate cart items with full product details
+        const hydrateCart = (cartToHydrate) => {
+          if (!cartToHydrate) return [];
+          return cartToHydrate.map(cartItem => {
+            const fullProduct = allProducts.find(p => p.clave === cartItem.clave);
+            if (fullProduct) {
+              const priceToKeep = fullProduct.precio !== cartItem.precio ? cartItem.precio : fullProduct.precio;
+              return { ...fullProduct, quantity: cartItem.quantity, precio: priceToKeep };
+            }
+            return null; // Or handle cases where product not found
+          }).filter(Boolean); // Filter out any nulls
+        };
+
         if (localCart.length > 0) {
-          const mergedCart = [...remoteCart];
+          // Merge remote and local carts before hydrating
+          const mergedCartData = [...remoteCart];
           localCart.forEach(localItem => {
-            const existingItemIndex = mergedCart.findIndex(item => item.clave === localItem.clave);
+            const existingItemIndex = mergedCartData.findIndex(item => item.clave === localItem.clave);
             if (existingItemIndex === -1) {
-              mergedCart.push(localItem);
+              mergedCartData.push(localItem);
+            } else {
+              // Optional: decide on quantity merge logic, here we prioritize remote
             }
           });
-          setCart(mergedCart);
-          await saveUserCart(currentUser.email, mergedCart);
+          
+          const hydratedMergedCart = hydrateCart(mergedCartData);
+          setCart(hydratedMergedCart); // Save the hydrated cart back
+          await saveUserCart(currentUser.email, hydratedMergedCart);
           localStorage.removeItem('cart');
+
         } else {
-          setCart(remoteCart);
+          // Just hydrate the remote cart
+          const hydratedRemoteCart = hydrateCart(remoteCart);
+          setCart(hydratedRemoteCart);
         }
 
-        // No need to load shipping addresses here anymore, useQuery handles it.
-
-      } else {
+      } else if (!currentUser) {
         // --- USER IS LOGGED OUT ---
-        // 1. Load cart from local storage
+        // For logged-out users, we assume local storage has the full object
         const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
         setCart(localCart);
-        // 2. shippingAddress will be null because currentUser is null, and useQuery is disabled.
       }
     };
 
-    loadCartData();
-  }, [currentUser]);
+    loadCartData().finally(() => setIsLoading(false));
+  }, [currentUser, allProducts]); // Add allProducts to dependency array
 
   // Effect for saving cart when it changes
   useEffect(() => {
-    if (isInitialMount.current) {
-      isInitialMount.current = false;
+    // Do not save to DB or localStorage until the initial load is complete
+    if (isLoading) {
       return;
     }
 
     if (currentUser) {
-      console.log('[CartProvider Save] currentUser:', currentUser);
-      console.log('[CartProvider Save] currentUser.email:', currentUser?.email);
-      console.log('[CartProvider Save] cart:', cart);
       saveUserCart(currentUser.email, cart);
     } else {
       localStorage.setItem('cart', JSON.stringify(cart));
     }
-  }, [cart, currentUser]);
+  }, [cart, currentUser, isLoading]);
 
   const addItem = (item, quantity) => {
     setCart(prevCart => {
@@ -140,8 +167,8 @@ const CartProvider = ({ children }) => {
     updateItemQuantity,
     cartTotal,
     cartItemCount,
-    shippingAddress, // shippingAddress is now derived from useQuery
-    // setShippingAddress, // No longer needed as it's derived
+    shippingAddress,
+    setShippingAddress: setOverrideAddress, // Allow manual override
   };
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

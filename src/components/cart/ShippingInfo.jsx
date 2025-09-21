@@ -87,7 +87,7 @@ const ShippingInfo = ({ cartTotal }) => {
     <div className={styles.container}>
       {renderFreeShippingMessage()}
       {renderShippingAddress()}
-      {isModalOpen && <AddressSelectionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />}
+      {isModalOpen && <AddressSelectionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} onSelectAddress={setShippingAddress} />}
     </div>
   );
 };

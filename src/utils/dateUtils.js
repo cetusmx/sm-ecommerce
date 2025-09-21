@@ -8,17 +8,31 @@ export const calculateArrivalDate = () => {
   const hoursToAdd = currentHour < 12 ? 48 : 72;
   arrival.setHours(now.getHours() + hoursToAdd);
 
+  // Adjust for weekends
+  const dayOfWeek = arrival.getDay();
+  if (dayOfWeek === 6) { // If it's Saturday
+    arrival.setDate(arrival.getDate() + 3); // Move to Monday
+  } else if (dayOfWeek === 0) { // If it's Sunday
+    arrival.setDate(arrival.getDate() + 1); // Move to Monday
+  }
+
   return arrival;
 };
 
 export const calculateDeliveryDate = (startDate = new Date()) => {
-  let businessDays = 0;
   let deliveryDate = new Date(startDate);
 
+  // Check if the start date is today and if the time is past the cutoff (12 PM)
+  const isToday = startDate.toDateString() === new Date().toDateString();
+  if (isToday && startDate.getHours() >= 12) {
+    deliveryDate.setDate(deliveryDate.getDate() + 1); // Start counting from tomorrow
+  }
+
+  let businessDays = 0;
   while (businessDays < 2) {
     deliveryDate.setDate(deliveryDate.getDate() + 1);
     const dayOfWeek = deliveryDate.getDay();
-    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Domingo, 6 = Sábado
+    if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday
       businessDays++;
     }
   }

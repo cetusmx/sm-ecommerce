@@ -1,14 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 import { useDeliveryInfo } from '@/hooks/useDeliveryInfo';
 import styles from './CartItem.module.css';
 import { FaTrash } from 'react-icons/fa';
+import AvisoEscasez from '../common/AvisoEscasez'; // Import the new modal
 
 const CartItem = ({ item }) => {
   const { removeItem, updateItemQuantity } = useCart();
   const deliveryInfo = useDeliveryInfo(item, item.quantity);
+  const [isScarcityModalOpen, setIsScarcityModalOpen] = useState(false);
 
-  //console.log("Item dentro CartItem: ", item)
+  console.log("Item dentro CartItem: ", item)
   // Determine the correct image URL based on category
   const perfilesUrl = `/Perfiles/${item.linea}.jpg`;
   const sugeridosUrl = `/Sugeridos/${item.clave}.jpg`;
@@ -19,6 +21,10 @@ const CartItem = ({ item }) => {
   const handleQuantityChange = (e) => {
     const newQuantity = Math.max(0, Number(e.target.value));
     updateItemQuantity(item.clave, newQuantity);
+
+    if (newQuantity > item.existencia) {
+      setIsScarcityModalOpen(true);
+    }
   };
 
   return (
@@ -53,6 +59,11 @@ const CartItem = ({ item }) => {
           </button>
         </div>
       </div>
+      <AvisoEscasez
+        isOpen={isScarcityModalOpen}
+        onClose={() => setIsScarcityModalOpen(false)}
+        message={deliveryInfo.warning}
+      />
     </div>
   );
 };

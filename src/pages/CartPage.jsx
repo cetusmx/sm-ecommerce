@@ -1,64 +1,111 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useCart } from '@/hooks/useCart';
-import styles from './CartPage.module.css'; // Use its own dedicated styles
-import CartItem from '@/components/cart/CartItem';
-import ShippingInfo from '@/components/cart/ShippingInfo'; // Import the new ShippingInfo component
-import Breadcrumb from '@/components/common/Breadcrumb'; // Import Breadcrumb component
-import HerramientasSugeridas from '@/components/features/product/HerramientasSugeridas';
-import ProductosVistos from '@/components/features/product/ProductosVistos';
+import React from "react";
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '@/context/AuthContext';
+import { fetchProductosVistos } from '@/api/productosVistosApi';
+import { useNavigate } from "react-router-dom";
+import { useCart } from "@/hooks/useCart";
+import styles from "./CartPage.module.css"; // Use its own dedicated styles
+import CartItem from "@/components/cart/CartItem";
+import ShippingInfo from "@/components/cart/ShippingInfo"; // Import the new ShippingInfo component
+import Breadcrumb from "@/components/common/Breadcrumb"; // Import Breadcrumb component
+import HerramientasSugeridas from "@/components/features/product/HerramientasSugeridas";
+import ProductosVistos from "@/components/features/product/ProductosVistos";
 
 const CartPage = () => {
-  const { cart, cartTotal, cartItemCount } = useCart();
+  const { cart, cartTotal, cartItemCount, clearCart } = useCart();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const { data: viewedProducts } = useQuery({
+    queryKey: ['productosVistos', currentUser?.email],
+    queryFn: () => fetchProductosVistos(currentUser?.email),
+    enabled: !!currentUser?.email,
+  });
 
   const handleCheckout = () => {
-    navigate('/checkout');
+    navigate("/checkout");
+  };
+
+  const handleClearCart = () => {
+    clearCart();
+    window.scrollTo(0, 0);
   };
 
   return (
-    <div className={styles['main-container']}>
-      {/* <Breadcrumb parent="Mi cuenta" child="Carrito de Compras" /> */}
-
-      <div className={styles['top-section']}>
-        <div className={styles['contenedor-izq-top']} style={{ width: '100%' }}>
-          <div className={styles['title-and-search']}>
-            <h1 className={styles['page-title']}>Mi Carrito</h1>
+    <div className={styles["main-container"]}>
+      <div className={styles["top-section"]}>
+        <div className={styles["contenedor-izq-top"]} style={{ width: "100%" }}>
+          <div className={styles["title-and-search"]}>
+            <h1 className={styles["page-title"]}>Mi Carrito</h1>
           </div>
         </div>
       </div>
-
-      <div style={{ display: 'flex', gap: '20px', alignItems: 'flex-start', width:"100%" }}>
-        {/* Cart Items Container (75%) */}
-        <div className={styles['contenedor-izq-bot']} >
+      <div
+        style={{
+          display: "flex",
+          gap: "20px",
+          alignItems: "flex-start",
+          width: "100%",
+        }}
+      >
+        <div className={styles["contenedor-izq-bot"]}>
           {cart.length === 0 ? (
-            <div className={styles['order-card']}>
+            <div className={styles["order-card"]}>
               <p>Tu carrito está vacío.</p>
-              <button className="sm-btn sm-btn-primary" onClick={() => navigate('/')}>Ver productos</button>
+              <button
+                className="sm-btn sm-btn-primary"
+                onClick={() => navigate("/")}
+              >
+                Ver productos
+              </button>
             </div>
           ) : (
-            cart.map(item => (
-              <CartItem key={item.clave} item={item} />
-            ))
+            <>
+              <div className={styles.cartItemsList}>
+                {cart.map((item) => <CartItem key={item.clave} item={item} />)}
+              </div>
+              <div className={styles.clearCartContainer}>
+                <button onClick={handleClearCart} className="sm-btn sm-btn-tertiary">
+                  Vaciar el carrito
+                </button>
+              </div>
+            </>
           )}
         </div>
-
-        {/* Order Summary & Shipping (25%) */}
         {cart.length > 0 && (
-          <div className={styles['contenedor-der-top']} style={{ width: '30%', alignSelf: 'flex-start' }}>
-            <h3 style={{ borderBottom: '1px solid #ddd', paddingBottom: '10px' }}>Resumen del Pedido</h3>
-            <div style={{ display: 'flex', justifyContent: 'space-between', margin: '20px 0' }}>
+          <div
+            className={styles["contenedor-der-top"]}
+            style={{ width: "30%", alignSelf: "flex-start" }}
+          >
+            <h3
+              style={{ borderBottom: "1px solid #ddd", paddingBottom: "10px" }}
+            >
+              Resumen del Pedido
+            </h3>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                margin: "20px 0",
+              }}
+            >
               <span>Subtotal ({cartItemCount} productos): </span>
-              <span style={{ fontWeight: 'bold', paddingLeft:"5px" }}> ${cartTotal.toFixed(2)}</span>
+              <span style={{ fontWeight: "bold", paddingLeft: "5px" }}>
+                {" "}
+                ${cartTotal.toFixed(2)}
+              </span>
             </div>
-            <button onClick={handleCheckout} className="sm-btn sm-btn-primary" style={{ width: '100%' }}>
+            <button
+              onClick={handleCheckout}
+              className="sm-btn sm-btn-primary"
+              style={{ width: "100%" }}
+            >
               Proceder al Pago
             </button>
             <ShippingInfo cartTotal={cartTotal} />
           </div>
         )}
       </div>
-      <ProductosVistos />
+      {viewedProducts && viewedProducts.length > 0 && <ProductosVistos viewedProducts={viewedProducts} />}
       <HerramientasSugeridas />
     </div>
   );

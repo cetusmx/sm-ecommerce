@@ -59,6 +59,7 @@ function AppContent() {
           <Route path="login" element={<Login />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="orders" element={<Pedido />} />
+          <Route path="pedido" element={<Pedido />} />
           <Route path="producto/:clave" element={<ProductDetailPage />} />
           <Route path="address-form" element={<AddressFormPage />} />
           <Route path="user-addresses" element={<UserAddressesPage />} />

@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
+import { fetchProductosVistos } from '@/api/productosVistosApi';
 import AddressFormPage from './AddressFormPage';
 import styles from './UserAddressesPage.module.css';
 import { useAuth } from '@/context/AuthContext';
 import Breadcrumb from '../components/common/Breadcrumb';
-import AnuncioPuntual from '../components/common/AnuncioPuntual';
+import ProductosPromocion from '../components/features/product/ProductosPromocion';
+import ProductosVistos from '../components/features/product/ProductosVistos';
 import ModalDomicilio from '../components/common/ModalDomicilio';
 
 import { updateAddressOrder } from '@/api/addresses';
@@ -15,7 +17,8 @@ const fetchAddresses = async (userEmail) => {
   }
   const response = await fetch(`${process.env.REACT_APP_API_URL}/domicilios/email/${userEmail}`);
   if (!response.ok) {
-    if (response.status === 404) {
+    console.log(response.status);
+    if (response.status === 404 || response.status === 500) {
       return [];
     }
     throw new Error('Network response was not ok');
@@ -41,12 +44,11 @@ const UserAddressesPage = () => {
   const queryClient = useQueryClient();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
+  const [deletedIds, setDeletedIds] = useState([]);
 
   const deleteMutation = useMutation({
     mutationFn: deleteAddress,
-    onSuccess: () => {
-      queryClient.invalidateQueries(['userAddresses', userEmail]);
-    },
+    // We will handle onSuccess specifically in the handleDelete function
   });
 
   const updateOrderMutation = useMutation({
@@ -62,10 +64,44 @@ const UserAddressesPage = () => {
     enabled: !!userEmail,
   });
 
+  const { data: viewedProducts } = useQuery({
+    queryKey: ['productosVistos', currentUser?.email],
+    queryFn: () => fetchProductosVistos(currentUser?.email),
+    enabled: !!currentUser?.email,
+  });
+
   const handleDelete = (addressId) => {
-    if (window.confirm('¿Estás seguro de que quieres eliminar esta dirección?')) {
-      deleteMutation.mutate(addressId);
+    const addressToDelete = addresses.find((addr) => addr.id === addressId);
+    const wasDefault = addressToDelete?.orden_domicilio === 'Predeterminado';
+
+    let newDefaultId = null;
+    if (wasDefault && addresses.length > 1) {
+      const newDefaultCandidate = addresses.find((addr) => addr.id !== addressId);
+      if (newDefaultCandidate) {
+        newDefaultId = newDefaultCandidate.id;
+      }
     }
+
+    setDeletedIds((prev) => [...prev, addressId]);
+
+    deleteMutation.mutate(addressId, {
+      onSuccess: () => {
+        setTimeout(async () => {
+          if (newDefaultId) {
+            await handlePredeterminado(newDefaultId);
+          } else {
+            queryClient.invalidateQueries(['userAddresses', userEmail]);
+          }
+          // Clean up the deleted ID from state after refresh
+          setDeletedIds((prev) => prev.filter((id) => id !== addressId));
+        }, 2000); // Wait 2 seconds before refreshing
+      },
+      onError: () => {
+        // If deletion fails, remove from deletedIds to show the card again
+        setDeletedIds((prev) => prev.filter((id) => id !== addressId));
+        alert('Error al borrar la dirección.');
+      },
+    });
   };
 
   const handlePredeterminado = async (addressId) => {
@@ -101,8 +137,22 @@ const UserAddressesPage = () => {
     setIsModalOpen(true);
   };
 
-  const handleAddressSave = () => {
-    console.log(selectedAddress);
+  const handleAddressSave = async (savedAddress) => {
+    // Check if the new/edited address is set as default
+    if (savedAddress && savedAddress.orden_domicilio === 'Predeterminado') {
+      // Find the current default address, if it exists and is not the one we just saved
+      const currentDefault = addresses.find(
+        (address) => address.orden_domicilio === 'Predeterminado' && address.id !== savedAddress.id
+      );
+
+      // If there was a different default address, remove its default status
+      if (currentDefault) {
+        await updateOrderMutation.mutateAsync({
+          id: currentDefault.id,
+          orden_domicilio: '',
+        });
+      }
+    }
     handleCloseModal();
     queryClient.invalidateQueries(['userAddresses', userEmail]);
   };
@@ -121,27 +171,36 @@ const UserAddressesPage = () => {
               {addresses && addresses.length > 0 ? (
                 <>
                   <div className={styles.addressList}>
-                    {addresses.map((address) => (
-                      <div key={address.id} className={styles.addressCard}>
-                        <div>
-                          <div className={styles.defaultAddressLabel}>{address.orden_domicilio === 'Predeterminado' ? 'Predeterminado' : ''}</div>
-                          <p className={styles.nombreCompleto}>{address.nombre_completo}</p>
-                          <p>Calle {address.calle} {address.numero_ext} {address.numero_int ? `Int. ${address.numero_int}` : ''}</p>
-                          <p>{address.colonia}</p>
-                          <p>{address.ciudad}, {address.estado} {address.postalCode}</p>
-                          <p>{address.pais}</p>
-                          <p>Número de teléfono: {address.numero_telefono}</p>
+                    {addresses.map((address) => {
+                      if (deletedIds.includes(address.id)) {
+                        return (
+                          <div key={address.id} className={`${styles.addressCard} ${styles.deletedCard}`}>
+                            Borrado
+                          </div>
+                        );
+                      }
+                      return (
+                        <div key={address.id} className={styles.addressCard}>
+                          <div>
+                            <div className={styles.defaultAddressLabel}>{address.orden_domicilio === 'Predeterminado' ? 'Predeterminado' : ''}</div>
+                            <p className={styles.nombreCompleto}>{address.nombre_completo}</p>
+                            <p>Calle {address.calle} {address.numero_ext} {address.numero_int ? `Int. ${address.numero_int}` : ''}</p>
+                            <p>{address.colonia}</p>
+                            <p>{address.ciudad}, {address.estado} {address.postalCode}</p>
+                            <p>{address.pais}</p>
+                            <p>Número de teléfono: {address.numero_telefono}</p>
+                          </div>
+                          <div className={styles.botones}><button className={styles.actionButton} onClick={() => handleEdit(address)}>Editar</button> <h6>|</h6> 
+                          <button className={styles.actionButton} onClick={() => handleDelete(address.id)}>Descartar</button>
+                          </div>
+                          <div>
+                            {address.orden_domicilio !== 'Predeterminado' && (
+                              <button className={styles.actionButton} style={{fontSize:"0.7em"}} onClick={() => handlePredeterminado(address.id)}>Establecer como predeterminado</button>
+                            )}
+                          </div>
                         </div>
-                        <div className={styles.botones}><button className={styles.actionButton} onClick={() => handleEdit(address)}>Editar</button> <h6>|</h6> 
-                        <button className={styles.actionButton} onClick={() => handleDelete(address.id)}>Descartar</button>
-                        </div>
-                        <div>
-                          {address.orden_domicilio !== 'Predeterminado' && (
-                            <button className={styles.actionButton} style={{fontSize:"0.7em"}} onClick={() => handlePredeterminado(address.id)}>Establecer como predeterminado</button>
-                          )}
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   <button onClick={handleOpenModal} className={`${styles.addButton} ${styles.yellowButton}`}>
                     Agregar otra dirección
@@ -157,12 +216,9 @@ const UserAddressesPage = () => {
               )}
             </div>
           </main>
-          <aside className={styles.sidebar}>
-            <AnuncioPuntual linea="ANSME" slogan="¡Oferta especial!" precio="99.99" />
-            <AnuncioPuntual linea="BAKSN" slogan="¡Solo por hoy!" precio="149.50" />
-            <AnuncioPuntual linea="BAMVE" slogan="¡Últimas unidades!" precio="75.00" />
-          </aside>
+          <ProductosPromocion className={styles.sidebar} />
         </div>
+        <ProductosVistos viewedProducts={viewedProducts} />
       </div>
       <ModalDomicilio isOpen={isModalOpen} onClose={handleCloseModal} onSave={handleAddressSave} address={selectedAddress} />
     </div>

@@ -26,7 +26,7 @@ export const useDeliveryInfo = (producto, quantity) => {
     else if (requestedAmount > stock) {
       const arrivalDate = calculateArrivalDate();
       const finalDeliveryDate = calculateDeliveryDate(arrivalDate);
-      warningMessage = `Actualmente tenemos ${stock} unidades. El resto llegará a nuestro almacén el ${formatToSpanishDate(arrivalDate)}. Tu pedido completo se enviará en esa fecha.`;
+      warningMessage = `Actualmente tenemos ${Math.floor(stock / producto.cant_por_empaque)} empaques. El resto llegará a nuestro almacén el ${formatToSpanishDate(arrivalDate)}. Tu pedido completo se enviará en esa fecha.`;
       setDeliveryInfo({
         message: `Recibirás tu pedido para el`,
         date: formatToSpanishDate(finalDeliveryDate),

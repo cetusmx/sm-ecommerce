@@ -1,26 +1,13 @@
-import React, { useState, useContext } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { AuthContext } from '@/context/AuthContext';
+import React, { useState } from 'react';
 import ProductoVisto from './ProductoVisto';
 import styles from './ProductosVistos.module.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-import { fetchProductosVistos } from '@/api/productosVistosApi';
 
-const ProductosVistos = () => {
-  const { currentUser } = useContext(AuthContext);
+
+const ProductosVistos = ({ viewedProducts }) => {
+
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const { data: viewedProducts, isLoading, error } = useQuery({
-    queryKey: ['productosVistos', currentUser?.email],
-    queryFn: () => fetchProductosVistos(currentUser?.email),
-    enabled: !!currentUser?.email,
-    staleTime: 60 * 1000, // Data is considered fresh for 1 minute
-  });
-
-  if (isLoading) return <div className={styles.container}>Cargando productos vistos...</div>;
-  if (error) return <div className={styles.container}>Error: {error.message}</div>;
-  if (!viewedProducts || viewedProducts.length === 0) return null;
 
   const productsPerPage = 5; // Adjust as needed
   const totalPages = Math.ceil(viewedProducts.length / productsPerPage);
