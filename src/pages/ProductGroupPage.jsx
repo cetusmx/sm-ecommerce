@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useParams } from 'react-router-dom';
 import { fetchProducts } from '@/api/productsApi';
@@ -127,6 +127,16 @@ const filterConfig = {
 const ProductGroupPage = () => {
     const { groupName } = useParams(); // Read group from URL
     const currentGroup = filterConfig[groupName] || {};
+    const [isMounted, setIsMounted] = useState(false);
+
+    useEffect(() => {
+        // Mount the component with a slight delay to allow scroll-to-top to finish
+        const timer = setTimeout(() => {
+            setIsMounted(true);
+        }, 50); // 50ms delay
+
+        return () => clearTimeout(timer); // Cleanup timer
+    }, []);
 
     const { data: products, isLoading, error } = useQuery({ 
         queryKey: ['products'], 
@@ -208,7 +218,7 @@ const ProductGroupPage = () => {
     const hasSubFilters = availableFilters.length > 0;
 
     return (
-        <div className={styles.pageContainer}>
+        <div className={`${styles.pageContainer} ${isMounted ? styles.mounted : ''}`}>
             <aside className={styles.sidebar}>
                 {hasSubFilters ? (
                     <>

@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import styles from './CarouselCategorias.module.css';
 import sellos from '@/assets/sellos.png';
@@ -13,8 +14,8 @@ import ofertas from '@/assets/ofertas.png';
 import _3d from '@/assets/3d.png';
 
 const categories = [
-  { name: 'Herramientas', image: herramientas },
-  { name: 'Accesorios Hidráulicos', image: accesorios },
+  { name: 'Herramientas', image: herramientas, path: '/grupo/herramientas' },
+  { name: 'Accesorios Hidráulicos', image: accesorios, path: '/grupo/accesorios-hidraulicos' },
   /* { name: 'Cilindros', image: cilindros },
   { name: 'Fabricación Sellos', image: cnc },*/
   { name: 'Tubo Honeado y Barra cromada', image: tyb }, 
@@ -45,12 +46,21 @@ const CarouselCategorias = () => {
         <FaChevronLeft />
       </button>
       <div className={styles['carousel-container']} ref={containerRef}>
-        {categories.map((category, index) => (
-          <div className={styles['category-card']} key={index}>
-            <img src={category.image} alt={category.name} />
-            <p>{category.name}</p>
-          </div>
-        ))}
+        {categories.map((category, index) =>
+          category.path ? (
+            <Link to={category.path} key={index} className={styles.link}>
+              <div className={styles['category-card']}>
+                <img src={category.image} alt={category.name} />
+                <p>{category.name}</p>
+              </div>
+            </Link>
+          ) : (
+            <div className={styles['category-card']} key={index}>
+              <img src={category.image} alt={category.name} />
+              <p>{category.name}</p>
+            </div>
+          )
+        )}
       </div>
       <button className={`${styles['carousel-arrow']} ${styles.right}`} onClick={() => scroll(1)}>
         <FaChevronRight />

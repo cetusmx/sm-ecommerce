@@ -123,11 +123,19 @@ const CartProvider = ({ children }) => {
   const addItem = (item, quantity) => {
     setCart(prevCart => {
       const existingItemIndex = prevCart.findIndex((i) => i.clave === item.clave);
+  
       if (existingItemIndex > -1) {
-        const updatedCart = [...prevCart];
-        updatedCart[existingItemIndex].quantity += quantity;
-        return updatedCart;
+        // Si el item existe, creamos un nuevo array
+        return prevCart.map((cartItem, index) => {
+          if (index === existingItemIndex) {
+            // Y para el item que coincide, creamos un nuevo objeto
+            return { ...cartItem, quantity: cartItem.quantity + quantity };
+          }
+          // Los demás items se devuelven como están
+          return cartItem;
+        });
       } else {
+        // Si es un item nuevo, lo agregamos al array
         return [...prevCart, { ...item, quantity }];
       }
     });

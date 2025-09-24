@@ -4,6 +4,12 @@
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    opacity: 0;
+    transition: opacity 1000ms ease-in-out;
+}
+
+.pageContainer.mounted {
+    opacity: 1;
 }
 
 .sidebar {
