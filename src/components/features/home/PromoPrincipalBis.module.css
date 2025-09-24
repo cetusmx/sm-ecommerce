@@ -1,0 +1,97 @@
+
+.container {
+  flex: 1;
+  border: 1px solid white;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--color-text);
+  padding: 10px;
+  gap: 10px;
+}
+
+.titulo-promo-box {
+  font-family: 'Roboto', 'Segoe UI', 'Verdana', 'Tahoma', 'Geneva', sans-serif;
+  font-weight: bolder;
+  font-size: 1.3rem;
+  margin-top: 12px;
+  margin-left: 10px;
+}
+
+.promo-content-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 10px;
+  flex-grow: 1;
+}
+
+.promo-image {
+  width: 50%;
+  height: auto;
+}
+
+.container p {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.container h5 {
+  font-weight: 550;
+}
+
+.promo-images-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  width: 100%;
+  flex-grow: 1;
+}
+
+.promo-image-item {
+  flex: 1;
+  text-align: center;
+  position: relative;
+  margin: 0 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.promo-image-item img {
+  max-width: 100%;
+  height: auto;
+}
+
+.image-title-box {
+  background-color: red;
+  color: white;
+  padding: 5px;
+  text-align: center;
+  font-size: 0.75rem;
+  width: 100%;
+}
+
+.promo-link-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.promo-link {
+  font-size: 0.75rem;
+  font-weight: normal;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: font-weight 0.3s ease;
+}
+
+.promo-link:hover {
+  font-weight: bold;
+}

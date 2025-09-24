@@ -7,22 +7,21 @@ import accesorios from '@/assets/accesorios.png';
 import cilindros from '@/assets/cilindros.png';
 import cnc from '@/assets/cnc.png';
 import tyb from '@/assets/tyb.png';
-import bombas from '@/assets/bombas.png';
+import bombas from '@/assets/bombas-hidraulicas.png';
 import segyper from '@/assets/segyper.png';
 import ofertas from '@/assets/ofertas.png';
 import _3d from '@/assets/3d.png';
 
 const categories = [
-  { name: 'Sellos', image: sellos },
   { name: 'Herramientas', image: herramientas },
   { name: 'Accesorios Hidráulicos', image: accesorios },
-  { name: 'Cilindros', image: cilindros },
-  { name: 'Fabricación Sellos', image: cnc },
-  { name: 'Tubo Honeado y Barra cromada', image: tyb },
+  /* { name: 'Cilindros', image: cilindros },
+  { name: 'Fabricación Sellos', image: cnc },*/
+  { name: 'Tubo Honeado y Barra cromada', image: tyb }, 
   { name: 'Bombas Hidráulicas', image: bombas },
   { name: 'Seguros y pernos', image: segyper },
   { name: 'Ofertas Especiales', image: ofertas },
-  { name: 'Impresión 3D', image: _3d },
+  /* { name: 'Impresión 3D', image: _3d }, */
 ];
 
 const CarouselCategorias = () => {
@@ -39,10 +38,8 @@ const CarouselCategorias = () => {
   };
 
   return (
-    <>
-    <div className={styles['titulo-all-categories']}>
-      <h4>Categorías de Productos</h4>
-    </div>
+    <div className={styles['category-carousel-container']}>
+    <h3 className={styles.title}>Más Productos</h3>
     <div className={styles['category-carousel-wrapper']}>
       <button className={`${styles['carousel-arrow']} ${styles.left}`} onClick={() => scroll(-1)}>
         <FaChevronLeft />
@@ -59,7 +56,7 @@ const CarouselCategorias = () => {
         <FaChevronRight />
       </button>
     </div>
-        </>
+        </div>
   );
 };
 

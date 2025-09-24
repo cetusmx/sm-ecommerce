@@ -14,7 +14,7 @@ const CartItem = ({ item }) => {
   // Determine the correct image URL based on category
   const perfilesUrl = `/Perfiles/${item.linea}.jpg`;
   const sugeridosUrl = `/Sugeridos/${item.clave}.jpg`;
-  const imageUrl = (item.categoria === 'Herramientas' || item.categoria === 'Accesorios')
+  const imageUrl = (item.categoria === 'Herramientas' || item.categoria === 'Accesorios' || item.categoria === 'Estuches' || item.categoria === 'Accesorios hidráulicos')
     ? sugeridosUrl
     : perfilesUrl;
 

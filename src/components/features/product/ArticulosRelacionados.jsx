@@ -92,7 +92,7 @@ const ArticulosRelacionados = ({ productoPrincipal }) => {
       }
 
       // Rule for non-dimensional categories
-      if (['Herramientas', 'Estuches', 'Adhesivos', 'Seguros externos', 'Seguros internos', 'Graseras', 'Pernos', 'Gatos'].includes(relatedCategory)) {
+      if (['Herramientas', 'Estuches', 'Adhesivos', 'Seguros externos', 'Seguros internos', 'Graseras', 'Pernos', 'Gatos', 'Accesorios hidráulicos'].includes(relatedCategory)) {
         const candidates = allProducts.filter(p => p.categoria === relatedCategory && p.existencia > 0);
         if (candidates.length > 0) {
           const randomIndex = Math.floor(Math.random() * candidates.length);

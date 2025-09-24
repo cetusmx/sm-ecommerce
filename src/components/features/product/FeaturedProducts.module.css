@@ -1,6 +1,7 @@
 .featured-products {
   padding: var(--spacing-lg) var(--spacing-sm);
   text-align: center;
+  padding: 40px 0;
 }
 
 .featured-products h2 {

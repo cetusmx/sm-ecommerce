@@ -10,7 +10,10 @@
   font-size: 1rem;
   transition: border 0.3s ease;
   text-decoration: none; /* For Link component if used */
-  width: 32%;
+  width: 33%;
+   font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
 }
 
 .address-button:hover {

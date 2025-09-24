@@ -37,7 +37,7 @@ const ProductFilter = ({ filters, onFilterChange }) => {
       </div>
       <div className={styles['filter-container']}>
         <div className={`${styles['filter-box']} ${styles.large}`}>
-          <label htmlFor="medida">Sistema de medición</label>
+          <label htmlFor="medida">Sistema medición</label>
           <select
             id="medida"
             name="medida"

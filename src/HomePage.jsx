@@ -217,7 +217,7 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
             <PromosPrincipales />
           </main>
           <CarouselCategorias />
-          <FeaturedProducts />
+          {/* <FeaturedProducts /> */}
           {viewedProducts && viewedProducts.length > 0 && (
             <div style={{ padding: '0 20px' }}>
               <ProductosVistos viewedProducts={viewedProducts} />

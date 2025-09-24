@@ -26,7 +26,7 @@ const ArticuloRelacionado = ({ producto, isSelected, onSelectionChange }) => {
         />
       </div>
       <div className={styles.imageContainer}>
-        {producto.categoria === 'Herramientas' || producto.categoria === 'Accesorios' ? (
+        {producto.categoria === 'Herramientas' || producto.categoria === 'Accesorios' || producto.categoria === 'Estuches' || producto.categoria === 'Accesorios hidráulicos' ? (
           <img src={imageurl2} alt={producto.descripcion} className={styles.image} />
         ) : (
           <img src={imageUrl} alt={producto.descripcion} className={styles.image} />

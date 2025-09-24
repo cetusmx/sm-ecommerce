@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom"; // Import Link
 import styles from "./Header.module.css";
-import logo from "@/assets/logo.png";
+import logo from "@/assets/logoBco.png";
+/* import logo from "@/assets/logoBlueLighter.png"; */
 import SearchInputWithDropdown from "@/utils/SearchInputWithDropdown.js";
 import CartButton from "@/components/features/cart/CartButton";
 import UserSession from "@/components/features/user/UserSession";

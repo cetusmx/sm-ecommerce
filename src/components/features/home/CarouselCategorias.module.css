@@ -1,9 +1,20 @@
+.category-carousel-container{
+  padding: 15px 20px 0 20px;
+  margin-bottom: 50px;
+}
+
+.title {
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: left;
+}
+
 .category-carousel-wrapper {
   display: flex;
   align-items: center;
   width: 80%;
   justify-content: center;
- /*  padding-left: 10%; */
   margin: 5px auto;
 }
 
@@ -20,15 +31,9 @@
   display: none; /* Chrome, Safari and Opera */
 }
 
-.titulo-all-categories{
-  background-color: transparent;
-  display: flex;
-  align-items: center;
-  padding: 15px 50px;
-}
 .category-card {
   flex: 0 0 10%;
-  min-width: 150px;
+  min-width: 170px;
   margin: 0 5px;
   cursor: pointer;
   text-align: center;

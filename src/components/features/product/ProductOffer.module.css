@@ -1,0 +1,47 @@
+.offerContainer {
+  border: 2px solid #f54900; /* Orange border for offer, matching StockStatus */
+  border-radius: 8px;
+  padding: 4px 15px; /* Added horizontal padding */
+  text-align: center;
+  font-weight: bold;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.topSection {
+  font-size: 0.8rem;
+  color: #f54900; /* Orange color for offer text, matching StockStatus */
+  padding-bottom: 2px;
+  border-bottom: 1px solid #d4edda; /* Lighter green border */
+}
+
+.animatedText {
+  display: inline-block;
+  animation: fadeInText 0.5s ease-in-out;
+}
+
+.bottomSection {
+  font-size: 0.9rem;
+  color: #333;
+  padding-top: 2px;
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.normalPrice {
+  text-decoration: line-through;
+  color: #6c757d; /* Gray for normal price */
+  font-size: 0.8em;
+}
+
+.offerPrice {
+  color: #dc3545; /* Red for offer price */
+  font-size: 1.1em;
+}
+
+@keyframes fadeInText {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
