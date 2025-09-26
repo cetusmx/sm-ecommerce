@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useCart } from '@/hooks/useCart';
 import { useAuth } from '@/context/AuthContext';
 import { getShippingRates } from '@/api/shippingService';
+import { fetchProductsByClaves } from '@/api/productsApi';
 import { convertStateToCode } from '@/utils/stateConverter';
 import styles from './CheckoutPage.module.css';
 import AddressSelectionModal from '@/components/cart/AddressSelectionModal';
@@ -23,6 +24,7 @@ const fetchAddresses = async (userEmail) => {
 const CheckoutPage = () => {
   const { cart, cartTotal, shippingAddress, setShippingAddress, clearCart } = useCart();
   const { currentUser } = useAuth();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const [step, setStep] = useState('loading');
@@ -38,16 +40,23 @@ const CheckoutPage = () => {
     enabled: !!currentUser,
   });
 
+  const cartProductClaves = useMemo(() => cart.map(item => item.clave), [cart]);
+
   const { data: products, isLoading: isLoadingProducts } = useQuery({
-    queryKey: ['products'],
+    queryKey: ['products', cartProductClaves],
+    // The backend should be updated to support this endpoint
+    // queryFn: () => fetchProductsByClaves(cartProductClaves),
     queryFn: async () => {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
-      if (!response.ok) {
-        throw new Error('Network response was not ok for products');
-      }
-      return response.json();
+      const productPromises = cartProductClaves.map(clave =>
+        fetch(`${process.env.REACT_APP_API_URL}/productos/${clave}`).then(res => res.json())
+      );
+      return Promise.all(productPromises);
     },
+    enabled: cartProductClaves.length > 0,
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
+
+
 
   useEffect(() => {
     if (shippingAddress) {
@@ -134,7 +143,7 @@ const CheckoutPage = () => {
 
     try {
       // Step 1: Create the order
-      const orderResponse = await fetch(`http://localhost:3004/api/pedidos`, {
+      const orderResponse = await fetch(`${process.env.REACT_APP_API_URL}/pedidos`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -148,6 +157,35 @@ const CheckoutPage = () => {
 
       console.log('Pedido creado exitosamente');
 
+      // Update cache for each product in the cart
+      cart.forEach(item => {
+        const productQueryKey = ['productDetails', item.clave];
+        const currentProductData = queryClient.getQueryData(productQueryKey);
+
+        if (currentProductData) {
+          const newStock = currentProductData.existencia - item.quantity;
+          queryClient.setQueryData(productQueryKey, {
+            ...currentProductData,
+            existencia: newStock,
+          });
+        }
+      });
+
+      const checkoutProductsQueryKey = ['products', cartProductClaves];
+      const currentCheckoutProducts = queryClient.getQueryData(checkoutProductsQueryKey);
+
+      if (currentCheckoutProducts) {
+          const updatedProducts = currentCheckoutProducts.map(p => {
+              const cartItem = cart.find(item => item.clave === p.clave);
+              if (cartItem) {
+                  return { ...p, existencia: p.existencia - cartItem.quantity };
+              }
+              return p;
+          });
+          queryClient.setQueryData(checkoutProductsQueryKey, updatedProducts);
+      }
+
+      /*
       // Step 2: Update stock
       const stockUpdatePayload = cart.map(item => {
         const product = products.find(p => p.clave === item.clave);
@@ -158,7 +196,7 @@ const CheckoutPage = () => {
         return { clave: item.clave, existencia: newStock };
       });
 
-      const stockResponse = await fetch(`http://localhost:3004/api/productos/existencias`, {
+      const stockResponse = await fetch(`${process.env.REACT_APP_API_URL}/productos/existencias`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -173,6 +211,7 @@ const CheckoutPage = () => {
       }
 
       console.log('Existencias actualizadas exitosamente');
+      */
 
       // Step 3: Clear cart and navigate
       clearCart();

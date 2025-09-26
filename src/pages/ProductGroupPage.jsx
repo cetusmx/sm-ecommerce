@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { fetchProducts } from '@/api/productsApi';
 import ProductTable from '@/components/features/product/ProductTable';
 import AnuncioPuntual from '@/components/common/AnuncioPuntual';
@@ -126,6 +126,7 @@ const filterConfig = {
 // --- Main ProductGroupPage Component (Dynamic) ---
 const ProductGroupPage = () => {
     const { groupName } = useParams(); // Read group from URL
+    const [searchParams] = useSearchParams();
     const currentGroup = filterConfig[groupName] || {};
     const [isMounted, setIsMounted] = useState(false);
 
@@ -143,7 +144,13 @@ const ProductGroupPage = () => {
         queryFn: fetchProducts 
     });
 
-    const [selectedFilters, setSelectedFilters] = useState([]);
+    // Initialize filters from URL search params
+    const initialFilters = useMemo(() => {
+        const filtrosFromUrl = searchParams.get('filtros');
+        return filtrosFromUrl ? filtrosFromUrl.split(',') : [];
+    }, [searchParams]);
+
+    const [selectedFilters, setSelectedFilters] = useState(initialFilters);
 
     const handleFilterChange = (filter) => {
         setSelectedFilters(prev => 

@@ -19,8 +19,8 @@ const categories = [
   /* { name: 'Cilindros', image: cilindros },
   { name: 'Fabricación Sellos', image: cnc },*/
   { name: 'Tubo Honeado y Barra cromada', image: tyb }, 
-  { name: 'Bombas Hidráulicas', image: bombas },
-  { name: 'Seguros y pernos', image: segyper },
+  { name: 'Bombas Hidráulicas', image: bombas, path: '/grupo/accesorios-hidraulicos?filtros=Bombas hidráulicas' },
+  { name: 'Seguros y pernos', image: segyper, path: '/grupo/seguros-pernos-graseras?filtros=Seguros externos,Seguros internos,Seguros E,Perno spirol,Perno ranurado,Perno sólido' },
   { name: 'Ofertas Especiales', image: ofertas },
   /* { name: 'Impresión 3D', image: _3d }, */
 ];

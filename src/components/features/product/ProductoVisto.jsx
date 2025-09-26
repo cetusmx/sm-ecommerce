@@ -3,19 +3,7 @@ import { Link } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { useCart } from '@/hooks/useCart';
 import styles from './ProductoVisto.module.css';
-
-const fetchProductDetails = async (clave) => {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
-  if (!response.ok) {
-    throw new Error('Network response was not ok');
-  }
-  const products = await response.json();
-  const singleProduct = products.find(p => p.clave === clave);
-  if (!singleProduct) {
-    throw new Error('Product not found');
-  }
-  return singleProduct;
-};
+import { fetchProductByClave } from '@/api/productsApi';
 
 const ProductoVisto = ({ viewedProduct }) => {
   const { addItem } = useCart();
@@ -23,7 +11,8 @@ const ProductoVisto = ({ viewedProduct }) => {
 
   const { data: product, isLoading, error } = useQuery({
     queryKey: ['productDetails', viewedProduct.clave],
-    queryFn: () => fetchProductDetails(viewedProduct.clave),
+    queryFn: () => fetchProductByClave(viewedProduct.clave),
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   const handleAddToCart = () => {

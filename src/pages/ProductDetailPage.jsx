@@ -15,6 +15,7 @@ import AnuncioPuntual from '../components/common/AnuncioPuntual';
 import ProductosPromocion from '../components/features/product/ProductosPromocion';
 
 import { fetchProductosVistos } from '@/api/productosVistosApi';
+import { fetchProductByClave } from '@/api/productsApi';
 
 const ProductDetailPage = () => {
   const { clave } = useParams();
@@ -72,14 +73,9 @@ const ProductDetailPage = () => {
 
   // Fetch the single product
   const { data: product, isLoading: isLoadingProduct, error: productError } = useQuery({
-    queryKey: ['product', clave],
-    queryFn: async () => {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/${clave}`);
-      if (!response.ok) {
-        throw new Error('Product not found');
-      }
-      return response.json();
-    },
+    queryKey: ['productDetails', clave],
+    queryFn: () => fetchProductByClave(clave),
+    staleTime: 1000 * 60 * 60, // 1 hour
   });
 
   // Fetch all categories
