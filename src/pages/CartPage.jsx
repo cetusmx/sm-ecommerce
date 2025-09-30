@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
 import { fetchProductosVistos } from '@/api/productosVistosApi';
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/hooks/useCart";
+import { getDeliveryInfo } from "@/utils/deliveryUtils"; // Import the utility function
 import styles from "./CartPage.module.css"; // Use its own dedicated styles
 import CartItem from "@/components/cart/CartItem";
 import ShippingInfo from "@/components/cart/ShippingInfo"; // Import the new ShippingInfo component
@@ -15,6 +16,16 @@ const CartPage = () => {
   const { cart, cartTotal, cartItemCount, clearCart } = useCart();
   const navigate = useNavigate();
   const { currentUser } = useAuth();
+  const [deliveryInfos, setDeliveryInfos] = useState({});
+
+  useEffect(() => {
+    const newDeliveryInfos = {};
+    cart.forEach(item => {
+      newDeliveryInfos[item.clave] = getDeliveryInfo(item, item.quantity);
+    });
+    setDeliveryInfos(newDeliveryInfos);
+  }, [cart]);
+
   const { data: viewedProducts } = useQuery({
     queryKey: ['productosVistos', currentUser?.email],
     queryFn: () => fetchProductosVistos(currentUser?.email),
@@ -22,7 +33,12 @@ const CartPage = () => {
   });
 
   const handleCheckout = () => {
-    navigate("/checkout");
+    const fechasDeEntrega = Object.keys(deliveryInfos).map(clave => ({
+      clave,
+      fecha: deliveryInfos[clave].date,
+      fechaCorta: deliveryInfos[clave].shortDate,
+    }));
+    navigate("/checkout", { state: { fechasDeEntrega } });
   };
 
   const handleClearCart = () => {
@@ -61,7 +77,7 @@ const CartPage = () => {
           ) : (
             <>
               <div className={styles.cartItemsList}>
-                {cart.map((item) => <CartItem key={item.clave} item={item} />)}
+                {cart.map((item) => <CartItem key={item.clave} item={item} deliveryInfo={deliveryInfos[item.clave]} />)}
               </div>
               <div className={styles.clearCartContainer}>
                 <button onClick={handleClearCart} className="sm-btn sm-btn-tertiary">

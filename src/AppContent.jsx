@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 import CartProvider from '@/context/CartProvider';
 import ScrollToTop from '@/components/common/ScrollToTop';
 import HomePage from '@/HomePage';
@@ -51,25 +52,33 @@ function AppContent() {
     // HomePage will handle clearing its own filters
   };
 
+  const initialOptions = {
+    clientId: process.env.REACT_APP_PAYPAL_CLIENT_ID,
+    currency: "MXN",
+    intent: "capture",
+  };
+
   return (
-    <CartProvider>
-      <ScrollToTop />
-      <Routes>
-        <Route path="/" element={<Layout onFullSearch={handleGlobalSearch} />}>
-          <Route index element={<HomePage globalSearchQuery={globalSearchQuery} setGlobalSearchQuery={setGlobalSearchQuery} onClearProductFilter={handleClearProductFilter} />} />
-          <Route path="login" element={<Login />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="orders" element={<Pedido />} />
-          <Route path="pedido" element={<Pedido />} />
-          <Route path="producto/:clave" element={<ProductDetailPage />} />
-          <Route path="address-form" element={<AddressFormPage />} />
-          <Route path="user-addresses" element={<UserAddressesPage />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="checkout" element={<CheckoutPage />} />
-          <Route path="grupo/:groupName" element={<ProductGroupPage />} />
-        </Route>
-      </Routes>
-    </CartProvider>
+    <PayPalScriptProvider options={initialOptions}>
+      <CartProvider>
+        <ScrollToTop />
+        <Routes>
+          <Route path="/" element={<Layout onFullSearch={handleGlobalSearch} />}>
+            <Route index element={<HomePage globalSearchQuery={globalSearchQuery} setGlobalSearchQuery={setGlobalSearchQuery} onClearProductFilter={handleClearProductFilter} />} />
+            <Route path="login" element={<Login />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="orders" element={<Pedido />} />
+            <Route path="pedido" element={<Pedido />} />
+            <Route path="producto/:clave" element={<ProductDetailPage />} />
+            <Route path="address-form" element={<AddressFormPage />} />
+            <Route path="user-addresses" element={<UserAddressesPage />} />
+            <Route path="cart" element={<CartPage />} />
+            <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="grupo/:groupName" element={<ProductGroupPage />} />
+          </Route>
+        </Routes>
+      </CartProvider>
+    </PayPalScriptProvider>
   );
 }
 

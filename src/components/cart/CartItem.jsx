@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { useCart } from '@/hooks/useCart';
-import { useDeliveryInfo } from '@/hooks/useDeliveryInfo';
 import styles from './CartItem.module.css';
 import { FaTrash } from 'react-icons/fa';
 import AvisoEscasez from '../common/AvisoEscasez'; // Import the new modal
 
-const CartItem = ({ item }) => {
+const CartItem = ({ item, deliveryInfo }) => {
   const { removeItem, updateItemQuantity } = useCart();
-  const deliveryInfo = useDeliveryInfo(item, item.quantity);
   const [isScarcityModalOpen, setIsScarcityModalOpen] = useState(false);
+
+  if (!deliveryInfo) {
+    return null; // Or a loading skeleton
+  }
 
   console.log("Item dentro CartItem: ", item)
   // Determine the correct image URL based on category

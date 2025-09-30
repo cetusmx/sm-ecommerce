@@ -5,9 +5,12 @@ import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 
 
-const ProductosVistos = ({ viewedProducts }) => {
-
+const ProductosVistos = ({ viewedProducts = [] }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  if (!viewedProducts || viewedProducts.length === 0) {
+    return null; // No renderizar nada si no hay productos vistos
+  }
 
   const productsPerPage = 5; // Adjust as needed
   const totalPages = Math.ceil(viewedProducts.length / productsPerPage);

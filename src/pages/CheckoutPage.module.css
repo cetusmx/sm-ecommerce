@@ -156,9 +156,13 @@
   flex-wrap: wrap; /* Allow items to wrap to next line */
   justify-content: space-between;
   padding: 0.5rem 0;
-  border-bottom: 1px dashed #eee;
+  border-bottom: 1px solid #ddd; /* More visible line */
   font-size: 0.95rem;
   color: #444;
+}
+
+.summaryItem:not(:first-child) {
+  padding-top: 10px; /* 0.5rem (8px) + 10px */
 }
 
 .summaryItem:last-of-type {
@@ -181,6 +185,14 @@
   color: #777;
   margin-top: 0.2rem;
   margin-left: 1rem; /* Indent description */
+}
+
+.deliveryDate {
+  font-size: 0.75rem;
+  color: #28a745; /* Green color for delivery date */
+  margin-top: 0.2rem;
+  margin-left: 1rem; /* Indent description */
+  font-weight: 400;
 }
 
 .itemPrice {
@@ -240,4 +252,116 @@
 
 .addressCard p strong {
   color: #333;
+}
+
+/* New Payment Options Styles */
+.paymentOptionsContainer {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.paymentOption {
+  flex: 1;
+  padding: 1.5rem 1rem;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: #f9f9f9;
+  text-align: center;
+}
+
+.paymentOption:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.paymentOption.selected {
+  border-color: #007bff;
+  background-color: #e6f2ff;
+  box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.paymentOptionIcon {
+  font-size: 2.5rem;
+  color: #007bff;
+  margin-bottom: 0.5rem;
+}
+
+.paymentOption span {
+  font-weight: 600;
+  color: #333;
+}
+
+.paymentContentContainer {
+  margin-top: 1rem;
+}
+
+.bankInfoContainer {
+  background-color: #f9f9f9;
+  border: 1px solid #eee;
+  padding: 1.5rem;
+  border-radius: 8px;
+}
+
+.bankInfoContainer h5 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+  padding-bottom: 0.5rem;
+}
+
+.bankInfoDetails p {
+  margin: 0.5rem 0;
+  font-size: 0.95rem;
+}
+
+.referenceBox {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background-color: #e9ecef;
+  border: 1px dashed #ccc;
+  border-radius: 4px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.referenceBox span {
+  font-family: monospace;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.referenceBox p {
+  margin: 0;
+}
+
+.copyButton {
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  background-color: #fff;
+  transition: background-color 0.2s;
+}
+
+.copyButton:hover {
+  background-color: #f0f0f0;
+}
+
+.finalizeButtonContainer {
+  margin-top: 1.5rem;
+}
+
+.bankInfoContainer .sm-btn {
+  margin-top: 1.5rem;
 }

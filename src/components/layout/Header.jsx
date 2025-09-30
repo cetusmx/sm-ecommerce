@@ -13,10 +13,10 @@ const Header = ({ onFullSearch }) => {
   return (
     <header className={styles.header}>
       <div className={styles['header-top']}>
-        <Link to="/" className={styles['logo']}> {/* Changed to Link */}
+        <Link to="/" className={styles['logo']}> 
           <img src={logo} alt="Logotipo de la marca" />
         </Link>
-        <Link to="/" className={styles['exo-2-font']}>Seal Market</Link> {/* Changed to Link */}
+        <Link to="/" className={styles['exo-2-font']}>Seal Market</Link>
         <AddressButton />
       </div>
       <div className={styles['search-bar-container']}>

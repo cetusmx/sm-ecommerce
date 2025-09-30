@@ -13,7 +13,7 @@ const fetchCategories = async () => {
 const excludedCategories = [
   "Accesorios", "Adhesivos", "Estuches", "Gato", "Graseras", 
   "Guías telescópicos", "Herramientas", "Kits telescópicos", 
-  "Pernos", "Seguros externos", "Seguros internos"
+  "Pernos", "Seguros externos", "Seguros internos", "Accesorios hidráulicos"
 ];
 
 const ProductFilter = ({ filters, onFilterChange }) => {

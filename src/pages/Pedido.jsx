@@ -4,11 +4,10 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/context/AuthContext';
 import styles from './Pedido.module.css';
 import OrderItem from '@/components/features/order/OrderItem';
-import { useDeliveryInfo } from '@/hooks/useDeliveryInfo';
+
 import ProductosPromocion from '@/components/features/product/ProductosPromocion'; // Import the new component
 import ProductosVistos from '@/components/features/product/ProductosVistos'; // Import ProductosVistos
 import ModalDomicilio from '../components/common/ModalDomicilio';
-import OrderConfirmationModal from '../components/common/OrderConfirmationModal';
 
 const Pedido = () => {
   const { currentUser, loading: authLoading } = useAuth();
@@ -18,15 +17,6 @@ const Pedido = () => {
   const [activeTab, setActiveTab] = useState('Pedidos');
   const [searchTerm, setSearchTerm] = useState('');
   const [dateRange, setDateRange] = useState('últimos 3 meses');
-  const [showOrderConfirmationModal, setShowOrderConfirmationModal] = useState(false);
-
-  useEffect(() => {
-    if (location.state?.orderPlaced) {
-      setShowOrderConfirmationModal(true);
-      // Clear the state to prevent the modal from showing again on refresh
-      navigate(location.pathname, { replace: true, state: {} });
-    }
-  }, [location.state, location.pathname, navigate]);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
@@ -119,7 +109,7 @@ const Pedido = () => {
 
 
   const formatDateToSpanish = (dateString) => {
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const options = { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' };
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', options);
   };
@@ -140,7 +130,6 @@ const Pedido = () => {
   }
 
   const OrderCard = ({ orderItems, products }) => {
-    const deliveryInfo = useDeliveryInfo(orderItems[0], 1);
     const pedidoConDetalles = orderItems.map(item => {
       const productInfo = products.find(p => p.clave === item.clave);
       return {
@@ -149,6 +138,10 @@ const Pedido = () => {
         categoria: productInfo?.categoria,
       };
     });
+
+    const fechaEntrega = orderItems[0].fecha_entrega 
+      ? formatDateToSpanish(orderItems[0].fecha_entrega)
+      : 'Fecha no disponible';
 
     return (
       <div className={styles['order-card']}>
@@ -180,7 +173,7 @@ const Pedido = () => {
           ))}
         </div>
         <div className={styles['card-footer']}>
-          <p><span className={styles['footer-label']}>Fecha de entrega:</span> {deliveryInfo.date}</p>
+          <p><span className={styles['footer-label']}>Fecha de entrega:</span> {fechaEntrega}</p>
           <p className={styles['order-status']}>Estatus: {orderItems[0].estatus}</p>
         </div>
       </div>
@@ -264,7 +257,6 @@ const Pedido = () => {
         </div>
       </div>
       {viewedProducts && viewedProducts.length > 0 && <ProductosVistos viewedProducts={viewedProducts} />}
-      <OrderConfirmationModal isOpen={showOrderConfirmationModal} onClose={() => setShowOrderConfirmationModal(false)} />
     </div>
   );
 };
