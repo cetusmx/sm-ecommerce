@@ -55,6 +55,13 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
     return null;
   }
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(value);
+  };
+
   return (
     <div className={styles.tableContainer}>
       <div className={styles.titleContainer}>
@@ -103,7 +110,7 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
                   {needsStockStatus ? (
                     <StockStatus arrivalDate={arrivalDate} />
                   ) : (
-                    `${product.precio}`
+                    formatCurrency(product.precio)
                   )}
                 </td>
                 <td>{product.unidad}</td>

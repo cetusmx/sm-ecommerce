@@ -187,6 +187,15 @@ const Producto = ({ producto, imageUrl }) => {
               </span>
             </div>
           )}
+          {producto.marca && (
+            <div className={styles["detalle-fila"]}>
+              <span>
+                <span className={styles.etiqueta}>Marca:</span>
+                {producto.marca}{" "}
+                {producto.sistema_medicion === "std" ? "pulg." : "mm"}
+              </span>
+            </div>
+          )}
           {producto.material !== "" ? (
             <div className={styles["detalle-fila"]}>
               <span>

@@ -63,6 +63,13 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
     );
   }
 
+  const formatCurrency = (value) => {
+    return new Intl.NumberFormat('es-MX', {
+      style: 'currency',
+      currency: 'MXN',
+    }).format(value);
+  };
+
   if (filteredForDisplay.length === 0) {
     return (
       <div className={styles.tableContainer}>
@@ -115,7 +122,7 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
                   {needsStockStatus ? (
                     <StockStatus arrivalDate={arrivalDate} />
                   ) : (
-                    `${product.precio}`
+                    formatCurrency(product.precio)
                   )}
                 </td>
                 <td>{product.unidad}</td>
