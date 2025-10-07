@@ -32,7 +32,7 @@ const ProductoVisto = ({ viewedProduct }) => {
 
   return (
     <div className={styles.container}>
-      {product.categoria === 'Herramientas' || product.categoria === 'Accesorios' ? (
+      {product.categoria === 'Herramientas' || product.categoria === 'Accesorios' || product.categoria==='Accesorios hidráulicos' ? (
           <img src={imageUrl2} alt={product.descripcion} className={styles.imagen} />
         ) : (
           <img src={imageUrl} alt={product.descripcion} className={styles.imagen} />

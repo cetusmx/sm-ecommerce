@@ -191,8 +191,7 @@ const Producto = ({ producto, imageUrl }) => {
             <div className={styles["detalle-fila"]}>
               <span>
                 <span className={styles.etiqueta}>Marca:</span>
-                {producto.marca}{" "}
-                {producto.sistema_medicion === "std" ? "pulg." : "mm"}
+                {producto.marca}
               </span>
             </div>
           )}
@@ -219,7 +218,7 @@ const Producto = ({ producto, imageUrl }) => {
 
         <div className={styles["acerca-de"]}>
           <h6>Acerca de este artículo</h6>
-          <p>{producto.observaciones}</p>
+          <p style={{textAlign:"justify"}}>{producto.acerca_de_producto}</p>
         </div>
       </div>
 
