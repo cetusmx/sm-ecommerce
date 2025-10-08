@@ -3,13 +3,15 @@ import { useCart } from '@/hooks/useCart';
 import styles from './CartItem.module.css';
 import { FaTrash } from 'react-icons/fa';
 import AvisoEscasez from '../common/AvisoEscasez'; // Import the new modal
+import CartItemSkeleton from './CartItemSkeleton'; // Import the skeleton component
 
 const CartItem = ({ item, deliveryInfo }) => {
   const { removeItem, updateItemQuantity } = useCart();
   const [isScarcityModalOpen, setIsScarcityModalOpen] = useState(false);
 
-  if (!deliveryInfo) {
-    return null; // Or a loading skeleton
+  // If delivery info isn't ready OR the item isn't hydrated, show skeleton.
+  if (!deliveryInfo || !item.descripcion) {
+    return <CartItemSkeleton />;
   }
 
   console.log("Item dentro CartItem: ", item)

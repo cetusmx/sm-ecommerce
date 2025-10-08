@@ -1,0 +1,74 @@
+@keyframes pulse {
+  0% {
+    background-color: #f0f0f0;
+  }
+  50% {
+    background-color: #e0e0e0;
+  }
+  100% {
+    background-color: #f0f0f0;
+  }
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  padding: 1rem;
+}
+
+.cardBody {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.placeholder {
+  animation: pulse 1.5s infinite ease-in-out;
+  border-radius: 4px;
+}
+
+.image {
+  width: 80px;
+  height: 80px;
+}
+
+.productDetails {
+  flex-grow: 1;
+}
+
+.line {
+  height: 1em;
+  margin-bottom: 0.5rem;
+}
+
+.lineLg {
+  width: 80%;
+}
+
+.lineMd {
+  width: 60%;
+}
+
+.lineSm {
+  width: 40%;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.quantityInput {
+  width: 60px;
+  height: 30px;
+}
+
+.removeButton {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}

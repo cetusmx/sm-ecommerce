@@ -25,37 +25,53 @@ export const getUserCart = async (email) => {
 };
 
 /**
- * Guarda el carrito de un usuario a través de la API.
+ * Guarda/sobrescribe el carrito completo de un usuario usando el nuevo endpoint PUT.
  * @param {string} email - El email del usuario.
- * @param {Array} cart - El array del carrito.
+ * @param {Array} cart - El array completo del carrito.
  */
 export const saveUserCart = async (email, cart) => {
   if (!email) return;
   try {
-    // Step 1: Delete all existing cart items for the user
-    await fetch(`${API_URL}/${email}`, {
-      method: 'DELETE',
+    // Mapeamos el carrito del frontend al formato esperado por el backend
+    const cartToSave = cart.map(item => ({
+      clave: item.clave,
+      descripcion: item.descripcion || '',
+      cantidad: String(item.quantity),
+      precio: item.precio,
+      fecha: item.fecha || new Date().toISOString(),
+    }));
+
+    const response = await fetch(`${API_URL}/${email}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(cartToSave),
     });
 
-    // Step 2: Add each item from the current cart
-    for (const item of cart) {
-      const itemToSave = {
-        email: email,
-        clave: item.clave,
-        descripcion: item.descripcion || '', // Ensure description is not undefined
-        cantidad: String(item.quantity), // Convert to string as per schema
-        precio: item.precio,
-        fecha: new Date().toISOString(), // Add current date/time
-      };
-      await fetch(API_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(itemToSave),
-      });
+    if (!response.ok) {
+      throw new Error('Error al guardar el carrito con PUT');
+    }
+
+  } catch (error) {
+    console.error("Error saving cart to API with PUT:", error);
+  }
+};
+
+/**
+ * Borra explícitamente todos los items del carrito de un usuario en la BD.
+ * @param {string} email - El email del usuario.
+ */
+export const clearCartInDB = async (email) => {
+  if (!email) return;
+  try {
+    const response = await fetch(`${API_URL}/${email}`, {
+      method: 'DELETE',
+    });
+    if (!response.ok) {
+      throw new Error('Error al borrar el carrito en la BD');
     }
   } catch (error) {
-    console.error("Error saving cart to API:", error);
+    console.error("Error clearing cart in DB:", error);
   }
 };

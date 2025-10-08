@@ -1,6 +1,6 @@
 import React, { createContext, useState, useMemo, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
-import { getUserCart, saveUserCart } from '../api/cartService';
+import { getUserCart, saveUserCart, clearCartInDB } from '../api/cartService';
 import { useQuery } from '@tanstack/react-query'; // Import useQuery
 import { fetchProducts } from '../api/productsApi';
 
@@ -57,6 +57,8 @@ const CartProvider = ({ children }) => {
       if (currentUser && allProducts) {
         // --- USER IS LOGGED IN ---
         const remoteCart = await getUserCart(currentUser.email);
+        setCart(remoteCart); // <--- PHASE 1: Set dehydrated cart immediately
+
         const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
 
         // Function to hydrate cart items with full product details
@@ -106,56 +108,63 @@ const CartProvider = ({ children }) => {
     loadCartData().finally(() => setIsLoading(false));
   }, [currentUser, allProducts]); // Add allProducts to dependency array
 
-  // Effect for saving cart when it changes
-  useEffect(() => {
-    // Do not save to DB or localStorage until the initial load is complete
-    if (isLoading) {
-      return;
-    }
+  const isInitialMount = useRef(true);
 
-    if (currentUser) {
-      saveUserCart(currentUser.email, cart);
-    } else {
-      localStorage.setItem('cart', JSON.stringify(cart));
-    }
-  }, [cart, currentUser, isLoading]);
+  // The auto-save useEffect has been removed to adopt an imperative save model.
 
   const addItem = (item, quantity) => {
-    setCart(prevCart => {
-      const existingItemIndex = prevCart.findIndex((i) => i.clave === item.clave);
-  
-      if (existingItemIndex > -1) {
-        // Si el item existe, creamos un nuevo array
-        return prevCart.map((cartItem, index) => {
-          if (index === existingItemIndex) {
-            // Y para el item que coincide, creamos un nuevo objeto
-            return { ...cartItem, quantity: cartItem.quantity + quantity };
-          }
-          // Los demás items se devuelven como están
-          return cartItem;
-        });
-      } else {
-        // Si es un item nuevo, lo agregamos al array
-        return [...prevCart, { ...item, quantity }];
-      }
-    });
+    let newCart;
+    const existingItemIndex = cart.findIndex((i) => i.clave === item.clave);
+
+    if (existingItemIndex > -1) {
+      newCart = cart.map((cartItem, index) =>
+        index === existingItemIndex
+          ? { ...cartItem, quantity: cartItem.quantity + quantity }
+          : cartItem
+      );
+    } else {
+      newCart = [...cart, { ...item, quantity }];
+    }
+    setCart(newCart);
+    if (currentUser) {
+      saveUserCart(currentUser.email, newCart);
+    } else {
+      localStorage.setItem('cart', JSON.stringify(newCart));
+    }
   };
 
   const removeItem = (itemClave) => {
-    setCart(cart.filter((item) => item.clave !== itemClave));
+    const newCart = cart.filter((item) => item.clave !== itemClave);
+    setCart(newCart);
+    if (currentUser) {
+      saveUserCart(currentUser.email, newCart);
+    } else {
+      localStorage.setItem('cart', JSON.stringify(newCart));
+    }
   };
 
   const clearCart = () => {
     setCart([]);
+    if (currentUser) {
+      clearCartInDB(currentUser.email);
+    } else {
+      localStorage.removeItem('cart');
+    }
   };
 
   const updateItemQuantity = (itemClave, newQuantity) => {
     if (newQuantity <= 0) {
-      removeItem(itemClave);
+      removeItem(itemClave); // removeItem already handles saving
+      return;
+    }
+    const newCart = cart.map((item) =>
+      item.clave === itemClave ? { ...item, quantity: newQuantity } : item
+    );
+    setCart(newCart);
+    if (currentUser) {
+      saveUserCart(currentUser.email, newCart);
     } else {
-      setCart(cart.map((item) =>
-        item.clave === itemClave ? { ...item, quantity: newQuantity } : item
-      ));
+      localStorage.setItem('cart', JSON.stringify(newCart));
     }
   };
 
