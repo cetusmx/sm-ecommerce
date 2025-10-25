@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import HeroSection from "@/components/features/home/HeroSection";
 import SpecSearchBlock from "@/components/features/search/SpecSearchBlock";
 import FeaturedProducts from "@/components/features/product/FeaturedProducts";
@@ -12,13 +12,13 @@ import GlobalSearchResultsComponent from "@/components/features/product/GlobalSe
 import ProductosVistos from "@/components/features/product/ProductosVistos";
 import useDebounce from "@/hooks/useDebounce";
 import { useAuth } from "@/context/AuthContext";
-import { fetchProductosVistos } from "@/api/productosVistosApi";
 
 import { fetchProducts } from "@/api/productsApi";
 
 const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilter, productFilterKey }) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [globalFilteredProducts, setGlobalFilteredProducts] = useState([]);
+  const queryClient = useQueryClient();
 
   const initialFilters = useMemo(() => ({
     diamInt: searchParams.get('diamInt') || '',
@@ -42,11 +42,7 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
 
   const { currentUser } = useAuth();
 
-  const { data: viewedProducts } = useQuery({
-    queryKey: ['productosVistos', currentUser?.email],
-    queryFn: () => fetchProductosVistos(currentUser?.email),
-    enabled: !!currentUser?.email,
-  });
+  const viewedProducts = queryClient.getQueryData(['productosVistos', currentUser?.email]);
 
   // Effect for global search
   useEffect(() => {

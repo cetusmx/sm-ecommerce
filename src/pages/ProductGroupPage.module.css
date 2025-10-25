@@ -12,28 +12,41 @@
     opacity: 1;
 }
 
-.sidebar {
-    flex: 0 0 250px;
-    border-right: 1px solid #e0e0e0;
-    padding-right: 2rem;
+/* The sticky container for the left column */
+.sidebarContainer {
+    width: 280px;
     position: sticky;
-    top: 0;
-    align-self: start; /* Aligns the sticky item to the start of the container */
-    max-height: 100vh;
-    overflow-y: auto;
+    top: 0; /* Changed from 2rem to 0 */
+    align-self: start;
+    /* NO max-height, NO flex properties */
+}
+
+/* The filter area with the visual styles */
+.sidebar {
+    /* background-color: #f7f7f7; */
+    /* background-color: #e8f2f7; */
+    /* background-color: #f1f6fa; */
+    background-color: #f3f7fa;
+    border-radius: 8px;
+    padding: 1rem; /* Reduced padding */
+    border: 1px solid #e0e0e0;
+    /* NO max-height, NO overflow-y, NO min-height */
+    /* NO scrollbar-hiding properties */
+    margin-bottom: 2rem; /* Space between sidebar and promo */
 }
 
 .title {
     font-size: 1.8rem;
     margin-bottom: 1.5rem;
-    color: #333;
+    /* color: #0e3287; */
+    color: #d9534e;
 }
 
 .filterTitle {
     font-size: 1.2rem;
     margin-bottom: 1rem;
-    color: #555;
-    border-bottom: 1px solid #eee;
+    color: #0e3287;
+    border-bottom: 1px solid #dad9d9;
     padding-bottom: 0.5rem;
     display: flex;
     align-items: center;
@@ -42,6 +55,10 @@
 
 .filterIcon {
     /* The size is set on the SVG element itself, but you could add more styles here if needed */
+}
+
+.expandIcon {
+    margin-right: 3px;
 }
 
 .filterList {
@@ -69,6 +86,10 @@
     cursor: pointer;
 }
 
+.filterItem input[type="checkbox"]:checked {
+    accent-color: #0e3287;
+}
+
 .mainContent {
     flex: 1;
 }
@@ -82,17 +103,51 @@
 
 /* Promotional Product Styles */
 .promoContainer {
-    margin-top: 2rem;
+    /* NO margin-top, handled by sidebar's margin-bottom */
 }
 
 .divider {
     border: none;
-    border-top: 1px solid #e0e0e0;
+    /* border-bottom: 1px solid #dad9d9; */
     margin-bottom: 2rem;
+}
+.divider1 {
+    border: none;
+    border-top: 1px solid #dad9d9;
+    margin-top: 1em;
 }
 
 .promoLoading {
     padding: 1rem;
     text-align: center;
     color: #666;
+}
+
+/* Added Styles for Filter Highlighting and Clearing */
+.clearButtonContainer {
+    text-align: center; /* Center the button */
+    margin-top: 1.5rem; /* Space above the button */
+}
+
+.clearButton {
+    background-color: transparent;
+    border: none;
+    color: #007bff;
+    cursor: pointer;
+    font-size: 0.9em;
+    padding: 0;
+}
+
+.clearButton:hover {
+    text-decoration: underline;
+}
+
+.expandableFilter.selectedFilter span,
+.filterItem label.selectedLabel {
+    font-weight: 500; /* Subtler bold */
+    color: #0e3287; /* New color */
+}
+
+.expandableFilter.selectedFilter {
+    /* No background color */
 }

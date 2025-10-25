@@ -73,7 +73,7 @@ const ProductTable = ({ products }) => {
         <table className={styles.productTable}>
             <thead>
                 <tr>
-                    <th className={styles.thImage}>Vista</th>
+                    <th className={styles.thImage}>Perfil</th>
                     <th className={styles.thClave}>SKU</th>
                     <th className={styles.thDescripcion}>Descripción</th>
                     <th className={styles.thPrecio}>Precio</th>

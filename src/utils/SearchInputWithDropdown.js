@@ -1,47 +1,59 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom'; // Re-import useNavigate
-import useDebounce from '@/hooks/useDebounce'; // Import useDebounce
+import { useNavigate } from 'react-router-dom';
+import useDebounce from '@/hooks/useDebounce';
+import { normalizeProductForSearch, getCanonicalStems } from '@/config/searchDictionary';
 
 const SearchInputWithDropdown = ({ onFullSearch }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const queryClient = useQueryClient();
-    const navigate = useNavigate(); // Re-declare navigate
+    const navigate = useNavigate();
 
-    const debouncedSearchQuery = useDebounce(searchQuery, 300); // Debounce search query by 300ms
+    const allProducts = queryClient.getQueryData(['products']) || [];
 
-    // Effect to trigger autocomplete search when debounced query changes
+    // Paso 1: Crear un índice de búsqueda normalizado y memorizado
+    const searchIndex = useMemo(() => {
+        console.log("Creando índice de búsqueda con stems y sinónimos...");
+        return allProducts.map(product => normalizeProductForSearch(product));
+    }, [allProducts]);
+
+    const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
     useEffect(() => {
         if (debouncedSearchQuery.trim() === '') {
             setSearchResults([]);
             return;
         }
         updateAutocompleteResults(debouncedSearchQuery);
-    }, [debouncedSearchQuery]); // Dependency on debounced query
+    }, [debouncedSearchQuery, searchIndex]); // Depender también del searchIndex
 
-    const updateAutocompleteResults = (query) => { // Renamed handleSearch to performSearch
-        const allProducts = queryClient.getQueryData(['products']);
-        if (!allProducts) {
+    // Paso 2: Nueva función de búsqueda que utiliza el índice
+    const updateAutocompleteResults = (query) => {
+        if (!searchIndex.length) {
+            return;
+        }
+
+        // Normalizar la consulta del usuario usando la misma lógica que los productos
+        const queryStems = getCanonicalStems(query);
+
+        if (queryStems.length === 0) {
             setSearchResults([]);
             return;
         }
 
-        const lowerCaseQuery = query.toLowerCase();
-
-        const filtered = allProducts.filter(p => !(p.existencia == 0 && !p.ultima_compra)).filter(product => {
-            const { descripcion, clave, categoria, material, observaciones } = product;
-            return (
-                (clave && clave.toLowerCase().includes(lowerCaseQuery)) ||
-                (descripcion && descripcion.toLowerCase().includes(lowerCaseQuery)) ||
-                (categoria && categoria.toLowerCase().includes(lowerCaseQuery)) ||
-                (material && material.toLowerCase().includes(lowerCaseQuery)) ||
-                (observaciones && observaciones.toLowerCase().includes(lowerCaseQuery))
-            );
+        // Filtrar el índice
+        const filteredIndexResults = searchIndex.filter(indexedProduct => {
+            // Verificar que todos los stems de la consulta existan en el texto de búsqueda del producto
+            return queryStems.every(stem => indexedProduct.searchableText.includes(stem));
         });
 
-        // Sort results: prioritize clave exact, clave starts with, clave contains, then description starts with, description contains
-        filtered.sort((a, b) => {
+        // Extraer los productos originales de los resultados del índice
+        let filteredProducts = filteredIndexResults.map(res => res.originalProduct);
+
+        // Paso 3: Aplicar el mismo ordenamiento de relevancia que antes
+        const lowerCaseQuery = query.toLowerCase();
+        filteredProducts.sort((a, b) => {
             const aClave = a.clave?.toLowerCase() || '';
             const bClave = b.clave?.toLowerCase() || '';
             const aDesc = a.descripcion?.toLowerCase() || '';
@@ -75,7 +87,7 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
             return 0;
         });
 
-        setSearchResults(filtered);
+        setSearchResults(filteredProducts);
     };
 
     const handleResultClick = (productClave) => {

@@ -21,10 +21,30 @@ import filtro from '@/assets/filtro.jpg';
 import termometro from '@/assets/termometro.jpg';
 import tapon from '@/assets/tapon.jpg';
 
+import orings from '@/assets/orings.jpg';
+import oring1 from '@/assets/oring1.png';
+import oring2 from '@/assets/oring2.jpg';
+import backup1 from '@/assets/backup1.jpg';
+
 
 const promosData = [
   {
-    title: 'Seguros, Pernos y Graseras',
+    title: 'Orings y Respaldos',
+    mainImage: orings,
+    mainImageAlt: 'Orings estándar AS568',
+    mainImage2: oring1,
+    mainImage2Alt: 'Orings de nitrilo y vitón',
+    description: 'Orings estándar AS568',
+    subImage1: oring2,
+    subImage1Alt: 'Orings milimétricos',
+    subImage1Title: 'Orings milimétricos',
+    subImage2: backup1,
+    subImage2Alt: 'Respaldos de todas medidas',
+    subImage2Title: 'Respaldos de todas medidas',
+    link: '/grupo/orings-respaldos'
+  },
+  /* {
+    title: 'Orings y Respaldos',
     mainImage: grasera,
     mainImageAlt: 'Fabricación de sellos',
     mainImage2: perno,
@@ -37,7 +57,7 @@ const promosData = [
     subImage2Alt: 'Alta precisión',
     subImage2Title: 'Alta precisión',
     link: '/grupo/seguros-pernos-graseras'
-  },
+  }, */
   {
     title: 'Herramientas',
     mainImage: her1,

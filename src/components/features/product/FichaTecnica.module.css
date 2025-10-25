@@ -1,0 +1,63 @@
+.fichaTecnicaContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Two equal columns */
+    gap: 1rem; /* Reduced gap */
+    padding: 1rem; /* Reduced padding */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #f3f7fa;
+    /* background-color: #fdfdfd; */
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.fichaTecnicaLeft {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* background-color: #f9f9f9; REMOVED */
+    border-radius: 4px;
+    /* min-height: 80px; REMOVED */
+    padding: 0.3rem; /* Reduced padding */
+    text-align: center;
+    color: #666;
+    font-size: 0.85rem; /* Reduced font size */
+}
+
+.fichaTecnicaRight h3 {
+    color: #0e3287;
+    margin-bottom: 0.5rem; /* Reduced margin */
+    font-size: 1.1rem; /* Reduced font size */
+}
+
+.fichaTecnicaTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem; /* Reduced table font size */
+}
+
+.fichaTecnicaTable th,
+.fichaTecnicaTable td {
+    border: 1px solid #eee;
+    padding: 0.3rem 0.5rem; /* Reduced padding */
+    text-align: left;
+}
+
+.fichaTecnicaTable th {
+    background-color: #f0f0f0;
+    font-weight: 500;
+    color: #333;
+}
+
+.fichaTecnicaTable tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.productSchemeImage {
+    max-width: 100%;
+    max-height: 150px; /* Constrain image height */
+    height: auto;
+    object-fit: contain; /* Ensure image scales correctly */
+    display: block; /* Remove extra space below image */
+    border-radius: 4px;
+}
