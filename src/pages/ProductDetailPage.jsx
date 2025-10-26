@@ -75,7 +75,8 @@ const ProductDetailPage = () => {
   const { data: product, isLoading: isLoadingProduct, error: productError } = useQuery({
     queryKey: ['productDetails', clave],
     queryFn: () => fetchProductByClave(clave),
-    staleTime: 1000 * 60 * 60, // 1 hour
+    staleTime: 0,
+    /* staleTime: 1000 * 60 * 60, */ // 1 hour
   });
 
   // Fetch all categories
