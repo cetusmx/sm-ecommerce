@@ -17,7 +17,7 @@ export const fetchProductByClave = async (clave) => {
   }
   return response.json();
 };
-
+ 
 
 export const fetchProductsByClaves = async (claves) => {
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/claves`, {
