@@ -12,10 +12,11 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
 
     const allProducts = queryClient.getQueryData(['products']) || [];
 
-    // Paso 1: Crear un índice de búsqueda normalizado y memorizado
+    // Paso 1: Crear un índice de búsqueda normalizado y memorizado (temporalmente desactivado)
     const searchIndex = useMemo(() => {
-        console.log("Creando índice de búsqueda con stems y sinónimos...");
-        return allProducts.map(product => normalizeProductForSearch(product));
+        // console.log("Creando índice de búsqueda con stems y sinónimos...");
+        // return allProducts.map(product => normalizeProductForSearch(product));
+        return []; // Devuelve un array vacío para desactivar la funcionalidad
     }, [allProducts]);
 
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
