@@ -18,8 +18,7 @@ export const fetchProductByClave = async (clave) => {
   return response.json();
 };
 
-// This is the recommended way to fetch multiple products. 
-// The backend should be updated to support this endpoint.
+
 export const fetchProductsByClaves = async (claves) => {
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/claves`, {
     method: 'POST',

@@ -14,8 +14,8 @@ const Footer = () => {
           <h4>Enlaces de interés</h4>
           <ul>
             <li><a href="/privacy-policy">Política de Privacidad</a></li>
-            <li><a href="/terms">Términos de Servicio</a></li>
-            <li><a href="/returns">Política de Devoluciones</a></li>
+           {/*  <li><a href="/terms">Términos de Servicio</a></li> */}
+            {/* <li><a href="/returns">Política de Devoluciones</a></li> */}
           </ul>
         </div>
         <div className={`${styles['footer-section']} ${styles.social}`}>
