@@ -1,45 +1,231 @@
 .footer {
-  background-color: #131921;
-  color: #fff;
-  padding: var(--spacing-xl) var(--spacing-md);
   display: flex;
-  flex-direction: column;
-  text-align: center;
-  padding-top: 20px;
-}
-
-.footer-content {
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-lg);
-}
-
-.footer-section h4 {
-  color: var(--color-secondary);
-  margin-bottom: var(--spacing-sm);
-
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-}
-
-.footer-section a {
+  justify-content: space-between;
+  background-color: #30018F; /* Changed */
   color: #fff;
-  transition: color 0.3s ease;
+  padding: 4rem 20%; /* Adjusted padding */
+  border-top: 1px solid #5024b3; /* Changed */
+  flex-wrap: wrap;
+}
+
+.column {
+  padding: 0 15px;
+  box-sizing: border-box;
+}
+
+.titleContainer {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.iconWrapper {
+  background-color: transparent; /* Changed */
+  border: 2px solid #c0aada; /* Changed */
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.icon {
+  color: #c0aada; /* Changed */
+  font-size: 18px; /* Slightly reduced */
+}
+
+.titleContainer h3 {
+  margin: 0;
+  font-size: 1.2rem; /* Reduced */
+  color: #fff;
+  font-weight: 400; /* Changed */
+}
+
+.content p,
+.infoLinks p {
+  margin: 0 0 10px 0;
+  color: #fff;
+  font-size: 0.85rem; /* Reduced */
+}
+
+.infoLinks a {
+  color: #fff;
   text-decoration: none;
+  transition: color 0.3s ease;
+  font-size: 0.85rem; /* Reduced */
 }
 
-.footer-section a:hover {
-  color: var(--color-secondary);
+.infoLinks a:hover {
+  color: #c0aada; /* Changed */
 }
 
-/* Media Query para Tabletas y Escritorios */
-@media (min-width: 768px) {
-  .footer-content {
-    flex-direction: row;
-    justify-content: space-around;
-    text-align: left;
+/* --- New Styles for "Nosotros" section --- */
+.infoItem {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.infoItem p {
+  margin: 0 0 0 10px; /* Adjust margin for icon */
+}
+
+.infoIcon {
+  color: #c0aada; /* Changed */
+  font-size: 1rem; /* Reduced */
+}
+
+/* Corrected selector for higher specificity */
+.infoItem .highlightText {
+  color: #c0aada; /* Changed */
+}
+
+.newsletterForm {
+  display: flex;
+  border: 2px solid #c0aada; /* Changed */
+  border-radius: 5px;
+  overflow: hidden;
+  margin-top: 1.5rem;
+}
+
+.newsletterInput {
+  flex-grow: 1;
+  border: none;
+  background-color: #5415cf; /* Changed */
+  padding: 10px;
+  color: #fff; /* Changed for contrast */
+  outline: none;
+  font-size: 0.8rem; /* Reduced */
+}
+
+.newsletterInput::placeholder {
+  color: #ddd; /* Changed for contrast */
+}
+
+.newsletterButton {
+  background-color: #c0aada; /* Changed */
+  border: none;
+  padding: 0 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff; /* Changed for contrast */
+}
+/* --- End of New Styles --- */
+
+.branchesGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-template-rows: repeat(2, auto);
+  gap: 20px;
+}
+
+.branch {
+  display: flex;
+  align-items: flex-start; /* Changed */
+}
+
+.branchImage {
+  width: 60px; /* Reduced */
+  height: 60px; /* Reduced */
+  object-fit: cover;
+  border-radius: 5px;
+  margin-right: 15px;
+}
+
+.branchAddress p {
+  margin: 0;
+  font-size: 0.8rem; /* Reduced */
+}
+
+.branchAddress p strong {
+  color: #fff;
+  font-size: 0.85rem; /* Reduced */
+  font-weight: 500; /* Added */
+}
+
+.branchTitle {
+  margin-bottom: 0.3rem;
+  padding-bottom: 0.3rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1400px) {
+  .footer {
+    padding: 3rem 10%; /* Adjust padding for smaller desktops */
   }
 }
+
+@media (max-width: 992px) {
+  .footer {
+    flex-direction: column;
+    padding: 2rem 5%; /* Adjust padding for tablets */
+  }
+
+  .column {
+    width: 100% !important; /* Override inline styles */
+    margin-bottom: 2rem;
+  }
+
+  .branchesGrid {
+    grid-template-columns: 1fr; /* Stack branches on smaller screens */
+  }
+}
+
+@media (max-width: 576px) {
+  .titleContainer h3 {
+    font-size: 1.1rem; /* Further reduce */
+  }
+
+  .branch {
+    flex-direction: column;
+    text-align: center;
+  }
+
+    .branchImage {
+
+      margin-right: 0;
+
+      margin-bottom: 10px;
+
+    }
+
+  }
+
+  
+
+  /* --- Copyright Section --- */
+
+  .copyrightSection {
+
+    width: 100%;
+
+    margin-top: 2rem;
+
+    padding-top: 2rem;
+
+    border-top: 1px solid #5024b3; /* Changed */
+
+  }
+
+  
+
+  .copyrightSection p {
+
+    text-align: left;
+
+    font-size: 0.8rem;
+
+    margin: 0;
+
+    color: #aaa; /* A slightly dimmer color for copyright text */
+
+  }
+
+  .branchAddress a {
+    color: #fff;
+    text-decoration: none;
+  }
