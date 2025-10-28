@@ -6,6 +6,7 @@ import durangoImg from '@/assets/durango.png';
 import zacatecasImg from '@/assets/zacatecas.png';
 import mazatlanImg from '@/assets/mazatlan.png';
 import queretaroImg from '@/assets/queretaro.png';
+import logo from '@/assets/footer-logo.png';
 import { searchOrderForFacturacion, sendFacturacionDocument } from '../../api/facturacionService';
 
 const Footer = () => {
@@ -266,6 +267,7 @@ const Footer = () => {
 
       <div className={styles.copyrightSection}>
         <p>&copy; 2025 All rights reserved</p>
+        <img src={logo} alt="Company Logo" className={styles.copyrightLogo} />
       </div>
     </footer>
   );

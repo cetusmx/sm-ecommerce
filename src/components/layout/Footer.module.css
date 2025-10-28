@@ -3,7 +3,7 @@
   justify-content: space-between;
   background-color: #30018F; /* Changed */
   color: #fff;
-  padding: 4rem 20%; /* Adjusted padding */
+  padding: 4rem 20% 1rem; /* Adjusted padding */
   border-top: 1px solid #5024b3; /* Changed */
   flex-wrap: wrap;
 }
@@ -155,14 +155,14 @@
 /* Responsive adjustments */
 @media (max-width: 1400px) {
   .footer {
-    padding: 3rem 10%; /* Adjust padding for smaller desktops */
+    padding: 3rem 10% 1rem; /* Adjust padding for smaller desktops */
   }
 }
 
 @media (max-width: 992px) {
   .footer {
     flex-direction: column;
-    padding: 2rem 5%; /* Adjust padding for tablets */
+    padding: 2rem 5% 1rem; /* Adjust padding for tablets */
   }
 
   .column {
@@ -203,11 +203,15 @@
 
     width: 100%;
 
-    margin-top: 2rem;
+    margin-top: 1rem;
 
-    padding-top: 2rem;
+    padding-top: 1rem;
 
     border-top: 1px solid #5024b3; /* Changed */
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
   }
 
@@ -386,4 +390,8 @@
 
 .chevronOpen {
   transform: rotate(180deg);
+}
+
+.copyrightLogo {
+  height: 40px; /* Adjust as needed */
 }
