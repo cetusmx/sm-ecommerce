@@ -229,3 +229,161 @@
     color: #fff;
     text-decoration: none;
   }
+
+.successMessage {
+  color: #28a745; /* Green for success */
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.errorMessage {
+  color: #dc3545; /* Red for error */
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.facturacionMessage.success {
+  color: #28a745;
+}
+
+/* --- Facturacion Styles --- */
+.facturacionForm {
+  margin-top: 0.5rem; /* Adjusted */
+  margin-bottom: 1.5rem; /* Added */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: 1px solid #c0aada; /* Added border for grouping */
+  border-radius: 5px;
+  padding: 1rem;
+}
+
+.facturacionForm h4 {
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.facturacionInput {
+  padding: 8px;
+  border: 1px solid #c0aada;
+  border-radius: 5px;
+  background-color: #5024b3;
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.facturacionInput::placeholder {
+  color: #ddd;
+}
+
+.facturacionButton {
+  background-color: #c0aada;
+  color: #30018F;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background-color 0.3s ease;
+}
+
+.facturacionButton:hover {
+  background-color: #ece6de;
+}
+
+.cancelButton {
+  background-color: #dc3545; /* Red for cancel */
+  color: #fff;
+  margin-top: 10px;
+}
+
+.cancelButton:hover {
+  background-color: #c82333;
+}
+
+.fileInputContainer {
+  display: flex;
+  flex-direction: column; /* Changed */
+  /* Removed align-items: center; */
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.fileInputInstruction {
+  color: #fff;
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+.fileInput {
+  flex-grow: 1;
+  padding: 5px;
+  border: 1px solid #c0aada;
+  border-radius: 5px;
+  background-color: #5024b3;
+  color: #fff;
+  font-size: 0.8rem;
+}
+
+.fileInput::-webkit-file-upload-button {
+  visibility: hidden;
+}
+
+.fileInput::before {
+  content: 'Seleccionar archivo';
+  display: inline-block;
+  background: #c0aada;
+  color: #30018F;
+  border: 1px solid #c0aada;
+  border-radius: 3px;
+  padding: 5px 8px;
+  outline: none;
+  white-space: nowrap;
+  -webkit-user-select: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.fileInput:hover::before {
+  background: #ece6de;
+}
+
+.fileInput:active::before {
+  background: #ece6de;
+}
+
+.fileInputContainer .facturacionButton {
+  margin-top: 10px; /* Added margin to separate button from input */
+}
+
+.facturacionMessage {
+  margin-top: 1rem;
+  font-size: 0.85rem;
+}
+
+.facturacionMessage.error {
+  color: #dc3545;
+}
+
+.facturacionMessage.success {
+  color: #28a745;
+}
+
+.facturacionToggle {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  color: #fff; /* Ensure text color is white */
+  text-decoration: none; /* Remove underline */
+}
+
+.chevronIcon {
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+}

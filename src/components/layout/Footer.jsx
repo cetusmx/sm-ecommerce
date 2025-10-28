@@ -1,12 +1,92 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 import styles from './Footer.module.css';
-import { FaUsers, FaBuilding, FaBook, FaInfoCircle, FaPhone, FaEnvelope, FaPaperPlane } from 'react-icons/fa';
+import { FaUsers, FaBuilding, FaBook, FaInfoCircle, FaPhone, FaEnvelope, FaPaperPlane, FaChevronDown, FaSearch, FaUpload } from 'react-icons/fa';
 import durangoImg from '@/assets/durango.png';
 import zacatecasImg from '@/assets/zacatecas.png';
 import mazatlanImg from '@/assets/mazatlan.png';
 import queretaroImg from '@/assets/queretaro.png';
+import { searchOrderForFacturacion, sendFacturacionDocument } from '../../api/facturacionService';
 
 const Footer = () => {
+  const [showFacturacionForm, setShowFacturacionForm] = useState(false);
+  const [folioPedido, setFolioPedido] = useState('');
+  const [totalPedido, setTotalPedido] = useState('');
+  const [orderFound, setOrderFound] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [facturacionMessage, setFacturacionMessage] = useState('');
+  const [isFacturacionError, setIsFacturacionError] = useState(false);
+
+  const searchOrderMutation = useMutation({
+    mutationFn: () => searchOrderForFacturacion(folioPedido, totalPedido),
+    onSuccess: (data) => {
+      if (data.orderFound) {
+        setOrderFound(true);
+        setFacturacionMessage('');
+      } else {
+        setFacturacionMessage('Pedido no encontrado o el total no coincide.');
+        setIsFacturacionError(true);
+        setTimeout(() => setFacturacionMessage(''), 3000);
+      }
+    },
+    onError: (error) => {
+      setFacturacionMessage(error.message || 'Error al buscar el pedido.');
+      setIsFacturacionError(true);
+      setTimeout(() => setFacturacionMessage(''), 3000);
+    },
+  });
+
+  const sendDocumentMutation = useMutation({
+    mutationFn: () => sendFacturacionDocument(folioPedido, selectedFile, totalPedido),
+    onSuccess: (data) => {
+      setFacturacionMessage(data.message || 'Documento enviado exitosamente.');
+      setIsFacturacionError(false);
+      setTimeout(() => {
+        setFacturacionMessage('');
+        setShowFacturacionForm(false);
+        setOrderFound(false);
+        setFolioPedido('');
+        setTotalPedido('');
+        setSelectedFile(null);
+      }, 3000);
+    },
+    onError: (error) => {
+      setFacturacionMessage(error.message || 'Error al enviar el documento.');
+      setIsFacturacionError(true);
+      setTimeout(() => setFacturacionMessage(''), 3000);
+    },
+  });
+
+  const handleFacturacionClick = (e) => {
+    e.preventDefault();
+    setShowFacturacionForm(!showFacturacionForm);
+    setOrderFound(false);
+    setFolioPedido('');
+    setTotalPedido('');
+    setSelectedFile(null);
+    setFacturacionMessage('');
+  };
+
+  const handleSearchOrder = () => {
+    if (folioPedido && totalPedido) {
+      searchOrderMutation.mutate();
+    } else {
+      setFacturacionMessage('Por favor, ingrese el folio y el total del pedido.');
+      setIsFacturacionError(true);
+      setTimeout(() => setFacturacionMessage(''), 3000);
+    }
+  };
+
+  const handleSendDocument = () => {
+    if (selectedFile) {
+      sendDocumentMutation.mutate();
+    } else {
+      setFacturacionMessage('Por favor, seleccione un archivo.');
+      setIsFacturacionError(true);
+      setTimeout(() => setFacturacionMessage(''), 3000);
+    }
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.column} style={{ width: '25%' }}>
@@ -101,7 +181,85 @@ const Footer = () => {
         </div>
         <div className={styles.infoLinks}>
           <p><a href="/politicas-de-privacidad">Políticas de privacidad</a></p>
-          <p><a href="/facturacion">Facturación</a></p>
+          <p>
+            <a href="#" onClick={handleFacturacionClick} className={styles.facturacionToggle}>
+              Facturación <FaChevronDown className={`${styles.chevronIcon} ${showFacturacionForm ? styles.chevronOpen : ''}`} />
+            </a>
+          </p>
+          {showFacturacionForm && (
+            <div className={styles.facturacionForm}>
+              {!orderFound ? (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Ingrese folio Pedido"
+                    className={styles.facturacionInput}
+                    value={folioPedido}
+                    onChange={(e) => setFolioPedido(e.target.value)}
+                  />
+                  <input
+                    type="number"
+                    placeholder="Ingrese el total del Pedido"
+                    className={styles.facturacionInput}
+                    value={totalPedido}
+                    onChange={(e) => setTotalPedido(e.target.value)}
+                  />
+                  <button
+                    className={styles.facturacionButton}
+                    onClick={handleSearchOrder}
+                    disabled={searchOrderMutation.isPending}
+                  >
+                    {searchOrderMutation.isPending ? 'Buscando...' : 'Buscar'}
+                  </button>
+                  <button
+                    className={styles.facturacionButton + ' ' + styles.cancelButton}
+                    onClick={handleFacturacionClick}
+                  >
+                    Cancelar
+                  </button>
+                </>
+              ) : (
+                <div className={styles.fileInputContainer}>
+                  <p className={styles.fileInputInstruction}>Agrega tu Constancia de SF (.pdf)</p>
+                  <input
+                    type="file"
+                    className={styles.fileInput}
+                    onChange={(e) => {
+                      const file = e.target.files[0];
+                      if (file && file.type === 'application/pdf') {
+                        setSelectedFile(file);
+                        setFacturacionMessage('');
+                      } else {
+                        setSelectedFile(null);
+                        setFacturacionMessage('Por favor, selecciona un archivo PDF.');
+                        setIsFacturacionError(true);
+                        setTimeout(() => setFacturacionMessage(''), 3000);
+                      }
+                    }}
+                    accept=".pdf"
+                  />
+                  <button
+                    className={styles.facturacionButton}
+                    onClick={handleSendDocument}
+                    disabled={sendDocumentMutation.isPending || !selectedFile}
+                  >
+                    {sendDocumentMutation.isPending ? 'Enviando...' : 'Enviar'}
+                  </button>
+                  <button
+                    className={styles.facturacionButton + ' ' + styles.cancelButton}
+                    onClick={handleFacturacionClick}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              )}
+              {facturacionMessage && (
+                <p className={isFacturacionError ? styles.facturacionMessage + ' ' + styles.error : styles.facturacionMessage + ' ' + styles.success}>
+                  {facturacionMessage}
+                </p>
+              )}
+            </div>
+          )}
           <p><a href="/contacto">Contacto</a></p>
         </div>
       </div>
