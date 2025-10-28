@@ -74,7 +74,7 @@ const SignUp = () => {
       <div className={styles['signup-main-container']}>
         <div className={styles['signup-header']}>
           <img src={logo} alt="Mercado de Sellos Logo" />
-          <h4>Mercado de sellos</h4>
+          <h4>Seal Market</h4>
         </div>
 
         <div className={styles['signup-form-container']}>
@@ -137,7 +137,7 @@ const SignUp = () => {
         </div>
 
         <p className={styles['signup-legal-notice']}>
-          Al crear una cuenta, aceptas las condiciones de uso y el aviso de privacidad de Mercado de Sellos.
+          Al crear una cuenta, aceptas las condiciones de uso y el aviso de privacidad de Seal Market.
         </p>
 
       </div>
