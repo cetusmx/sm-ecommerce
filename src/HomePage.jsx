@@ -6,7 +6,7 @@ import SpecSearchBlock from "@/components/features/search/SpecSearchBlock";
 import FeaturedProducts from "@/components/features/product/FeaturedProducts";
 import ProductFilter from "@/components/features/product/ProductFilter.js";
 import PromosPrincipales from "@/components/features/home/PromosPrincipales";
-import CarouselCategorias from "@/components/features/home/CarouselCategorias";
+import ProductosPorUbicacion from "@/components/features/home/ProductosPorUbicacion";
 import SearchResults from "@/components/features/product/SearchResults";
 import GlobalSearchResultsComponent from "@/components/features/product/GlobalSearchResultsComponent";
 import ProductosVistos from "@/components/features/product/ProductosVistos";
@@ -212,7 +212,7 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
           <main className="main-content">
             <PromosPrincipales />
           </main>
-          <CarouselCategorias />
+          {products && <ProductosPorUbicacion products={products} />}
           {/* <FeaturedProducts /> */}
           {viewedProducts && viewedProducts.length > 0 && (
             <div style={{ padding: '0 20px' }}>
