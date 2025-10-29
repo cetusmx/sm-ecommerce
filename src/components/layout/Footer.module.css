@@ -392,6 +392,26 @@
   transform: rotate(180deg);
 }
 
+.boletinMessage {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+}
+
+.boletinMessage.success {
+  color: white;
+  border: none;
+  background-color: transparent;
+}
+
+.boletinMessage.error {
+  color: red;
+  border: none;
+  background-color: transparent;
+}
+
 .copyrightLogo {
   height: 40px; /* Adjust as needed */
 }

@@ -1,21 +1,10 @@
-Se ha modificado `src/pages/ProductGroupPage.jsx` para implementar un filtro de materiales independiente. Se añadió un nuevo estado `materialFilters`, se refactorizó la sincronización de los filtros con la URL usando `useEffect`, y se actualizó la lógica de filtrado de productos. Se creó el componente `src/components/features/product/FichaTecnica.jsx` para mostrar una ficha técnica dinámica basada en los materiales seleccionados, y se integró en `ProductGroupPage.jsx`.
+Se ha refactorizado el componente `ProductosPorUbicacion` en `src/components/features/home/ProductosPorUbicacion.jsx` para mostrar productos específicos en lugar de categorías. Se ha implementado una lógica de selección de productos basada en los campos `colocado_en` y `categoria` o `perfil`, con un límite de 10 productos por sección y un orden aleatorio.
 
-Se realizaron ajustes de estilo en `src/pages/ProductGroupPage.module.css` para:
-- Cambiar el color del título principal del sidebar a `#0e3287`.
-- Ajustar el `font-weight` de los filtros seleccionados a `500` y su color a `#0e3287`, eliminando el fondo.
-- Mover el botón "Limpiar filtros" a la parte inferior del sidebar.
-- Eliminar la barra de scroll vertical del sidebar (haciéndola invisible).
-- Cambiar el color de los checkboxes seleccionados a `#0e3287`.
-- Ajustar el `top` del sidebar a `0` para alinearlo con el encabezado de la tabla de productos.
+Se han realizado los siguientes cambios de estilo en `src/components/features/home/ProductosPorUbicacion.module.css`:
+- Cada grupo de productos ahora está en un contenedor con fondo blanco y esquinas no redondeadas.
+- Se ha reducido el tamaño de las imágenes de los productos y el tamaño del texto de la descripción.
+- Se ha reducido el tamaño del título de cada grupo y se ha justificado a la izquierda.
+- Se ha reducido el espacio entre el título de cada grupo y la fila de productos.
+- Se ha implementado un sistema de navegación horizontal con flechas para los productos, ocultando la barra de desplazamiento por defecto y mostrándola al pasar el ratón por encima del contenedor.
 
-Se realizaron ajustes de estilo en `src/components/features/product/FichaTecnica.module.css` y `src/components/features/product/FichaTecnica.jsx` para:
-- Implementar un layout de dos columnas (esquema y tabla de parámetros).
-- Reducir el tamaño de fuente y el `padding` de la tabla para hacerla más compacta.
-- Eliminar el encabezado de la tabla de la ficha técnica.
-- Integrar la imagen `assets/oring_schema.jpg` como esquema del producto.
-- Eliminar el fondo gris del contenedor de la imagen.
-- Ajustar la altura de la imagen con `max-height` y `object-fit: contain` para armonizar con la tabla.
-
-Se corrigió un error en `FichaTecnica.jsx` donde la búsqueda de propiedades de material no coincidía con los códigos almacenados en `materialFilters`.
-
-Se realizaron múltiples intentos para corregir problemas de layout en el sidebar, incluyendo el ancho, la altura y el comportamiento sticky, hasta llegar a una solución que permite que el contenedor de filtros crezca con su contenido y el producto en promoción se mantenga debajo, con todo el bloque siendo sticky.
+Se ha implementado la funcionalidad de suscripción al boletín en `src/components/layout/Footer.jsx` utilizando el endpoint `/boletines` y la función `postBoletin` de `src/api/boletinesService.js`. Se ha mejorado el manejo de errores para mostrar mensajes más amigables en caso de correos electrónicos duplicados y se han ajustado los estilos de los mensajes de éxito y error en `src/components/layout/Footer.module.css` para que el texto sea blanco para éxito y rojo para error, sin fondo.

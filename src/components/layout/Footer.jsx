@@ -8,6 +8,7 @@ import mazatlanImg from '@/assets/mazatlan.png';
 import queretaroImg from '@/assets/queretaro.png';
 import logo from '@/assets/footer-logo.png';
 import { searchOrderForFacturacion, sendFacturacionDocument } from '../../api/facturacionService';
+import { postBoletin } from '../../api/boletinesService';
 
 const Footer = () => {
   const [showFacturacionForm, setShowFacturacionForm] = useState(false);
@@ -17,6 +18,8 @@ const Footer = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [facturacionMessage, setFacturacionMessage] = useState('');
   const [isFacturacionError, setIsFacturacionError] = useState(false);
+  const [email, setEmail] = useState('');
+  const [boletinMessage, setBoletinMessage] = useState('');
 
   const searchOrderMutation = useMutation({
     mutationFn: () => searchOrderForFacturacion(folioPedido, totalPedido),
@@ -58,6 +61,24 @@ const Footer = () => {
     },
   });
 
+  const subscribeMutation = useMutation({
+    mutationFn: postBoletin,
+    onSuccess: () => {
+      setBoletinMessage('¡Gracias por suscribirte!');
+      setEmail('');
+      setTimeout(() => setBoletinMessage(''), 3000);
+    },
+    onError: (error) => {
+      console.error("Subscription error:", error);
+      let errorMessage = 'Error al suscribirse.';
+      if (error.message && error.message.includes("Validation error")) {
+        errorMessage = 'Este correo electrónico ya está suscrito.';
+      }
+      setBoletinMessage(errorMessage);
+      setTimeout(() => setBoletinMessage(''), 3000);
+    },
+  });
+
   const handleFacturacionClick = (e) => {
     e.preventDefault();
     setShowFacturacionForm(!showFacturacionForm);
@@ -88,6 +109,13 @@ const Footer = () => {
     }
   };
 
+  const handleSubscribe = (e) => {
+    e.preventDefault();
+    if (email) {
+      subscribeMutation.mutate(email);
+    }
+  };
+
   return (
     <footer className={styles.footer}>
       <div className={styles.column} style={{ width: '25%' }}>
@@ -109,12 +137,20 @@ const Footer = () => {
             <FaEnvelope className={styles.infoIcon} />
             <p className={styles.highlightText}>contacto@sealmarket.mx</p>
           </div>
-          <div className={styles.newsletterForm}>
-            <input type="text" placeholder="Tu correo electrónico" className={styles.newsletterInput} />
-            <button className={styles.newsletterButton}>
-              <FaPaperPlane />
+          <form className={styles.newsletterForm} onSubmit={handleSubscribe}>
+            <input 
+              type="email" 
+              placeholder="Tu correo electrónico" 
+              className={styles.newsletterInput} 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+            <button type="submit" className={styles.newsletterButton} disabled={subscribeMutation.isPending}>
+              {subscribeMutation.isPending ? '...' : <FaPaperPlane />}
             </button>
-          </div>
+          </form>
+          {boletinMessage && <p className={`${styles.boletinMessage} ${subscribeMutation.isError ? styles.error : styles.success}`}>{boletinMessage}</p>}
         </div>
       </div>
 
