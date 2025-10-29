@@ -108,3 +108,11 @@
 .password-validation-message.invalid {
   color: red;
 }
+
+.successMessageContainer {
+  padding: 10px;
+  border: 1px solid green;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  background-color: #e6ffe6; /* Light green background */
+}

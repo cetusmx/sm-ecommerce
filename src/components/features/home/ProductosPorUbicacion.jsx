@@ -48,7 +48,7 @@ const ProductGroup = ({ title, products }) => {
 const ProductosPorUbicacion = ({ products }) => {
   const estoperoCategorias = ["Limpiadores", "Guías desgaste", "Buffers", "Sello U"];
   const estoperoProducts = products.filter(p => 
-    p.colocado_en === 'estopero' && estoperoCategorias.includes(p.categoria)
+    p.colocado_en === 'estopero' && estoperoCategorias.includes(p.categoria) && p.ultima_compra !== null && p.existencia > 0
   );
   
   // Shuffle the selected products
@@ -59,7 +59,7 @@ const ProductosPorUbicacion = ({ products }) => {
 
   const pistonPerfiles = ["CPS", "P1800", "CTC", "H714", "H780", "K49", "K501", "MPS"];
   const pistonProducts = products.filter(p => 
-    p.colocado_en === 'piston' && pistonPerfiles.includes(p.perfil)
+    p.colocado_en === 'piston' && pistonPerfiles.includes(p.perfil) && p.ultima_compra !== null && p.existencia > 0
   );
 
   // Shuffle the selected products

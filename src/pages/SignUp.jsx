@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { updateProfile } from 'firebase/auth';
 import logo from '../assets/logo.png';
@@ -14,6 +14,7 @@ const SignUp = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Validation states
   const [isPasswordLengthValid, setIsPasswordLengthValid] = useState(false);
@@ -22,11 +23,23 @@ const SignUp = () => {
   const { signup } = useAuth();
   const { mutate: addClientToVPS } = useAddClient();
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setIsPasswordLengthValid(password.length >= 6);
     setDoPasswordsMatch(password !== '' && password === confirmPassword);
   }, [password, confirmPassword]);
+
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage('');
+        const from = location.state?.from || '/';
+        navigate(from);
+      }, 3000); // Clear message and redirect after 3 seconds
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage, navigate, location.state?.from]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,8 +73,7 @@ const SignUp = () => {
       
       addClientToVPS(clientData);
 
-      alert('¡Cuenta creada! Revisa tu correo para verificar la cuenta.');
-      navigate('/');
+      setSuccessMessage('¡Cuenta creada exitosamente! Revisa tu correo para verificar la cuenta.');
     } catch (err) {
       setError('Error al crear la cuenta. El correo electrónico puede que ya esté en uso.');
     }
@@ -84,6 +96,11 @@ const SignUp = () => {
           </div>
 
           {error && <p style={{ color: 'red' }}>{error}</p>}
+          {successMessage && (
+            <div className={styles.successMessageContainer}>
+              <p style={{ color: 'green' }}>{successMessage}</p>
+            </div>
+          )}
           <form onSubmit={handleSubmit}>
             <label htmlFor="email">Ingresa el correo electrónico</label>
             <input

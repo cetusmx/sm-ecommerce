@@ -69,7 +69,7 @@ const Login = () => {
 
         <div style={{ marginTop: '20px', textAlign: 'center' }}>
           <p>¿Eres nuevo en Seal Market?</p>
-          <Link to="/signup">Crea tu cuenta</Link>
+          <Link to="/signup" state={{ from: location.state?.from }}>Crea tu cuenta</Link>
         </div>
 
       </div>
