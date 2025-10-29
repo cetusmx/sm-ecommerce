@@ -33,6 +33,11 @@ const CartPage = () => {
   });
 
   const handleCheckout = () => {
+    if (!currentUser) {
+      navigate("/login", { state: { from: "/cart" } });
+      return;
+    }
+
     const fechasDeEntrega = Object.keys(deliveryInfos).map(clave => ({
       clave,
       fecha: deliveryInfos[clave].date,

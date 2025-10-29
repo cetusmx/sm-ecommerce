@@ -184,7 +184,7 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
   if (error) return <div>Ocurrió un error: {error.message}</div>;
 
   return (
-    <div className="home-page-container">
+    <div className="home-page-wrapper">
       <ProductFilter 
         key={productFilterKey} // Add key to force remount/reset
         filters={filters} 
@@ -207,7 +207,7 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
           />
         </div>
       ) : (
-        <div className="fade-in">
+        <div className="fade-in default-home-content">
           <HeroSection />
           <main className="main-content">
             <PromosPrincipales />

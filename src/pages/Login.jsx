@@ -32,7 +32,7 @@ const Login = () => {
       <div className={styles['login-main-container']}>
         <div className={styles['login-header']}>
           <img src={logo} alt="Mercado de Sellos Logo" />
-          <h4>Mercado de sellos</h4>
+          <h4>Seal Market</h4>
         </div>
 
         <div className={styles['login-form-container']}>
@@ -64,11 +64,11 @@ const Login = () => {
         </div>
 
         <p className={styles['login-legal-notice']}>
-          Al ingresar, aceptas las condiciones de uso y el aviso de privacidad de Mercado de Sellos.
+          Al ingresar, aceptas las condiciones de uso y el aviso de privacidad de Seal Market.
         </p>
 
         <div style={{ marginTop: '20px', textAlign: 'center' }}>
-          <p>¿Eres nuevo en Mercado de Sellos?</p>
+          <p>¿Eres nuevo en Seal Market?</p>
           <Link to="/signup">Crea tu cuenta</Link>
         </div>
 
