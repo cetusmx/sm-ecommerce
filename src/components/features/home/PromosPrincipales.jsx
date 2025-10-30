@@ -6,7 +6,7 @@ import PromoPrincipal from './PromoPrincipal';
 import grasera from '@/assets/grasera.jpg';
 import perno from '@/assets/perno.jpg';
 import seguroInterno from '@/assets/seguro-interno.jpg';
-import taponGato from '@/assets/taponGato.jpg';
+import kitquad from '@/assets/kitquad.jpg';
 
 import her1 from '@/assets/SET-01.png';
 import her2 from '@/assets/SET-18.jpg';
@@ -16,10 +16,10 @@ import her4 from '@/assets/SET-5.jpg';
 import estu1 from '@/assets/EMON70382.jpg';
 import estu2 from '@/assets/ESON70382.jpg';
 
-import cedazo from '@/assets/cedazo.jpg';
-import filtro from '@/assets/filtro.jpg';
-import termometro from '@/assets/termometro.jpg';
-import tapon from '@/assets/tapon.jpg';
+import reten1 from '@/assets/reten1.jpg';
+import reten2 from '@/assets/reten2.jpg';
+import reten3 from '@/assets/reten3.jpg';
+import reten4 from '@/assets/reten4.jpg';
 
 import orings from '@/assets/orings.jpg';
 import oring1 from '@/assets/oring1.png';
@@ -74,19 +74,19 @@ const promosData = [
     link: '/grupo/herramientas'
   },
   {
-    title: 'Accesorios Hidráulicos',
-    mainImage: cedazo,
+    title: 'Retenes',
+    mainImage: reten1,
     mainImageAlt: 'Promo 3',
-    mainImage2: tapon,
+    mainImage2: reten2,
     mainImage2Alt: 'Promo 3',
     description: 'Descripción de la promo 3.',
-    subImage1: filtro,
+    subImage1: reten3,
     subImage1Alt: 'Sub imagen 1',
     subImage1Title: 'Título sub imagen 1',
-    subImage2: termometro,
+    subImage2: reten4,
     subImage2Alt: 'Sub imagen 2',
     subImage2Title: 'Título sub imagen 2',
-    link: '/grupo/accesorios-hidraulicos'
+    link: '/?sello=Retenes'
   },
   {
     title: 'Estuches de Orings',
@@ -95,7 +95,7 @@ const promosData = [
     mainImage2: estu2,
     mainImage2Alt: 'Promo 4',
     description: 'Descripción de la promo 4.',
-    subImage1: taponGato,
+    subImage1: kitquad,
     subImage1Alt: 'Sub imagen 1',
     subImage1Title: 'Título sub imagen 1',
     subImage2: estu2,
