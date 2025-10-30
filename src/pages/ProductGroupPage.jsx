@@ -604,7 +604,7 @@ const ProductGroupPage = () => {
             </div>
             <main className={styles.mainContent}>
                 {!hasSubFilters && <h2 className={styles.mainContentTitle}>{currentGroup.title}</h2>}
-                <FichaTecnica materialFilters={materialFilters} filteredProducts={filteredProducts} />
+                <FichaTecnica materialFilters={materialFilters} filteredProducts={filteredProducts} groupName={groupName} />
                 <ProductTable products={filteredProducts} />
             </main>
         </div>

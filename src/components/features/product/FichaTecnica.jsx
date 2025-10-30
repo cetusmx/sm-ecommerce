@@ -32,7 +32,7 @@ const materialDisplayNames = {
     'NBRH': 'Nitrilo Hidrogenado (HNBR)'
 };
 
-const FichaTecnica = ({ materialFilters, filteredProducts }) => {
+const FichaTecnica = ({ materialFilters, filteredProducts, groupName }) => {
     // Determine which material's properties to display (using raw code)
     const selectedMaterialCode = materialFilters && materialFilters.length > 0
         ? materialFilters[0] // Use the first selected raw material code
@@ -48,11 +48,15 @@ const FichaTecnica = ({ materialFilters, filteredProducts }) => {
         : null;
 
     if (!propertiesToDisplay) {
-        return (
-            <div className={styles.fichaTecnicaContainer}>
-                <p>Selecciona un material para ver su ficha técnica detallada.</p>
-            </div>
-        );
+        if (groupName === 'orings-respaldos') {
+            return (
+                <div className={styles.fichaTecnicaContainer}>
+                    <p>Selecciona un material para ver su ficha técnica detallada.</p>
+                </div>
+            );
+        } else {
+            return null; // Render nothing for other groups if no material is selected
+        }
     }
 
     return (

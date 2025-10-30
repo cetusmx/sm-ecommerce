@@ -2,7 +2,7 @@
 import { FaWhatsapp } from "react-icons/fa";
 import React from 'react';
 
-const WHATSAPP_LINK = "https://wa.me/5216182303777?text=Hola%2C%20necesito%20ayuda%20con%20una%20duda.";
+const WHATSAPP_LINK = "https://wa.me/5216182303777?text=Hola%2C%20estoy%2C%20en%2C%20la%2C%20tienda,%2C%20necesito%20ayuda%20con%20una%20duda.";
 
 const styles = {
   button: {
