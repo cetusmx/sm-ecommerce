@@ -15,6 +15,7 @@ import UserAddressesPage from './pages/UserAddressesPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ProductGroupPage from './pages/ProductGroupPage';
+import RetenesPage from './pages/RetenesPage';
 import Layout from './components/layout/Layout';
 
 const fetchProductosVistos = async (email) => {
@@ -74,6 +75,7 @@ function AppContent() {
             <Route path="user-addresses" element={<UserAddressesPage />} />
             <Route path="cart" element={<CartPage />} />
             <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="/retenes" element={<RetenesPage />} />
             <Route path="grupo/:groupName" element={<ProductGroupPage />} />
           </Route>
         </Routes>

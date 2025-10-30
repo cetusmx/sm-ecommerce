@@ -86,7 +86,7 @@ const promosData = [
     subImage2: reten4,
     subImage2Alt: 'Sub imagen 2',
     subImage2Title: 'Título sub imagen 2',
-    link: '/?sello=Retenes'
+    link: '/retenes'
   },
   {
     title: 'Estuches de Orings',
