@@ -39,6 +39,12 @@ const CheckoutPage = () => {
   const fechasDeEntrega = location.state?.fechasDeEntrega || [];
   const folio = useMemo(() => uuidv4(), []);
 
+  useEffect(() => {
+    if (location.state?.newAddress) {
+      setShippingAddress(location.state.newAddress);
+    }
+  }, [location.state?.newAddress, setShippingAddress]);
+
   const [modalState, setModalState] = useState({ isOpen: false, message: '', isError: false });
 
   const handlePaymentComplete = async (result, paymentMethodType) => {
@@ -76,6 +82,7 @@ const CheckoutPage = () => {
         descripcion: item.descripcion,
         cantidad: item.quantity,
         cant_por_empaque: item.cant_por_empaque,
+        unidad_salida: item.unidad_salida,
         total_partida: (item.precio * item.quantity).toFixed(2),
         estatus: 'Pendiente de envío', 
         fecha_entrega: entrega ? entrega.fechaCorta : null,

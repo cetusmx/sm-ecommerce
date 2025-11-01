@@ -32,6 +32,8 @@ const CartProvider = ({ children }) => {
     staleTime: 1000 * 60 * 60, // Cache for 1 hour
   });
 
+
+
   // Use useQuery to fetch addresses
   const { data: addresses, isLoading: addressesLoading, error: addressesError } = useQuery({
     queryKey: ['userAddresses', currentUser?.email],

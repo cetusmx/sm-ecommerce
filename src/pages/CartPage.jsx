@@ -34,7 +34,7 @@ const CartPage = () => {
 
   const handleCheckout = () => {
     if (!currentUser) {
-      navigate("/login", { state: { from: "/cart" } });
+      navigate("/login", { state: { from: "/checkout" } });
       return;
     }
 

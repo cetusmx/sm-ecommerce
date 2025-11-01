@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { fetchProductosVistos } from '@/api/productosVistosApi';
+import { useLocation, useNavigate } from 'react-router-dom';
+
+
 import AddressFormPage from './AddressFormPage';
 import styles from './UserAddressesPage.module.css';
 import { useAuth } from '@/context/AuthContext';
@@ -45,6 +48,8 @@ const UserAddressesPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [deletedIds, setDeletedIds] = useState([]);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const deleteMutation = useMutation({
     mutationFn: deleteAddress,
@@ -155,6 +160,10 @@ const UserAddressesPage = () => {
     }
     handleCloseModal();
     queryClient.invalidateQueries(['userAddresses', userEmail]);
+
+    if (location.state?.from === '/checkout') {
+      navigate('/checkout', { state: { newAddress: savedAddress } });
+    }
   };
 
   if (isLoading) return <div>Cargando direcciones...</div>;

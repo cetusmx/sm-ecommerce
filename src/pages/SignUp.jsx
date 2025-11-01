@@ -34,8 +34,12 @@ const SignUp = () => {
     if (successMessage) {
       const timer = setTimeout(() => {
         setSuccessMessage('');
-        const from = location.state?.from || '/';
-        navigate(from);
+        const from = location.state?.from;
+        if (from === '/checkout') {
+          navigate('/user-addresses', { state: { from: '/checkout' } });
+        } else {
+          navigate(from || '/');
+        }
       }, 3000); // Clear message and redirect after 3 seconds
       return () => clearTimeout(timer);
     }
