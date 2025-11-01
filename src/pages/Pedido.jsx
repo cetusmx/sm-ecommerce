@@ -25,7 +25,7 @@ const Pedido = () => {
   const { data: pedidos, isLoading, error } = useQuery({
     queryKey: ['pedidos', currentUser?.email],
     queryFn: async () => {
-      const response = await fetch(`http://localhost:3004/api/pedidos/cliente/${currentUser.email}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/pedidos/cliente/${currentUser.email}`);
       if (!response.ok) {
         if (response.status === 404) { // If 404 (Not Found), it means no orders for this user, return empty array
           return [];
