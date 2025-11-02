@@ -1,29 +1,65 @@
-.skeletonContainer {
+/* Copied layout styles from the real component */
+.container {
+  padding: 20px 24px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 20px; /* Adjust to match your product card spacing */
-  padding: 20px; /* Adjust to match your product section padding */
-  justify-content: center; /* Center items if needed */
+  flex-direction: column;
+  gap: 20px;
 }
 
-.skeletonCard {
-  width: 200px; /* Adjust to match your product card width */
-  height: 250px; /* Adjust to match your product card height */
-  background-color: #e0e0e0; /* Grey background */
+.section {
+  background-color: #fff;
+  padding: 20px;
+}
+
+.title {
+  margin-bottom: 10px;
+}
+
+.productList {
+  display: flex;
+  overflow-x: hidden; /* Hide scrollbar for skeleton */
+  gap: 20px;
+}
+
+.productCard {
+  flex: 0 0 180px;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
+  overflow: hidden;
+  background-color: #fff;
+}
+
+.productImage {
+  width: 100%;
+  height: 140px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.productInfo {
+  padding: 15px;
+}
+
+.productName {
+  height: 40px; /* Mimic the two-line height */
+}
+
+/* Re-usable placeholder and shimmer effect */
+.placeholder {
+  background-color: #e0e0e0;
   position: relative;
   overflow: hidden;
+  border-radius: 4px;
 }
 
-/* Shimmer effect */
-.skeletonCard::after {
+.placeholder::after {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.5) 60%, rgba(255,255,255,0));
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
   transform: translateX(-100%);
   animation: shimmer 1.5s infinite;
 }
