@@ -9,6 +9,7 @@ import PromosPrincipales from "@/components/features/home/PromosPrincipales";
 import ProductosPorUbicacion from "@/components/features/home/ProductosPorUbicacion";
 import SearchResults from "@/components/features/product/SearchResults";
 import GlobalSearchResultsComponent from "@/components/features/product/GlobalSearchResultsComponent";
+import ProductosPorUbicacionSkeleton from "@/components/features/home/ProductosPorUbicacionSkeleton";
 import ProductosVistos from "@/components/features/product/ProductosVistos";
 import useDebounce from "@/hooks/useDebounce";
 import { useAuth } from "@/context/AuthContext";
@@ -180,7 +181,6 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
     setSearchResults([]); // Clear previous search results
   };
 
-  if (isLoading) return <div>Cargando...</div>;
   if (error) return <div>Ocurrió un error: {error.message}</div>;
 
   return (
@@ -212,7 +212,11 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
           <main className="main-content">
             <PromosPrincipales />
           </main>
-          {products && <ProductosPorUbicacion products={products} />}
+          {isLoading ? (
+            <ProductosPorUbicacionSkeleton />
+          ) : (
+            products && <ProductosPorUbicacion products={products} />
+          )}
           {/* <FeaturedProducts /> */}
           {viewedProducts && viewedProducts.length > 0 && (
             <div style={{ padding: '0 20px' }}>
