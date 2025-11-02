@@ -55,60 +55,62 @@ const CartProvider = ({ children }) => {
   // Effect for loading cart on user state change
   useEffect(() => {
     const loadCartData = async () => {
-      // Wait until allProducts are loaded before processing the cart
-      if (currentUser && allProducts) {
-        // --- USER IS LOGGED IN ---
-        const remoteCart = await getUserCart(currentUser.email);
-        setCart(remoteCart); // <--- PHASE 1: Set dehydrated cart immediately
+      setIsLoading(true);
 
-        const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+      // --- Phase 1: Immediate Load from localStorage for ALL users ---
+      const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
+      setCart(localCart); // Set state immediately. No more flash of empty cart.
 
-        // Function to hydrate cart items with full product details
-        const hydrateCart = (cartToHydrate) => {
-          if (!cartToHydrate) return [];
-          return cartToHydrate.map(cartItem => {
-            const fullProduct = allProducts.find(p => p.clave === cartItem.clave);
-            if (fullProduct) {
-              const priceToKeep = fullProduct.precio !== cartItem.precio ? cartItem.precio : fullProduct.precio;
-              return { ...fullProduct, quantity: cartItem.quantity, precio: priceToKeep };
-            }
-            return null; // Or handle cases where product not found
-          }).filter(Boolean); // Filter out any nulls
-        };
-
-        if (localCart.length > 0) {
-          // Merge remote and local carts before hydrating
-          const mergedCartData = [...remoteCart];
-          localCart.forEach(localItem => {
-            const existingItemIndex = mergedCartData.findIndex(item => item.clave === localItem.clave);
-            if (existingItemIndex === -1) {
-              mergedCartData.push(localItem);
-            } else {
-              // Optional: decide on quantity merge logic, here we prioritize remote
-            }
-          });
-          
-          const hydratedMergedCart = hydrateCart(mergedCartData);
-          setCart(hydratedMergedCart); // Save the hydrated cart back
-          await saveUserCart(currentUser.email, hydratedMergedCart);
-          localStorage.removeItem('cart');
-
-        } else {
-          // Just hydrate the remote cart
-          const hydratedRemoteCart = hydrateCart(remoteCart);
-          setCart(hydratedRemoteCart);
-        }
-
-      } else if (!currentUser) {
-        // --- USER IS LOGGED OUT ---
-        // For logged-out users, we assume local storage has the full object
-        const localCart = JSON.parse(localStorage.getItem('cart') || '[]');
-        setCart(localCart);
+      // --- Phase 2: Wait for dependencies and then hydrate/sync ---
+      if (!allProducts) {
+        // Products are not ready, we will wait for the effect to re-run when they are.
+        return;
       }
+
+      // Now that products are loaded, we can proceed with hydration and synchronization.
+      const hydrateCart = (cartToHydrate) => {
+        if (!cartToHydrate) return [];
+        return cartToHydrate.map(cartItem => {
+          const fullProduct = allProducts.find(p => p.clave === cartItem.clave);
+          if (fullProduct) {
+            const priceToKeep = fullProduct.precio !== cartItem.precio ? cartItem.precio : fullProduct.precio;
+            return { ...fullProduct, quantity: cartItem.quantity, precio: priceToKeep };
+          }
+          return cartItem; // Instead of null, return the original item to prevent data loss
+        }).filter(Boolean); // Filter out any nulls
+      };
+
+      if (currentUser) {
+        // --- LOGGED IN USER: Sync with DB, merge, and hydrate ---
+        const remoteCart = await getUserCart(currentUser.email);
+
+        // Merge logic: local items take precedence for quantity, but remote items are added.
+        const mergedMap = new Map();
+        localCart.forEach(item => mergedMap.set(item.clave, item));
+        remoteCart.forEach(item => {
+          if (!mergedMap.has(item.clave)) {
+            mergedMap.set(item.clave, item);
+          }
+        });
+        
+        const mergedCart = Array.from(mergedMap.values());
+        const finalHydratedCart = hydrateCart(mergedCart);
+
+        setCart(finalHydratedCart);
+        localStorage.setItem('cart', JSON.stringify(finalHydratedCart)); // Persist the fully synced and hydrated cart
+        await saveUserCart(currentUser.email, finalHydratedCart);
+
+      } else {
+        // --- GUEST USER: Just hydrate the local cart we already loaded ---
+        const hydratedLocalCart = hydrateCart(localCart);
+        setCart(hydratedLocalCart);
+      }
+
+      setIsLoading(false);
     };
 
-    loadCartData().finally(() => setIsLoading(false));
-  }, [currentUser, allProducts]); // Add allProducts to dependency array
+    loadCartData();
+  }, [currentUser, allProducts]);
 
   const isInitialMount = useRef(true);
 
@@ -128,29 +130,26 @@ const CartProvider = ({ children }) => {
       newCart = [...cart, { ...item, quantity }];
     }
     setCart(newCart);
+    localStorage.setItem('cart', JSON.stringify(newCart));
     if (currentUser) {
       saveUserCart(currentUser.email, newCart);
-    } else {
-      localStorage.setItem('cart', JSON.stringify(newCart));
     }
   };
 
   const removeItem = (itemClave) => {
     const newCart = cart.filter((item) => item.clave !== itemClave);
     setCart(newCart);
+    localStorage.setItem('cart', JSON.stringify(newCart));
     if (currentUser) {
       saveUserCart(currentUser.email, newCart);
-    } else {
-      localStorage.setItem('cart', JSON.stringify(newCart));
     }
   };
 
   const clearCart = () => {
     setCart([]);
+    localStorage.removeItem('cart');
     if (currentUser) {
       clearCartInDB(currentUser.email);
-    } else {
-      localStorage.removeItem('cart');
     }
   };
 
@@ -163,10 +162,9 @@ const CartProvider = ({ children }) => {
       item.clave === itemClave ? { ...item, quantity: newQuantity } : item
     );
     setCart(newCart);
+    localStorage.setItem('cart', JSON.stringify(newCart));
     if (currentUser) {
       saveUserCart(currentUser.email, newCart);
-    } else {
-      localStorage.setItem('cart', JSON.stringify(newCart));
     }
   };
 
