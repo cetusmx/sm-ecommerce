@@ -1,23 +1,19 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import HeroSection from "@/components/features/home/HeroSection";
-import SpecSearchBlock from "@/components/features/search/SpecSearchBlock";
-import FeaturedProducts from "@/components/features/product/FeaturedProducts";
 import ProductFilter from "@/components/features/product/ProductFilter.js";
 import PromosPrincipales from "@/components/features/home/PromosPrincipales";
 import ProductosPorUbicacion from "@/components/features/home/ProductosPorUbicacion";
-import SearchResults from "@/components/features/product/SearchResults";
 import GlobalSearchResultsComponent from "@/components/features/product/GlobalSearchResultsComponent";
 import ProductosPorUbicacionSkeleton from "@/components/features/home/ProductosPorUbicacionSkeleton";
 import ProductosVistos from "@/components/features/product/ProductosVistos";
-import useDebounce from "@/hooks/useDebounce";
 import { useAuth } from "@/context/AuthContext";
-
 import { fetchProducts } from "@/api/productsApi";
 
 const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilter, productFilterKey }) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [globalFilteredProducts, setGlobalFilteredProducts] = useState([]);
   const queryClient = useQueryClient();
 
@@ -30,11 +26,6 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
   }), [searchParams]);
 
   const [filters, setFilters] = useState(initialFilters);
-  const [searchResults, setSearchResults] = useState([]);
-  const [isSearching, setIsSearching] = useState(false);
-  const [searchUpdateId, setSearchUpdateId] = useState(0);
-
-  const debouncedFilters = useDebounce(filters, 400);
 
   const { data: products, isLoading, error } = useQuery({ 
     queryKey: ['products'], 
@@ -48,7 +39,6 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
   // Effect for global search
   useEffect(() => {
     if (globalSearchQuery && products) {
-      // Clear product filter when global search is active
       if (onClearProductFilter) {
         onClearProductFilter();
       }
@@ -101,84 +91,29 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
     } else {
       setGlobalFilteredProducts([]);
     }
-  }, [globalSearchQuery, products]);
-
-  useEffect(() => {
-    const newSearchParams = new URLSearchParams();
-    Object.entries(debouncedFilters).forEach(([key, value]) => {
-      if (value && value !== 'Todos' && value !== 'Pulgadas') {
-        newSearchParams.set(key, value);
-      }
-    });
-    setSearchParams(newSearchParams, { replace: true });
-
-    const hasActiveFilters = debouncedFilters.diamInt || debouncedFilters.diamExt || debouncedFilters.altura || (debouncedFilters.sello && debouncedFilters.sello !== 'Todos');
-    setIsSearching(hasActiveFilters);
-
-    if (hasActiveFilters && products) {
-      const results = products.filter(p => !(p.existencia == 0 && !p.ultima_compra)).filter(p => {
-        const medidaValue = debouncedFilters.medida === 'Pulgadas' ? 'std' : 'mm';
-        if (p.sistema_medicion !== medidaValue) return false;
-        if (debouncedFilters.sello && debouncedFilters.sello !== 'Todos' && p.categoria !== debouncedFilters.sello) return false;
-
-        if (debouncedFilters.diamInt) {
-          const filterValue = parseFloat(debouncedFilters.diamInt);
-          const productValue = parseFloat(p.diam_int);
-          if (isNaN(filterValue) || isNaN(productValue)) return false;
-          if (p.categoria === 'Orings') {
-            if (productValue !== filterValue) return false;
-          } else {
-            const tolerance = debouncedFilters.medida === 'Pulgadas' ? 0.035 : 1;
-            if (productValue < filterValue - tolerance || productValue > filterValue + (debouncedFilters.medida === 'Pulgadas' ? 0.035 : 0)) return false;
-          }
-        }
-
-        if (debouncedFilters.diamExt) {
-          const filterValue = parseFloat(debouncedFilters.diamExt);
-          const productValue = parseFloat(p.diam_ext);
-          if (isNaN(filterValue) || isNaN(productValue)) return false;
-          if (p.categoria === 'Orings') {
-            if (productValue !== filterValue) return false;
-          } else {
-            const tolerance = debouncedFilters.medida === 'Pulgadas' ? 0.035 : 0.5;
-            if (productValue < filterValue - tolerance || productValue > filterValue + tolerance) return false;
-          }
-        }
-
-        if (debouncedFilters.altura) {
-          const filterValue = parseFloat(debouncedFilters.altura);
-          const productValue = parseFloat(p.altura);
-          if (isNaN(filterValue) || isNaN(productValue)) return false;
-          if (p.categoria === 'Orings') {
-            if (productValue !== filterValue) return false;
-          } else {
-            const tolerance = debouncedFilters.medida === 'Pulgadas' ? 0.012 : 0.5;
-            if (productValue < filterValue - tolerance || productValue > filterValue + tolerance) return false;
-          }
-        }
-       
-        return true;
-      });
-      setSearchResults(results);
-      setSearchUpdateId(id => id + 1);
-    } else {
-      setSearchResults([]);
-    }
-  }, [debouncedFilters, products, setSearchParams]);
+  }, [globalSearchQuery, products, onClearProductFilter]);
 
   useEffect(() => {
     setFilters(initialFilters);
   }, [initialFilters]);
 
   const handleFilterChange = (newFilters) => {
-    setFilters(prevFilters => ({ ...prevFilters, ...newFilters }));
-    setGlobalSearchQuery(''); // Clear global search results when product filter is used
-  };
+    const updatedFilters = { ...filters, ...newFilters };
+    setFilters(updatedFilters);
+    setGlobalSearchQuery(''); 
 
-  const handleClearProductFilter = () => {
-    setFilters(initialFilters); // Reset filters to initial state
-    setIsSearching(false); // Stop showing search results
-    setSearchResults([]); // Clear previous search results
+    const searchParams = new URLSearchParams();
+    Object.entries(updatedFilters).forEach(([key, value]) => {
+      if (value && value !== 'Todos' && value !== 'Pulgadas') {
+        searchParams.set(key, value);
+      }
+    });
+    
+    const hasActiveFilters = Object.values(updatedFilters).some(v => v && v !== 'Todos' && v !== 'Pulgadas');
+
+    if (hasActiveFilters) {
+      navigate(`/search?${searchParams.toString()}`);
+    }
   };
 
   if (error) return <div>Ocurrió un error: {error.message}</div>;
@@ -186,7 +121,7 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
   return (
     <div className="home-page-wrapper">
       <ProductFilter 
-        key={productFilterKey} // Add key to force remount/reset
+        key={productFilterKey}
         filters={filters} 
         onFilterChange={handleFilterChange} 
       />
@@ -196,14 +131,6 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
           <GlobalSearchResultsComponent 
             results={globalFilteredProducts} 
             searchQuery={globalSearchQuery} 
-          />
-        </div>
-      ) : isSearching ? (
-        <div className="fade-in">
-          <SearchResults 
-            results={searchResults} 
-            searchUpdateId={searchUpdateId} 
-            selectedCategory={debouncedFilters.sello}
           />
         </div>
       ) : (
@@ -217,7 +144,6 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
           ) : (
             products && <ProductosPorUbicacion products={products} />
           )}
-          {/* <FeaturedProducts /> */}
           {viewedProducts && viewedProducts.length > 0 && (
             <div style={{ padding: '0 20px' }}>
               <ProductosVistos viewedProducts={viewedProducts} />
