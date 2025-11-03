@@ -76,7 +76,7 @@ const ProductosPromocion = ({ className }) => {
     <aside className={className}>
       {productsWithDiscountedPrice.map((product) => {
         let imageUrl;
-        if (product.originalProductCategory === "Herramientas" || product.originalProductCategory === "Accesorios" || product.originalProductCategory === "Estuches" ) {
+        if (product.originalProductCategory === "Herramientas" || product.originalProductCategory === "Accesorios" || product.originalProductCategory === "Estuches" || product.originalProductCategory === "Adhesivos"  ) {
           imageUrl = `/Sugeridos/${product.clave}.jpg`;
         } else {
           imageUrl = `/Productos/${product.originalProductLinea}.jpg`;
