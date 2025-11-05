@@ -8,6 +8,8 @@ import AnuncioPuntual from '@/components/common/AnuncioPuntual';
 import ProductosPromocion from '@/components/features/product/ProductosPromocion';
 import styles from './ProductGroupPage.module.css';
 
+import ScrollToTopButton from '@/components/common/ScrollToTopButton';
+
 // Helper function to fetch promotional products
 const fetchProductosPromocion = async () => {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/productospromocion`);
@@ -607,6 +609,7 @@ const ProductGroupPage = () => {
                 <FichaTecnica materialFilters={materialFilters} filteredProducts={filteredProducts} groupName={groupName} />
                 <ProductTable products={filteredProducts} />
             </main>
+            <ScrollToTopButton />
         </div>
     );
 };
