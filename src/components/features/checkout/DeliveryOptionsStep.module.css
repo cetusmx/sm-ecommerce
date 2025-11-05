@@ -18,6 +18,7 @@
   align-items: center;
   gap: 15px;
   transition: all 0.2s ease-in-out;
+  font-size: 0.85em;
 }
 
 .optionCard:hover {
@@ -43,6 +44,7 @@
   border-radius: 8px;
   padding: 15px;
   background-color: #f9f9f9; /* Match order summary background */
+  padding-bottom: 0px;
 }
 
 .groupCard h4 {
@@ -65,7 +67,7 @@
   justify-content: space-between;
   padding: 0.5rem 0;
   border-bottom: 1px solid #ddd;
-  font-size: 0.95rem;
+  font-size: 0.80rem;
   color: #444;
 }
 
@@ -85,18 +87,21 @@
 }
 
 .productDescription {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #777;
   margin-top: 0.2rem;
   margin-left: 1rem;
 }
 
 .deliveryDate {
-  font-size: 0.75rem;
-  color: #28a745;
+  font-size: 1.1rem;
+  /* color: #28a745; */
+  color: #31018f;
   margin-top: 0.2rem;
-  margin-left: 1rem;
-  font-weight: 400;
+  /* margin-left: 1rem; */
+  padding-bottom: 1rem;
+  font-weight: 500;
+  border-bottom: 1px solid #dedede;
 }
 
 .itemPrice {

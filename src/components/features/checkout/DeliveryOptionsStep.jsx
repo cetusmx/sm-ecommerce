@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import styles from './DeliveryOptionsStep.module.css';
+import { formatDeliveryDateLowercase } from '../../../utils/formatosFechas';
 
 const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPreference }) => {
   // Group products by delivery date
   const groupedByDate = cart.reduce((acc, item) => {
     const entrega = fechasDeEntrega.find(f => f.clave === item.clave);
-    const fecha = entrega ? entrega.fechaCorta : 'Fecha no disponible';
+    const fecha = entrega ? entrega.fecha : 'Fecha no disponible'; //fechaCorta
     if (!acc[fecha]) {
       acc[fecha] = [];
     }
@@ -15,7 +16,7 @@ const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPrefe
 
   return (
     <div className={styles.container}>
-      <h2>Paso 2: Opciones de Entrega</h2>
+      <h2>Opciones de Entrega</h2>
       <p>Algunos de tus productos tienen diferentes fechas de entrega. ¿Cómo te gustaría recibirlos?</p>
       
       <div className={styles.optionsContainer}>
@@ -31,7 +32,7 @@ const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPrefe
             onChange={() => {}} // onChange is required for controlled components
           />
           <div>
-            <h4>Enviar todo junto</h4>
+            <h5>Enviar todo junto</h5>
             <p>Recibirás todos tus productos en un solo paquete en la fecha de entrega más lejana.</p>
           </div>
         </div>
@@ -47,7 +48,7 @@ const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPrefe
             onChange={() => {}} // onChange is required for controlled components
           />
           <div>
-            <h4>Enviar por separado</h4>
+            <h5>Enviar por separado</h5>
             <p>Recibirás tus productos a medida que estén disponibles. Esto puede incurrir en costos de envío adicionales.</p>
           </div>
         </div>
@@ -56,7 +57,7 @@ const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPrefe
       <div className={styles.productGroups}>
         {Object.entries(groupedByDate).map(([fecha, productos]) => (
           <div key={fecha} className={styles.groupCard}>
-            <h4>Entrega estimada: {fecha}</h4>
+            <h5 className={styles.deliveryDate}>Entrega estimada: {fecha}</h5>
             <ul>
               {productos.map(p => {
                 const entrega = fechasDeEntrega.find(f => f.clave === p.clave);

@@ -72,12 +72,8 @@ const UserSession = () => {
     return uniqueItems.slice(0, 3);
   }, [pedidos, allProducts]);
 
-  const handleMouseEnter = () => {
-    setIsDropdownVisible(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsDropdownVisible(false);
+  const handleToggleDropdown = () => {
+    setIsDropdownVisible(prev => !prev);
   };
 
   const handleLogout = async () => {
@@ -109,7 +105,8 @@ const UserSession = () => {
       : perfilesUrl;
   };
 
-  const handleDropdownClick = () => {
+  const handleDropdownClick = (e) => {
+    e.stopPropagation();
     setIsDropdownVisible(false);
   };
 
@@ -120,7 +117,7 @@ const UserSession = () => {
           <div key={prod.clave} className={styles.buyAgainProduct}>
             <img src={getProductImageUrl(prod)} alt={prod.descripcion} className={styles.productImage} />
             <div className={styles.productInfo}>
-              <Link to={`/producto/${prod.clave}?imageUrl=${encodeURIComponent(getProductImageUrl(prod))}`} className={styles.productDescriptionLink} onClick={handleDropdownClick}>
+              <Link to={`/producto/${prod.clave}?imageUrl=${encodeURIComponent(getProductImageUrl(prod))}`} className={styles.productDescriptionLink} onClick={(e) => handleDropdownClick(e)}>
                 <p className={styles.productDescription}>{prod.descripcion}</p>
               </Link>
               <div className={styles.priceRow}>
@@ -140,7 +137,7 @@ const UserSession = () => {
   return (
     <div
       className={styles['user-session-container']}
-      onMouseEnter={handleMouseEnter}
+      onClick={handleToggleDropdown}
     >
       <div className={styles['user-info']}>
         <span className={styles['greeting']}>Hola,</span>
@@ -151,11 +148,11 @@ const UserSession = () => {
       <IoMdArrowDropdown className={styles['dropdown-arrow']} />
       
       {isDropdownVisible && (
-        <div className={styles.overlay} onClick={handleDropdownClick}></div>
+        <div className={styles.overlay} onClick={(e) => handleDropdownClick(e)}></div>
       )}
 
       {isDropdownVisible && (
-        <div className={styles.dropdownContainer} onClick={handleDropdownClick} onMouseLeave={handleMouseLeave}> 
+        <div className={styles.dropdownContainer} onClick={(e) => e.stopPropagation()}> 
           <div className={styles.columnsContainer}>
             {/* LEFT COLUMN */}
             <div className={styles.column}>
@@ -165,7 +162,7 @@ const UserSession = () => {
               {currentUser && lastThreeProducts.length > 0 ? (
                 // Logged-in with recent orders: Show last three products
                 <>
-                  <Link to="/pedido" className={styles.link} onClick={handleDropdownClick}>Ver todos</Link>
+                  <Link to="/pedido" className={styles.link} onClick={(e) => handleDropdownClick(e)}>Ver todos</Link>
                   {renderProductList(lastThreeProducts)}
                 </>
               ) : (
@@ -184,8 +181,8 @@ const UserSession = () => {
                 <>
                   <h3 className={styles.columnTitle}>Mi cuenta</h3>
                   <div className={styles.accountLinks}>
-                    <Link to="/perfil" className={styles.accountLink} onClick={handleDropdownClick}>Mi perfil</Link>
-                    <Link to="/pedido" className={styles.accountLink} onClick={handleDropdownClick}>Mis pedidos</Link>
+                    <Link to="/perfil" className={styles.accountLink} onClick={(e) => handleDropdownClick(e)}>Mi perfil</Link>
+                    <Link to="/pedido" className={styles.accountLink} onClick={(e) => handleDropdownClick(e)}>Mis pedidos</Link>
                     <button onClick={handleLogout} className={styles.accountLink}>Cerrar sesión</button>
                   </div>
                 </>
@@ -194,8 +191,8 @@ const UserSession = () => {
                 <>
                   <h3 className={styles.columnTitle}>Identifícate</h3>
                   <div className={styles.accountLinks}> 
-                    <button onClick={() => { navigate('/login'); handleDropdownClick(); }} className={`${styles.accountLink} sm-btn sm-btn-primary`}>Iniciar sesión</button> 
-                    <Link to="/signup" className={styles.accountLink} onClick={handleDropdownClick}>Regístrate</Link>
+                    <button onClick={(e) => { navigate('/login'); handleDropdownClick(e); }} className={`${styles.accountLink} sm-btn sm-btn-primary`}>Iniciar sesión</button> 
+                    <Link to="/signup" className={styles.accountLink} onClick={(e) => handleDropdownClick(e)}>Regístrate</Link>
                   </div>
                 </>
               )}

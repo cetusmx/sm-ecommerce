@@ -70,7 +70,7 @@ const ProductosPorUbicacion = ({ products }) => {
 
   return (
     <div className={styles.container}>
-      <ProductGroup title="Para Estopero" products={estoperoProducts} />
+      <ProductGroup title="Para Vástago" products={estoperoProducts} />
       <ProductGroup title="Para Pistón" products={pistonProducts} />
     </div>
   );

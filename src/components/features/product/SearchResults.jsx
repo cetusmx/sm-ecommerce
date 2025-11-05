@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SearchResults.module.css';
 import StockStatus from './StockStatus';
 import { calculateArrivalDate, formatToShortDate } from '../../../utils/dateUtils';
 import { useCart } from '@/hooks/useCart'; // Import useCart
+import { FaAngleDoubleUp } from 'react-icons/fa';
 import AvisoEscasez from '../../common/AvisoEscasez';
 
 const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
@@ -12,6 +13,26 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
   const [addedMessage, setAddedMessage] = useState({}); // State for added message
   const [isScarcityModalOpen, setIsScarcityModalOpen] = useState(false);
   const [scarcityMessage, setScarcityMessage] = useState('');
+  const [showScroll, setShowScroll] = useState(false);
+
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!showScroll && window.pageYOffset > 400) {
+        setShowScroll(true);
+      } else if (showScroll && window.pageYOffset <= 400) {
+        setShowScroll(false);
+      }
+    };
+
+    window.addEventListener('scroll', checkScrollTop);
+    return () => {
+      window.removeEventListener('scroll', checkScrollTop);
+    };
+  }, [showScroll]);
+
+  const scrollTop = () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
 
   const handleQuantityChange = (product, value) => {
     const newQuantity = Math.max(0, Number(value));
@@ -142,6 +163,11 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
         onClose={() => setIsScarcityModalOpen(false)}
         message={scarcityMessage}
       />
+      {showScroll && (
+        <button onClick={scrollTop} className={styles.scrollTopButton}>
+          <FaAngleDoubleUp />
+        </button>
+      )}
     </div>
   );
 };
