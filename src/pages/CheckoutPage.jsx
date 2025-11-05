@@ -16,6 +16,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import CheckoutForm from '@/components/features/checkout/CheckoutForm';
 import PaymentConfirmationModal from '@/components/common/PaymentConfirmationModal';
 import { gestionPedidoEnAlmacen } from '@/api/ProcesoLogistica';
+import DeliveryOptionsStep from '@/components/features/checkout/DeliveryOptionsStep';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
 
@@ -133,7 +134,6 @@ const CheckoutPage = () => {
 
 
   const [step, setStep] = useState('loading');
-  const [shippingRates, setShippingRates] = useState([]);
   const [selectedShippingOption, setSelectedShippingOption] = useState(null);
   const [isLoadingRates, setIsLoadingRates] = useState(false);
   const [error, setError] = useState(null);
@@ -142,6 +142,7 @@ const CheckoutPage = () => {
   const [isCopied, setIsCopied] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
   const hasFetchedPaymentIntent = useRef(false); // New ref
+  const [deliveryPreference, setDeliveryPreference] = useState(null);
 
   const calculateTotal = useMemo(() => {
     const shippingCost = selectedShippingOption ? selectedShippingOption.totalPrice : 0;
@@ -202,16 +203,23 @@ const CheckoutPage = () => {
     staleTime: 1000 * 60 * 60, // 1 hour
   });
 
-
+  const hasMultipleDeliveryDates = useMemo(() => {
+    const dates = new Set(fechasDeEntrega.map(f => f.fechaCorta));
+    return dates.size > 1;
+  }, [fechasDeEntrega]);
 
   useEffect(() => {
     if (shippingAddress) {
-      setStep('shipping');
-      fetchRates(shippingAddress);
+      if (hasMultipleDeliveryDates) {
+        setStep('deliveryOptions');
+      } else {
+        fetchRates(shippingAddress);
+        setStep('payment');
+      }
     } else {
       setStep('address');
     }
-  }, [shippingAddress]);
+  }, [shippingAddress, hasMultipleDeliveryDates]);
 
   const fetchRates = async (address) => {
     setIsLoadingRates(true);
@@ -248,9 +256,20 @@ const CheckoutPage = () => {
 
     try {
       const ratesData = await getShippingRates(originAddress, destinationForEnvia, parcel);
-      setShippingRates(ratesData.data || []);
+      const dhlOption = ratesData.data?.find(rate => rate.serviceDescription === "DHL Economy Ocurre - Domicilio");
+
+      if (dhlOption) {
+        setSelectedShippingOption(dhlOption);
+      } else {
+        setSelectedShippingOption(null);
+        setError("No existe servicio de paquetería para el código postal ingresado");
+      }
     } catch (err) {
-      setError(err.message || 'No se pudieron obtener las tarifas de envío.');
+      if (err.message.includes("No coverage")) {
+        setError("No existe servicio de paquetería para el código postal ingresado");
+      } else {
+        setError(err.message || 'No se pudieron obtener las tarifas de envío.');
+      }
     } finally {
       setIsLoadingRates(false);
     }
@@ -260,11 +279,15 @@ const CheckoutPage = () => {
     setShippingAddress(address);
   };
 
-  const handleSelectShippingOption = (rate) => {
-    setSelectedShippingOption(rate);
-  };
-
-  const handleContinueToPayment = () => {
+  const handleDeliverySelection = async (preference) => {
+    setDeliveryPreference(preference);
+    if (preference === 'single') {
+      await fetchRates(shippingAddress);
+    } else {
+      // Logic for separate shipments will be implemented here
+      // For now, we'll just use the single rate
+      await fetchRates(shippingAddress);
+    }
     setStep('payment');
   };
 
@@ -285,7 +308,7 @@ const CheckoutPage = () => {
 
   const handleCancelCheckout = () => {
     if (shippingAddress) {
-      setStep('shipping');
+      setStep('address');
     } else {
       navigate('/cart');
     }
@@ -321,59 +344,21 @@ const CheckoutPage = () => {
     );
   };
 
-  const renderShippingOptions = () => (
-    <div className={styles.shippingRates}>
-      <h2>Paso 2: Opciones de Envío</h2>
-      <div className={styles.addressSummary}>
-        <div>
-          <strong style={{fontSize:"1.2em", fontWeight: 500}}>Enviar a</strong> <strong style={{fontSize:"1.2em", fontWeight: 500}}>{shippingAddress?.nombre_completo}</strong>
-          <p>{shippingAddress?.calle} {shippingAddress?.numero_ext}, {shippingAddress?.colonia}, {shippingAddress?.ciudad}</p>
-          <p>{shippingAddress?.estado}, {shippingAddress?.codigo_postal}, {shippingAddress?.pais}</p>
-        </div>
-        <span onClick={() => setStep('address')} className={styles.link}>Cambiar</span>
-      </div>
-      {isLoadingRates ? (
-        <p>Calculando tarifas...</p>
-      ) : shippingRates.length > 0 ? (
-        <ul>
-          {shippingRates.map((rate, index) => (
-            <li 
-              key={index} 
-              className={`${styles.shippingOptionCard} ${selectedShippingOption === rate ? styles.selectedShippingOptionCard : ''}`}
-              onClick={() => handleSelectShippingOption(rate)}
-            >
-              <input 
-                type="radio" 
-                name="shippingOption" 
-                value={`${rate.carrier}-${rate.service}`}
-                checked={selectedShippingOption === rate}
-                onChange={() => handleSelectShippingOption(rate)}
-              />
-              <span>{rate.carrier.toUpperCase()} ({rate.serviceDescription})</span>
-              <strong>${rate.totalPrice} {rate.currency}</strong>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No se encontraron opciones de envío para la dirección proporcionada.</p>
-      )}
-      <button 
-        onClick={handleContinueToPayment} 
-        className="sm-btn sm-btn-primary" 
-        disabled={!selectedShippingOption}
-      >
-        Continuar
-      </button>
-    </div>
+  const renderDeliveryOptions = () => (
+    <DeliveryOptionsStep 
+      cart={cart} 
+      fechasDeEntrega={fechasDeEntrega} 
+      onSelection={handleDeliverySelection} 
+    />
   );
 
   const renderPaymentStep = () => {
-    if (isLoadingProducts) {
-        return <p>Cargando datos de productos...</p>;
+    if (isLoadingProducts || isLoadingRates) {
+        return <p>Cargando...</p>;
     }
     return (
         <div className={styles.paymentStep}>
-        <h2>Paso 3: Pago</h2>
+        <h2>Paso 3: Pago y Resumen del Pedido</h2>
         <h3>Resumen del Pedido</h3>
         <div className={styles.orderSummary}>
             {cart.map(item => (
@@ -397,7 +382,7 @@ const CheckoutPage = () => {
             <span>${cartTotal.toFixed(2)}</span>
             </div>
             <div className={styles.summaryLine}>
-            <span>Envío ({selectedShippingOption?.carrier.toUpperCase()}):</span>
+            <span>Envío:</span>
             <span>${selectedShippingOption?.totalPrice.toFixed(2) || '0.00'}</span>
             </div>
             <div className={`${styles.summaryLine} ${styles.totalLine}`}>
@@ -548,8 +533,8 @@ const CheckoutPage = () => {
     switch (step) {
       case 'address':
         return renderAddressSelection();
-      case 'shipping':
-        return renderShippingOptions();
+      case 'deliveryOptions':
+        return renderDeliveryOptions();
       case 'payment':
         return renderPaymentStep();
       case 'loading':
@@ -557,7 +542,6 @@ const CheckoutPage = () => {
         return <p>Cargando...</p>;
     }
   };
-
   return (
     <div className={styles.container}>
       <h1>Checkout</h1>

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import { useParams, useSearchParams } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthContext } from '@/context/AuthContext';
 import Producto from '../components/Producto/Producto';
@@ -21,6 +21,7 @@ const ProductDetailPage = () => {
   const { clave } = useParams();
   const [searchParams] = useSearchParams();
   const { currentUser, authLoading } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     // Do nothing until auth state is stable and we have a product key
@@ -106,6 +107,11 @@ const ProductDetailPage = () => {
 
   const parentCategory = getParentCategory();
 
+  // Get product from cache
+  const cachedProduct = queryClient.getQueryData(['products'])?.find(p => p.clave === clave);
+
+  const finalProduct = cachedProduct ? { ...product, precio: cachedProduct.precio } : product;
+
   if (isLoadingProduct || isLoadingCategories) {
     return <div>Cargando producto...</div>;
   }
@@ -127,11 +133,11 @@ const ProductDetailPage = () => {
     <div className={styles.pageContainer}>
       <div className={styles.contentWrapper}>
         <main className={styles.mainContent}>
-          <Producto producto={product} imageUrl={finalImageUrl} />
+          <Producto producto={finalProduct} imageUrl={finalImageUrl} />
         </main>
         <ProductosPromocion className={styles.sidebar} />
       </div>
-          <ArticulosRelacionados productoPrincipal={product} />
+          <ArticulosRelacionados productoPrincipal={finalProduct} />
           {viewedProducts && viewedProducts.length > 0 && <ProductosVistos viewedProducts={viewedProducts} />}
           <HerramientasSugeridas />
     </div>

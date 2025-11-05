@@ -15,9 +15,8 @@ export const getDeliveryInfo = (producto, quantity) => {
     const finalDeliveryDate = calculateDeliveryDate(arrivalDate);
     warningMessage = `El producto llegará a nuestro almacén el ${formatToSpanishDate(arrivalDate)}. Puedes comprarlo ahora y te lo enviaremos en cuanto llegue.`;
     return {
-      message: `Recíbelo para el`,
       date: formatToSpanishDate(finalDeliveryDate),
-      shortDate: formatToYYYYMMDD(finalDeliveryDate),
+      shortDate: formatToSpanishDate(finalDeliveryDate),
       warning: warningMessage,
     };
   }

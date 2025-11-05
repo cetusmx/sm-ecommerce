@@ -154,7 +154,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className={styles.column} style={{ width: '50%' }}>
+      <div className={styles.column} style={{ width: '53%' }}>
         <div className={styles.titleContainer}>
           <div className={styles.iconWrapper}>
             <FaBuilding className={styles.icon} />
@@ -196,20 +196,20 @@ const Footer = () => {
             </div>
           </div>
           <div className={styles.branch}>
-            <a href="https://maps.app.goo.gl/pisoovcgnQpiZZaUA" target="_blank" rel="noopener noreferrer">
+            <a href="https://maps.app.goo.gl/ntZrbVHJqKiH7PzS9" target="_blank" rel="noopener noreferrer">
               <img src={queretaroImg} alt="Sucursal Querétaro" className={styles.branchImage} />
             </a>
             <div className={styles.branchAddress}>
               <p className={styles.branchTitle}><strong>Sucursal Querétaro</strong></p>
-              <a href="https://maps.app.goo.gl/pisoovcgnQpiZZaUA" target="_blank" rel="noopener noreferrer">
-                <p>Blvd. Peña Flor 1102, CP 76116, Santiago de Querétaro, Qro.</p>
+              <a href="https://maps.app.goo.gl/ntZrbVHJqKiH7PzS9" target="_blank" rel="noopener noreferrer">
+                <p>Av. Constituyentes 25 local 1, Col. Magisterial, CP 76116, Santiago de Querétaro, Qro.</p>
               </a>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={styles.column} style={{ width: '25%' }}>
+      <div className={styles.column} style={{ width: '22%' }}>
         <div className={styles.titleContainer}>
           <div className={styles.iconWrapper}>
             <FaBook className={styles.icon} />
