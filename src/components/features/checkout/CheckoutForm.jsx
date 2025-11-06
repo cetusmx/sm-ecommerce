@@ -31,7 +31,7 @@ const CheckoutForm = ({ onPaymentComplete }) => {
       onPaymentComplete({ error: true, message: error.message });
     } else if (paymentIntent && paymentIntent.status === 'succeeded') {
       // Payment succeeded, pass the result to the parent.
-      onPaymentComplete({ success: true, message: "¡Pago exitoso! Tu pedido ha sido creado." });
+      onPaymentComplete({ success: true, message: "¡Pago exitoso! Tu pedido ha sido creado, recibirás un correo confirmando tu compra." });
     } else {
       // Handle other statuses if needed
       onPaymentComplete({ error: true, message: `El pago no se completó. Estado: ${paymentIntent?.status}` });

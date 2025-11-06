@@ -298,7 +298,7 @@ const Producto = ({ producto, imageUrl }) => {
           ) : (
             ""
           )}
-          {producto.dureza !== "" ? (
+          {producto.dureza.length > 1 ? (
             <div className={styles["detalle-fila"]}>
               <span>
                 <span className={styles.etiqueta}>Dureza:</span>
