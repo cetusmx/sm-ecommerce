@@ -96,11 +96,12 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
       <table key={searchUpdateId} className={`${styles.resultsTable} fade-in`}>
         <thead>
           <tr>
-            <th style={{width: '10%'}}>Vista</th>
+            <th style={{width: '10%'}}>Perfil</th>
             <th style={{width: '13%'}}>SKU</th>
-            <th style={{width: '9%'}}>DI</th>
-            <th style={{width: '9%'}}>DE</th>
-            <th style={{width: '9%'}}>Altura</th>
+            <th style={{width: '7%'}}>DI</th>
+            <th style={{width: '7%'}}>DE</th>
+            <th style={{width: '7%'}}>Altura</th>
+            <th style={{width: '8%'}}>Marca</th>
             <th>Precio</th>
             <th style={{width: '10%'}}>Unidad</th>
             <th style={{width: '12%'}}>Cant por empaque</th>
@@ -113,20 +114,26 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
             const arrivalDate = needsStockStatus ? formatToShortDate(calculateArrivalDate()) : null;
 
             return (
-              <tr key={product.clave}>
-                <td>
+              <tr style={{borderBottom: "1px solid #ddd"}} key={product.clave}>
+                <td >
                   <Link to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}> 
                     <img 
                       src={`/Perfiles/${product.linea}.jpg`} 
                       alt={product.descripcion} 
                       className={styles.productImage} 
                     />
+                    {/* <p style={{textDecoration: "underline", fontSize: "0.8em"}}>Ver detalles</p> */}
                   </Link>
                 </td>
-                <td>{product.clave}</td>
+                <td>
+                  <Link style={{textDecoration:"underline", color: "#212c59"}} to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}>
+                  {product.clave}
+                  </Link>
+                </td>
                 <td style={{fontWeight:500}}>{product.diam_int}</td>
                 <td style={{fontWeight:500}}>{product.diam_ext}</td>
                 <td style={{fontWeight:500}}>{product.altura}</td>
+                <td style={{fontWeight:500}}>{product.marca}</td>
                 <td>
                   {needsStockStatus ? (
                     <StockStatus arrivalDate={arrivalDate} />

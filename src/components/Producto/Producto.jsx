@@ -204,7 +204,7 @@ const Producto = ({ producto, imageUrl }) => {
         <h5 className={styles["producto-descripcion"]}>
           {producto.descripcion}
         </h5>
-        <h7>SKU: {producto.clave}</h7>
+        <h7>CLAVE: {producto.clave}</h7>
         <div className={styles["producto-precio"]}>
           {showStockStatus ? <StockStatus /> : `$${precioPorEmpaque}`}
         </div>
@@ -224,7 +224,7 @@ const Producto = ({ producto, imageUrl }) => {
           </span>
         </div>
 
-        <div className={styles["producto-detalles"]}>
+        {/* <div className={styles["producto-detalles"]}>
           {producto.observaciones2 !== "" ? (
             <div className={styles["detalle-fila"]}>
               <span>
@@ -235,7 +235,7 @@ const Producto = ({ producto, imageUrl }) => {
           ) : (
             ""
           )}
-        </div>
+        </div> */}
 
         <div className={styles["producto-detalles"]}>
           {producto.diam_int !== "" ? (
@@ -298,6 +298,16 @@ const Producto = ({ producto, imageUrl }) => {
           ) : (
             ""
           )}
+          {producto.dureza !== "" ? (
+            <div className={styles["detalle-fila"]}>
+              <span>
+                <span className={styles.etiqueta}>Dureza:</span>
+                {producto.dureza}
+              </span>
+            </div>
+          ) : (
+            ""
+          )}
           {producto.sistema_medicion !== "" ? (
             <div className={styles["detalle-fila"]}>
               <span>
@@ -310,7 +320,7 @@ const Producto = ({ producto, imageUrl }) => {
         </div>
 
         <div className={styles["acerca-de"]}>
-          <h6>Acerca de este artículo</h6>
+          <h6>Acerca de este producto</h6>
           <p style={{textAlign:"justify"}}>{producto.acerca_de_producto}</p>
         </div>
       </div>

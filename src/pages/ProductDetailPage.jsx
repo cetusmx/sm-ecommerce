@@ -110,7 +110,7 @@ const ProductDetailPage = () => {
   // Get product from cache
   const cachedProduct = queryClient.getQueryData(['products'])?.find(p => p.clave === clave);
 
-  const finalProduct = cachedProduct ? { ...product, precio: cachedProduct.precio } : product;
+  const finalProduct = product;
 
   if (isLoadingProduct || isLoadingCategories) {
     return <div>Cargando producto...</div>;
@@ -124,8 +124,6 @@ const ProductDetailPage = () => {
   const imageUrlFromQuery = searchParams.get('imageUrl');
   console.log(imageUrlFromQuery);
   const finalImageUrl = imageUrlFromQuery || `/Perfiles/${product.linea}.jpg`;
-  console.log(finalImageUrl);
-  console.log("--- ProductDetailPage RENDER END ---");
   return (
     <div className={styles.productContainer}>
 
