@@ -143,11 +143,13 @@ const CheckoutPage = () => {
   const [clientSecret, setClientSecret] = useState(null);
   const hasFetchedPaymentIntent = useRef(false); // New ref
   const [deliveryPreference, setDeliveryPreference] = useState(null);
+  const [numberOfShipments, setNumberOfShipments] = useState(1);
+  const [latestDeliveryDate, setLatestDeliveryDate] = useState(null);
 
   const calculateTotal = useMemo(() => {
-    const shippingCost = selectedShippingOption ? selectedShippingOption.totalPrice : 0;
+    const shippingCost = selectedShippingOption ? selectedShippingOption.totalPrice * numberOfShipments : 0;
     return cartTotal + shippingCost;
-  }, [cartTotal, selectedShippingOption]);
+  }, [cartTotal, selectedShippingOption, numberOfShipments]);
 
   useEffect(() => {
     if (selectedPaymentMethod === 'card' && calculateTotal > 0 && currentUser && !clientSecret && !hasFetchedPaymentIntent.current) {
@@ -282,10 +284,19 @@ const CheckoutPage = () => {
   const handleDeliverySelection = async (preference) => {
     setDeliveryPreference(preference);
     if (preference === 'single') {
+      const dates = fechasDeEntrega.map(f => {
+        const parts = f.fechaCorta.split('-');
+        return new Date(parts[0], parts[1] - 1, parts[2]);
+      });
+      dates.sort((a, b) => b - a);
+      const latestDate = dates[0];
+      setLatestDeliveryDate(latestDate);
+      setNumberOfShipments(1);
       await fetchRates(shippingAddress);
     } else {
-      // Logic for separate shipments will be implemented here
-      // For now, we'll just use the single rate
+      const uniqueDates = new Set(fechasDeEntrega.map(f => f.fechaCorta));
+      setNumberOfShipments(uniqueDates.size);
+      setLatestDeliveryDate(null); // Reset latest delivery date
       await fetchRates(shippingAddress);
     }
     setStep('payment');
@@ -361,12 +372,15 @@ const CheckoutPage = () => {
         <h2>Paso 3: Pago y Resumen del Pedido</h2>
         <h3>Resumen del Pedido</h3>
         <div className={styles.orderSummary}>
+            {deliveryPreference === 'single' && latestDeliveryDate && (
+              <p style={{marginBottom: "0.5em"}}  className={styles.deliveryDate}>Entrega estimada: {latestDeliveryDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' })}</p>
+            )}
             {cart.map(item => (
             <div key={item.clave} className={styles.summaryItem}>
                 <div className={styles.itemDetails}>
                 <span>{item.clave} x {item.quantity}</span>
                 {item.descripcion && <p style={{marginBottom: "0.4em"}} className={styles.productDescription}>{item.descripcion}</p>}
-                {(() => {
+                {deliveryPreference !== 'single' && (() => {
                   const entrega = fechasDeEntrega.find(f => f.clave === item.clave);
                   if (entrega && entrega.fecha) {
                     return <p style={{marginBottom: "0.5em"}}  className={styles.deliveryDate}>Entrega estimada: {entrega.fecha}</p>;
@@ -382,8 +396,8 @@ const CheckoutPage = () => {
             <span>${cartTotal.toFixed(2)}</span>
             </div>
             <div className={styles.summaryLine}>
-            <span>Envío:</span>
-            <span>${selectedShippingOption?.totalPrice.toFixed(2) || '0.00'}</span>
+            <span>Envío:{numberOfShipments > 1 && ` (${numberOfShipments} fletes)`}</span>
+            <span>${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2) || '0.00'}</span>
             </div>
             <div className={`${styles.summaryLine} ${styles.totalLine}`}>
             <span>Total:</span>

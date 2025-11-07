@@ -139,8 +139,14 @@ const Pedido = () => {
       };
     });
 
-    const fechaEntrega = orderItems[0].fecha_entrega 
-      ? formatDateToSpanish(orderItems[0].fecha_entrega)
+    const latestFechaEntrega = orderItems.reduce((latest, item) => {
+      if (!item.fecha_entrega) return latest;
+      const itemDate = new Date(item.fecha_entrega);
+      return latest > itemDate ? latest : itemDate;
+    }, new Date(0));
+
+    const fechaEntrega = latestFechaEntrega.getTime() !== new Date(0).getTime()
+      ? formatDateToSpanish(latestFechaEntrega)
       : 'Fecha no disponible';
 
     return (
@@ -153,7 +159,7 @@ const Pedido = () => {
             </div>
             <div className={styles['header-item']}>
               <span className={styles['header-label']}>TOTAL</span>
-              <span className={styles['header-value']}>${orderItems.reduce((acc, item) => acc + parseFloat(item.total_partida), 0).toFixed(2)}</span>
+              <span className={styles['header-value']}>${parseFloat(orderItems[0].total_pedido).toFixed(2)}</span>
             </div>
             <div className={styles['header-item']}>
               <span className={styles['header-label']}>ENVIAR A</span>

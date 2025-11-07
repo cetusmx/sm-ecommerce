@@ -9,5 +9,5 @@ export const useDeliveryInfo = (producto, quantity) => {
     setDeliveryInfo(newDeliveryInfo);
   }, [quantity, producto]);
 
-  return deliveryInfo;
+  return deliveryInfo; 
 };

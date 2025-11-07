@@ -8,7 +8,7 @@ export const calculateArrivalDate = () => {
   const hoursToAdd = currentHour < 12 ? 48 : 72;
   arrival.setHours(now.getHours() + hoursToAdd);
 
-  // Adjust for weekends
+  // Adjust for weekends. Aquí ya tengo el día según el horario, ahora checar si no es fin de semana
   const dayOfWeek = arrival.getDay();
   if (dayOfWeek === 6) { // If it's Saturday
     arrival.setDate(arrival.getDate() + 3); // Move to Monday
@@ -18,7 +18,7 @@ export const calculateArrivalDate = () => {
 
   return arrival;
 };
-
+ 
 export const calculateDeliveryDate = (startDate = new Date()) => {
   let deliveryDate = new Date(startDate);
 
@@ -40,7 +40,8 @@ export const calculateDeliveryDate = (startDate = new Date()) => {
 };
 
 export const formatToSpanishDate = (date) => {
-    return date.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
+    const localDate = new Date(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
+    return localDate.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
 };
 
 export const formatToShortDate = (date) => {
@@ -55,5 +56,11 @@ export const formatToYYYYMMDD = (date) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    // Create a new Date object that represents the same date but at UTC midnight
+    const utcDate = new Date(Date.UTC(year, month - 1, day));
+
+    const utcYear = utcDate.getUTCFullYear();
+    const utcMonth = String(utcDate.getUTCMonth() + 1).padStart(2, '0');
+    const utcDay = String(utcDate.getUTCDate()).padStart(2, '0');
+    return `${utcYear}-${utcMonth}-${utcDay}`;
 };

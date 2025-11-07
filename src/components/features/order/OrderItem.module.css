@@ -45,3 +45,9 @@
   align-items: center;
   gap: 1rem;
 }
+
+.deliveryDateStyle {
+  margin-top: 2rem;
+  color: #2c58c7;
+  font-size: 0.9em;
+}

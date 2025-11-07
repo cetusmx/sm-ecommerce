@@ -51,9 +51,16 @@ export const fetchProducts = async () => {
     throw new Error('Network response was not ok');
   }
   const products = await response.json();
+
   return products
-    .filter(product => !product.observaciones?.toLowerCase().includes('revisar'))
+    .filter(product => product.ultima_compra != null && 
+                       !product.observaciones?.toLowerCase().includes('revisar') &&
+                       product.precio > product.ultimo_costo)
     .map(applyProductRules);
+  /* return products
+  .filter(product => product.ultima_compra != null)
+    .filter(product => !product.observaciones?.toLowerCase().includes('revisar'))
+    .map(applyProductRules); */
 };
 
 export const fetchProductByClave = async (clave) => {

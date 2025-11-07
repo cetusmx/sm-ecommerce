@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SearchResults.module.css';
 import StockStatus from './StockStatus';
 import { calculateArrivalDate, formatToShortDate } from '../../../utils/dateUtils';
 import { useCart } from '@/hooks/useCart'; // Import useCart
+import { FaAngleDoubleUp } from 'react-icons/fa';
 import AvisoEscasez from '../../common/AvisoEscasez';
 
 const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
@@ -12,9 +13,29 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
   const [addedMessage, setAddedMessage] = useState({}); // State for added message
   const [isScarcityModalOpen, setIsScarcityModalOpen] = useState(false);
   const [scarcityMessage, setScarcityMessage] = useState('');
+  const [showScroll, setShowScroll] = useState(false);
+
+  useEffect(() => {
+    const checkScrollTop = () => {
+      if (!showScroll && window.pageYOffset > 400) {
+        setShowScroll(true);
+      } else if (showScroll && window.pageYOffset <= 400) {
+        setShowScroll(false);
+      }
+    };
+
+    window.addEventListener('scroll', checkScrollTop);
+    return () => {
+      window.removeEventListener('scroll', checkScrollTop);
+    };
+  }, [showScroll]);
 
   // Products are already filtered by existence/ultima_compra in HomePage.jsx
   const filteredForDisplay = results;
+
+  const scrollTop = () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
 
   const handleQuantityChange = (product, value) => {
     const newQuantity = Math.max(0, Number(value));
@@ -89,9 +110,10 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
           <tr>
             <th style={{width: '10%'}}>Vista</th>
             <th style={{width: '13%'}}>SKU</th>
-            <th style={{width: '9%'}}>DI</th>
-            <th style={{width: '9%'}}>DE</th>
-            <th style={{width: '9%'}}>Altura</th>
+            <th style={{width: '7%'}}>DI</th>
+            <th style={{width: '7%'}}>DE</th>
+            <th style={{width: '7%'}}>Altura</th>
+            <th style={{width: '8%'}}>Marca</th>
             <th>Precio</th>
             <th style={{width: '10%'}}>Unidad</th>
             <th style={{width: '12%'}}>Cant por empaque</th>
@@ -114,10 +136,15 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
                     />
                   </Link>
                 </td>
-                <td>{product.clave}</td>
+                <td>
+                  <Link style={{textDecoration:"underline", color: "#212c59"}} to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}>
+                  {product.clave}
+                  </Link>
+                  </td>
                 <td style={{fontWeight:500}}>{product.diam_int}</td>
                 <td style={{fontWeight:500}}>{product.diam_ext}</td>
                 <td style={{fontWeight:500}}>{product.altura}</td>
+                <td style={{fontWeight:500}}>{product.marca}</td>
                 <td>
                   {needsStockStatus ? (
                     <StockStatus arrivalDate={arrivalDate} />
@@ -154,6 +181,11 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
         onClose={() => setIsScarcityModalOpen(false)}
         message={scarcityMessage}
       />
+      {showScroll && (
+        <button onClick={scrollTop} className={styles.scrollTopButton}>
+          <FaAngleDoubleUp />
+        </button>
+      )}
     </div>
   );
 };
