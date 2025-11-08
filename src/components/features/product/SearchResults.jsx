@@ -110,8 +110,7 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
         </thead>
         <tbody>
           {results.map((product) => {
-            console.log('Product data in SearchResults:', product);
-            const needsStockStatus = (product.precio == 0 || product.existencia == 0) && product.ultima_compra;
+           const needsStockStatus = (product.precio == 0 || product.existencia == 0) && product.ultima_compra;
             const arrivalDate = needsStockStatus ? formatToShortDate(calculateArrivalDate()) : null;
 
             return (

@@ -79,3 +79,11 @@
 .closeButton:hover {
   background-color: #0056b3;
 }
+
+.additionalMessage {
+  margin-top: -15px; /* Adjust as needed to bring it closer to the main message */
+  margin-bottom: 25px;
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: bold;
+}

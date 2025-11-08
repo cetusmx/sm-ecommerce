@@ -48,15 +48,7 @@ const FichaTecnica = ({ materialFilters, filteredProducts, groupName }) => {
         : null;
 
     if (!propertiesToDisplay) {
-        if (groupName === 'orings-respaldos') {
-            return (
-                <div className={styles.fichaTecnicaContainer}>
-                    <p>Selecciona un material para ver su ficha técnica detallada.</p>
-                </div>
-            );
-        } else {
-            return null; // Render nothing for other groups if no material is selected
-        }
+        return null; // Render nothing if no material is selected
     }
 
     return (

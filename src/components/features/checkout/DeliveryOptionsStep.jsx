@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styles from './DeliveryOptionsStep.module.css';
 import { formatDeliveryDateLowercase } from '../../../utils/formatosFechas';
 
-const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPreference }) => {
+const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPreference, isLoading }) => {
   // Group products by delivery date
   const groupedByDate = cart.reduce((acc, item) => {
     const entrega = fechasDeEntrega.find(f => f.clave === item.clave);
@@ -19,10 +19,16 @@ const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPrefe
       <h2>Opciones de Entrega</h2>
       <p>Algunos de tus productos tienen diferentes fechas de entrega. ¿Cómo te gustaría recibirlos?</p>
       
+      {isLoading && (
+        <div className={styles.loadingOverlay}>
+          <p>Espera, estamos organizando tu pedido...</p>
+        </div>
+      )}
+
       <div className={styles.optionsContainer}>
         <div 
-          className={`${styles.optionCard} ${selectedPreference === 'single' ? styles.selected : ''}`}
-          onClick={() => onSelection('single')}
+          className={`${styles.optionCard} ${selectedPreference === 'single' ? styles.selected : ''} ${isLoading ? styles.disabled : ''}`}
+          onClick={() => !isLoading && onSelection('single')}
         >
           <input 
             type="radio" 
@@ -30,6 +36,7 @@ const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPrefe
             value="single" 
             checked={selectedPreference === 'single'}
             onChange={() => {}} // onChange is required for controlled components
+            disabled={isLoading}
           />
           <div>
             <h5>Enviar todo junto</h5>
@@ -37,8 +44,8 @@ const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPrefe
           </div>
         </div>
         <div 
-          className={`${styles.optionCard} ${selectedPreference === 'separate' ? styles.selected : ''}`}
-          onClick={() => onSelection('separate')}
+          className={`${styles.optionCard} ${selectedPreference === 'separate' ? styles.selected : ''} ${isLoading ? styles.disabled : ''}`}
+          onClick={() => !isLoading && onSelection('separate')}
         >
           <input 
             type="radio" 
@@ -46,6 +53,7 @@ const DeliveryOptionsStep = ({ cart, fechasDeEntrega, onSelection, selectedPrefe
             value="separate" 
             checked={selectedPreference === 'separate'}
             onChange={() => {}} // onChange is required for controlled components
+            disabled={isLoading}
           />
           <div>
             <h5>Enviar por separado</h5>

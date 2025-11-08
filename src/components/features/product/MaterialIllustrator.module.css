@@ -1,0 +1,108 @@
+.materialIllustratorContainer {
+    width: 100%;
+    max-width: 600px; /* Adjust as needed */
+    margin: 2rem auto;
+    padding: 1rem;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.materialBlock {
+    display: flex;
+    width: 100%;
+    /* Height is 1/8 of width, but since width is dynamic, we use padding-bottom trick */
+    padding-bottom: 12.5%; /* 1/8 = 0.125 */
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden; /* Ensures clip-path works correctly */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.materialLeft {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70%; /* Adjusted width */
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align text to the left */
+    color: white;
+    font-weight: bold;
+    font-size: 1.1em;
+    padding-left: 3rem; /* Keep initial padding-left */
+    padding-right: 1rem; /* Add padding-right to avoid circle */
+    text-align: left; /* Ensure text aligns left */
+    box-sizing: border-box;
+    clip-path: polygon(0% 0%, 70% 0%, 80% 50%, 70% 100%, 0% 100%); /* Less pronounced arrow shape */
+    z-index: 1;
+}
+
+.materialRight {
+    position: absolute;
+    top: 0;
+    left: 0; /* Starts from the beginning of the block */
+    width: 100%; /* Covers the entire block */
+    height: 100%;
+    background-color: #f7f7f7;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align text to start */
+    padding-left: calc(56% + 1rem); /* Adjusted padding to start text from arrow tip */
+    font-size: 0.9em;
+    color: #333;
+    box-sizing: border-box;
+    z-index: 0; /* Ensure it's behind materialLeft */
+}
+
+.materialRight p {
+    margin: 0;
+    /* padding-left: 1rem; -- Removed as padding-left on .materialRight is sufficient */
+}
+
+.temperatureCircle {
+    position: absolute;
+    top: 50%;
+    left: calc(70% * 0.7); /* Positioned inside the left container, aligned with the arrow's base */
+    transform: translate(-50%, -50%);
+    width: 45px; /* Adjusted size of the circle */
+    height: 45px;
+    border-radius: 50%;
+    background-color: white;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 0.8em; /* Adjusted font size */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.materialName {
+    position: absolute;
+    left: 1rem;
+    color: white;
+    font-size: 1.2em;
+    font-weight: bold;
+    z-index: 3; /* Ensure text is above clip-path */
+}
+
+.resistantChemicals {
+    position: absolute;
+    right: 1rem;
+    color: #333;
+    font-size: 0.9em;
+    text-align: right;
+    z-index: 3;
+}
+
+/* Specific colors for each material */
+.nitrilo { background-color: #0e3287; } /* Blue */
+.viton { background-color: #d9534e; } /* Red */
+.epdm { background-color: #5cb85c; } /* Green */
+.hnbr { background-color: #f0ad4e; } /* Orange */

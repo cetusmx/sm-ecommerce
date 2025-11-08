@@ -365,3 +365,32 @@
 .bankInfoContainer .sm-btn {
   margin-top: 1.5rem;
 }
+
+/* Placing Order Overlay */
+.placingOrderOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  color: white;
+}
+
+.placingOrderMessage {
+  background-color: #333;
+  padding: 2rem 3rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.placingOrderMessage p {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 500;
+}

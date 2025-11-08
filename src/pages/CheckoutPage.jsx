@@ -50,11 +50,19 @@ const CheckoutPage = () => {
 
   const handlePaymentComplete = async (result, paymentMethodType) => {
     if (result.success) {
-      // Call the existing order creation logic now that payment is confirmed.
-      await createOrderInDB(paymentMethodType, 'pagoTDC');
+      setIsPlacingOrder(true);
+      const orderSuccess = await createOrderInDB(paymentMethodType, 'pagoTDC');
+      setIsPlacingOrder(false);
+      
+      if (orderSuccess) {
+        setModalState({ isOpen: true, message: "¡Pago exitoso! Tu pedido ha sido creado.", isError: false });
+      } else {
+        setModalState({ isOpen: true, message: "El pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte.", isError: true });
+      }
+    } else {
+      // Show the modal with the result from the payment component (e.g., Stripe/PayPal)
+      setModalState({ isOpen: true, message: result.message, isError: !!result.error });
     }
-    // Show the modal with the result
-    setModalState({ isOpen: true, message: result.message, isError: !!result.error });
   };
 
   const handleCloseModal = () => {
@@ -143,6 +151,8 @@ const CheckoutPage = () => {
   const [clientSecret, setClientSecret] = useState(null);
   const hasFetchedPaymentIntent = useRef(false); // New ref
   const [deliveryPreference, setDeliveryPreference] = useState(null);
+  const [isProcessingDelivery, setIsProcessingDelivery] = useState(false);
+  const [isPlacingOrder, setIsPlacingOrder] = useState(false);
   const [numberOfShipments, setNumberOfShipments] = useState(1);
   const [latestDeliveryDate, setLatestDeliveryDate] = useState(null);
 
@@ -282,6 +292,7 @@ const CheckoutPage = () => {
   };
 
   const handleDeliverySelection = async (preference) => {
+    setIsProcessingDelivery(true);
     setDeliveryPreference(preference);
     if (preference === 'single') {
       const dates = fechasDeEntrega.map(f => {
@@ -311,9 +322,19 @@ const CheckoutPage = () => {
   };
 
   const handleNonStripePayment = async (paymentMethod) => {
+    setIsPlacingOrder(true);
     const success = await createOrderInDB(paymentMethod, 'pagoTransf');
+    setIsPlacingOrder(false);
+
     if (success) {
-      navigate('/pedido', { state: { orderPlaced: true } });
+      setModalState({
+        isOpen: true,
+        message: "¡Tu pedido ha sido colocado exitosamente!",
+        isError: false,
+        additionalMessage: "No olvides enviar tu comprobante de pago al correo pagos@sealmarket.mx"
+      });
+    } else {
+      setModalState({ isOpen: true, message: "Hubo un error al colocar tu pedido. Por favor, intenta de nuevo.", isError: true });
     }
   };
 
@@ -360,6 +381,7 @@ const CheckoutPage = () => {
       cart={cart} 
       fechasDeEntrega={fechasDeEntrega} 
       onSelection={handleDeliverySelection} 
+      isLoading={isProcessingDelivery}
     />
   );
 
@@ -558,6 +580,13 @@ const CheckoutPage = () => {
   };
   return (
     <div className={styles.container}>
+      {isPlacingOrder && (
+        <div className={styles.placingOrderOverlay}>
+          <div className={styles.placingOrderMessage}>
+            <p>Finalizando tu pedido, por favor espera...</p>
+          </div>
+        </div>
+      )}
       <h1>Checkout</h1>
       {error && <p className={styles.error}>{error}</p>}
       {renderContent()}
@@ -567,6 +596,7 @@ const CheckoutPage = () => {
         onClose={handleCloseModal}
         message={modalState.message}
         isError={modalState.isError}
+        additionalMessage={modalState.additionalMessage}
       />
     </div>
   );
