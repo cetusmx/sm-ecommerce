@@ -35,106 +35,206 @@ const ProductTable = ({ products }) => {
         setQuantities(prev => ({ ...prev, [clave]: newQuantity }));
     };
 
-    const handleAddToCart = (product) => {
-        const quantity = quantities[product.clave] || 1;
-        let productToAdd = { ...product }; // Start with a copy of the original product
+        const handleAddToCart = (product) => {
 
-        if (isProductInPromotion(product)) {
-            const allProductsFromCache = queryClient.getQueryData(['products']); // Get all products from cache
-            const promotionalProductsFromCache = queryClient.getQueryData(['promotionalProducts']); // Get promotional products from cache
+            const quantity = quantities[product.clave] || 1;
 
-            const promoDetails = promotionalProductsFromCache.find(promo => promo.clave === product.clave);
-            const originalProduct = allProductsFromCache.find(p => p.clave === product.clave);
+            let productToAdd = { ...product }; // Start with a copy of the original product
 
-            if (promoDetails && originalProduct) {
-                const normalPrice = parseFloat(originalProduct.precio);
-                const discount = parseFloat(promoDetails.descuento);
+    
 
-                let offerPrice = normalPrice;
-                if (!isNaN(discount) && discount > 0 && discount <= 100) {
-                    offerPrice = normalPrice * (1 - discount / 100);
+            if (isProductInPromotion(product)) {
+
+                const allProductsFromCache = queryClient.getQueryData(['products']); // Get all products from cache
+
+                const promotionalProductsFromCache = queryClient.getQueryData(['promotionalProducts']); // Get promotional products from cache
+
+    
+
+                const promoDetails = promotionalProductsFromCache.find(promo => promo.clave === product.clave);
+
+                const originalProduct = allProductsFromCache.find(p => p.clave === product.clave);
+
+    
+
+                if (promoDetails && originalProduct) {
+
+                    const normalPrice = parseFloat(originalProduct.precio);
+
+                    const discount = parseFloat(promoDetails.descuento);
+
+    
+
+                    let offerPrice = normalPrice;
+
+                    if (!isNaN(discount) && discount > 0 && discount <= 100) {
+
+                        offerPrice = normalPrice * (1 - discount / 100);
+
+                    }
+
+                    productToAdd.precio = offerPrice.toFixed(2); // Update the price to the offer price
+
                 }
-                productToAdd.precio = offerPrice.toFixed(2); // Update the price to the offer price
+
             }
+
+    
+
+            addItem(productToAdd, quantity);
+
+            setAddedMessage(prev => ({ ...prev, [product.clave]: 'Agregado' }));
+
+            setTimeout(() => {
+
+                setAddedMessage(prev => ({ ...prev, [product.clave]: null }));
+
+            }, 2000);
+
+        };
+
+    
+
+        if (products.length === 0) {
+            return null; // Don't render anything if there are no products
         }
 
-        addItem(productToAdd, quantity);
-        setAddedMessage(prev => ({ ...prev, [product.clave]: 'Agregado' }));
-        setTimeout(() => {
-            setAddedMessage(prev => ({ ...prev, [product.clave]: null }));
-        }, 2000);
+        return (
+
+            <table className={styles.productTable}>
+
+                <thead>
+
+                    <tr>
+
+                        <th className={styles.thImage}>Perfil</th>
+
+                        <th className={styles.thClave}>SKU</th>
+
+                        <th className={styles.thDescripcion}>Descripción</th>
+
+                        <th className={styles.thPrecio}>Precio</th>
+
+                        {/* <th className={styles.thUnidad}>Unidad */}
+
+                        <th className={styles.thCant}>Cant por empaque</th>
+
+                        <th className={styles.thAction}>Agregar</th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    {products.map(product => {
+
+                        let imageUrl;
+
+                        if (product.categoria === "Herramientas" || product.categoria === "Accesorios" || product.categoria === "Estuches" || product.categoria === "Accesorios hidráulicos") {
+
+                            imageUrl = `/Sugeridos/${product.clave}.jpg`;
+
+                        } else {
+
+                            imageUrl = `/Perfiles/${product.linea}.jpg`;
+
+                        }
+
+                        const quantity = quantities[product.clave] || 1;
+
+    
+
+                        return (
+
+                            <tr key={product.clave}>
+
+                                <td className={styles.tdImage}>
+
+                                    <Link to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(imageUrl)}`}>
+
+                                        <img src={imageUrl} alt={product.descripcion} className={styles.productImage} />
+
+                                    </Link>
+
+                                </td>
+
+                                <td className={styles.tdClave}>{product.clave}</td>
+
+                                <td className={styles.tdDescripcion}>{product.descripcion}</td>
+
+                                <td className={styles.tdPrecio}>
+
+                                    {isProductInPromotion(product) ? (
+
+                                        <ProductOffer product={product} />
+
+                                    ) : (
+
+                                        parseFloat(product.precio).toFixed(2)
+
+                                    )}
+
+                                </td>
+
+                                {/* <td className={styles.tdUnidad}> {product.unidad_medida}</td> */}
+
+                                <td className={styles.tdCant}>{product.cantidad_empaque}</td>
+
+                                <td className={styles.tdAction}>
+
+                                    <div className={styles.actionContainer}>
+
+                                        <input 
+
+                                            type="number" 
+
+                                            min="1" 
+
+                                            value={quantity} 
+
+                                            onChange={(e) => handleQuantityChange(product.clave, e.target.value)}
+
+                                            className={styles.quantityInput} 
+
+                                        />
+
+                                        <button 
+
+                                            onClick={() => handleAddToCart(product)}
+
+                                            className="sm-btn sm-btn-primary"
+
+                                            style={{fontSize:"0.9em", padding: "7px 20px"}}
+
+                                        >
+
+                                            Agregar
+
+                                        </button>
+
+                                        {addedMessage[product.clave] && <div className={styles.addedMessage}>{addedMessage[product.clave]}</div>}
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        );
+
+                    })}
+
+                </tbody>
+
+            </table>
+
+        );
+
     };
 
-    if (products.length === 0) {
-        return <p className={styles.noProducts}>Selecciona un filtro para ver los productos.</p>;
-    }
+    
 
-    return (
-        <table className={styles.productTable}>
-            <thead>
-                <tr>
-                    <th className={styles.thImage}>Perfil</th>
-                    <th className={styles.thClave}>SKU</th>
-                    <th className={styles.thDescripcion}>Descripción</th>
-                    <th className={styles.thPrecio}>Precio</th>
-                    {/* <th className={styles.thUnidad}>Unidad */}
-                    <th className={styles.thCant}>Cant por empaque</th>
-                    <th className={styles.thAction}>Agregar</th>
-                </tr>
-            </thead>
-            <tbody>
-                {products.map(product => {
-                    let imageUrl;
-                    if (product.categoria === "Herramientas" || product.categoria === "Accesorios" || product.categoria === "Estuches" || product.categoria === "Accesorios hidráulicos") {
-                        imageUrl = `/Sugeridos/${product.clave}.jpg`;
-                    } else {
-                        imageUrl = `/Perfiles/${product.linea}.jpg`;
-                    }
-                    const quantity = quantities[product.clave] || 1;
+    export default ProductTable;
 
-                    return (
-                        <tr key={product.clave}>
-                            <td className={styles.tdImage}>
-                                <Link to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(imageUrl)}`}>
-                                    <img src={imageUrl} alt={product.descripcion} className={styles.productImage} />
-                                </Link>
-                            </td>
-                            <td className={styles.tdClave}>{product.clave}</td>
-                            <td className={styles.tdDescripcion}>{product.descripcion}</td>
-                            <td className={styles.tdPrecio}>
-                                {isProductInPromotion(product) ? (
-                                    <ProductOffer product={product} />
-                                ) : (
-                                    parseFloat(product.precio).toFixed(2)
-                                )}
-                            </td>
-                            {/* <td className={styles.tdUnidad}> {product.unidad_medida}</td> */}
-                            <td className={styles.tdCant}>{product.cantidad_empaque}</td>
-                            <td className={styles.tdAction}>
-                                <div className={styles.actionContainer}>
-                                    <input 
-                                        type="number" 
-                                        min="1" 
-                                        value={quantity} 
-                                        onChange={(e) => handleQuantityChange(product.clave, e.target.value)}
-                                        className={styles.quantityInput} 
-                                    />
-                                    <button 
-                                        onClick={() => handleAddToCart(product)}
-                                        className="sm-btn sm-btn-primary"
-                                        style={{fontSize:"0.9em", padding: "7px 20px"}}
-                                    >
-                                        Agregar
-                                    </button>
-                                    {addedMessage[product.clave] && <div className={styles.addedMessage}>{addedMessage[product.clave]}</div>}
-                                </div>
-                            </td>
-                        </tr>
-                    );
-                })}
-            </tbody>
-        </table>
-    );
-};
-
-export default ProductTable;
+    

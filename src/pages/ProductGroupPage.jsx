@@ -428,60 +428,43 @@ const ProductGroupPage = () => {
         const dimensionallyFilteredProducts = useMemo(() => {
             if (!products || !currentGroup) return [];
     
-            let baseFiltered = [...products];
+            let filtered = [...products];
     
-            // --- Main Filtering Logic ---
+            // Apply base filter if it exists
+            if (currentGroup.baseFilter) {
+                Object.entries(currentGroup.baseFilter).forEach(([key, value]) => {
+                    if (Array.isArray(value)) {
+                        filtered = filtered.filter(p => p[key] && value.includes(p[key]));
+                    } else {
+                        filtered = filtered.filter(p => p[key] === value);
+                    }
+                });
+            }
+    
+            // Apply hierarchical filters
             if (currentGroup.hierarchy) {
-                let dimensionalFiltered = [...baseFiltered];
-    
-                if (currentGroup.baseFilter) {
-                    Object.entries(currentGroup.baseFilter).forEach(([key, value]) => {
-                        if (Array.isArray(value)) {
-                            dimensionalFiltered = dimensionalFiltered.filter(p => p[key] && value.includes(p[key]));
-                        } else {
-                            dimensionalFiltered = dimensionalFiltered.filter(p => p[key] === value);
-                        }
-                    });
-                }
-    
                 const { sistema_medicion, perfil, seccion_oring, seccion_respaldo } = hierarchicalFilters;
     
-                                if (sistema_medicion) {
-                                    dimensionalFiltered = dimensionalFiltered.filter(p => p.sistema_medicion && p.sistema_medicion.trim() === sistema_medicion);
-                
-                                    if (perfil) {
-                                        dimensionalFiltered = dimensionalFiltered.filter(p => p.perfil && p.perfil.trim() === perfil);
-                
-                                        if (perfil === 'ORING') {
-                                            if (seccion_oring) {
-                                                dimensionalFiltered = dimensionalFiltered.filter(p => p.seccion && p.seccion.trim() === seccion_oring);
-                                            } else {
-                                                // If ORING is selected but no specific section, clear products
-                                                dimensionalFiltered = [];
-                                            }
-                                        } else if (perfil === 'RESPALDO') {
-                                            if (seccion_respaldo) {
-                                                dimensionalFiltered = dimensionalFiltered.filter(p => p.seccion && p.seccion.trim() === seccion_respaldo);
-                                            } else {
-                                                // If RESPALDO is selected but no specific section, clear products
-                                                dimensionalFiltered = [];
-                                            }
-                                        }
-                                    } else {
-                                        // If sistema_medicion is selected but no perfil, clear products
-                                        dimensionalFiltered = [];
-                                    }
-                                } else {
-                                    if (currentGroup.hierarchy) {
-                                        dimensionalFiltered = [];
-                                    }
-                                }
-                                return dimensionalFiltered;            }
+                if (sistema_medicion) {
+                    filtered = filtered.filter(p => p.sistema_medicion && p.sistema_medicion.trim() === sistema_medicion);
+                }
     
+                if (perfil) {
+                    filtered = filtered.filter(p => p.perfil && p.perfil.trim() === perfil);
+                }
+    
+                if (seccion_oring) {
+                    filtered = filtered.filter(p => p.seccion && p.seccion.trim() === seccion_oring);
+                } else if (seccion_respaldo) {
+                    filtered = filtered.filter(p => p.seccion && p.seccion.trim() === seccion_respaldo);
+                }
+            }
+    
+            // Apply legacy filters (for other groups)
             if (currentGroup.filters && currentGroup.filters.length > 0) {
                 if (legacyFilters.length === 0) return [];
                 const activeFilterCriteria = currentGroup.filters.filter(f => legacyFilters.includes(f.name));
-                return baseFiltered.filter(product => {
+                filtered = filtered.filter(product => {
                     return activeFilterCriteria.some(criteria => {
                         const lineaMatch = product.linea && product.linea.trim() === criteria.linea;
                         const claveMatch = product.clave && String(product.clave).trim().startsWith(criteria.prefix);
@@ -489,14 +472,15 @@ const ProductGroupPage = () => {
                     });
                 });
             }
+            // Apply direct linea/category filters (for other groups)
             if (currentGroup.linea) {
-                return baseFiltered.filter(product => product.linea && product.linea.trim() === currentGroup.linea);
+                filtered = filtered.filter(product => product.linea && product.linea.trim() === currentGroup.linea);
             }
             if (currentGroup.category) {
-                return baseFiltered.filter(product => product.categoria && product.categoria.trim() === currentGroup.category);
+                filtered = filtered.filter(product => product.categoria && product.categoria.trim() === currentGroup.category);
             }
     
-            return [];
+            return filtered;
         }, [products, hierarchicalFilters, legacyFilters, currentGroup]);
     
         const sortedProducts = useMemo(() => {
@@ -709,8 +693,11 @@ const ProductGroupPage = () => {
                 </div>
                 <main className={styles.mainContent}>
                     {!hasSubFilters && <h2 className={styles.mainContentTitle}>{currentGroup.title}</h2>}
-                    {groupName === 'orings-respaldos' && Object.keys(hierarchicalFilters).length === 0 && (
-                        <MaterialIllustrator />
+                    {groupName === 'orings-respaldos' && !hierarchicalFilters.seccion_oring && !hierarchicalFilters.seccion_respaldo && (
+                        <>
+                            <p className={styles.noProductsInitialMessage}>Comienza a seleccionar filtros para ver los productos.</p>
+                            <MaterialIllustrator />
+                        </>
                     )}
 
                     <FichaTecnica materialFilters={materialFilters} filteredProducts={materialFilteredProducts} groupName={groupName} />

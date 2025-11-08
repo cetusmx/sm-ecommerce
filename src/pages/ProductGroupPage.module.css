@@ -205,4 +205,16 @@
   width: calc(33.33% - 7px); /* Adjusted for 10px column-gap */
 }
 
+.noProductsInitialMessage {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+    color: #d9534e; /* A notable color */
+    font-weight: bold;
+    background-color: #fefefe;
+    border: 1px solid #f5c6cb;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+}
+
 

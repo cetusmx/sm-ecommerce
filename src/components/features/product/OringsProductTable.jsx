@@ -74,7 +74,7 @@ const OringsProductTable = ({ products, sortConfig, handleSort }) => {
     };
 
     if (products.length === 0) {
-        return <p className={styles.noProducts}>Selecciona un filtro para ver los productos.</p>;
+        return null; // Don't render anything if there are no products
     }
 
     return (
