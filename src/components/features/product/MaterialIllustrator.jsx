@@ -29,6 +29,20 @@ const materialData = [
         colorClass: styles.hnbr,
         maxTemp: '150°C',
         chemicals: 'Combustibles, aceites, ozono, abrasión, refrigerante'
+    },
+    {
+        name: 'Silicón',
+        code: 'SIL',
+        colorClass: styles.silicon,
+        maxTemp: '220°C',
+        chemicals: 'Agua, ozono, alimentos, aplicaciones médicas'
+    },
+    {
+        name: 'Teflón',
+        code: 'PTFE',
+        colorClass: styles.teflon,
+        maxTemp: '250°C',
+        chemicals: 'Químicos agresivos, solventes, ácidos fuertes'
     }
 ];
 

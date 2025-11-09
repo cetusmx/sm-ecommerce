@@ -15,6 +15,7 @@ import UserAddressesPage from './pages/UserAddressesPage';
 import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ProductGroupPage from './pages/ProductGroupPage';
+import OringsPage from './pages/OringsPage';
 import RetenesPage from './pages/RetenesPage';
 import SearchPage from './pages/SearchPage'; // Import SearchPage
 import Layout from './components/layout/Layout';
@@ -78,6 +79,7 @@ function AppContent() {
             <Route path="checkout" element={<CheckoutPage />} />
             <Route path="/retenes" element={<RetenesPage />} />
             <Route path="/search" element={<SearchPage />} />
+            <Route path="grupo/orings-respaldos" element={<OringsPage />} />
             <Route path="grupo/:groupName" element={<ProductGroupPage />} />
           </Route>
         </Routes>

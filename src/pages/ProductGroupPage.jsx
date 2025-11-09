@@ -425,11 +425,15 @@ const ProductGroupPage = () => {
             setExpandedFilters([]);
         };
     
-        const dimensionallyFilteredProducts = useMemo(() => {
-            if (!products || !currentGroup) return [];
-    
-            let filtered = [...products];
-    
+                const dimensionallyFilteredProducts = useMemo(() => {
+                    if (!products || !currentGroup) return [];
+        
+                    // Para orings-respaldos, si no se ha seleccionado ninguna sección, no mostrar productos.
+                    if (groupName === 'orings-respaldos' && !hierarchicalFilters.seccion_oring && !hierarchicalFilters.seccion_respaldo) {
+                        return [];
+                    }
+        
+                    let filtered = [...products];    
             // Apply base filter if it exists
             if (currentGroup.baseFilter) {
                 Object.entries(currentGroup.baseFilter).forEach(([key, value]) => {

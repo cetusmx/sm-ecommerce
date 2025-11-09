@@ -1,7 +1,7 @@
 .materialIllustratorContainer {
     width: 100%;
     max-width: 600px; /* Adjust as needed */
-    margin: 2rem auto;
+    margin: 0 auto; 
     padding: 1rem;
     background-color: #fff;
     border-radius: 8px;
@@ -15,7 +15,7 @@
     display: flex;
     width: 100%;
     /* Height is 1/8 of width, but since width is dynamic, we use padding-bottom trick */
-    padding-bottom: 12.5%; /* 1/8 = 0.125 */
+    padding-bottom: 11%; /* 1/8 = 0.125 */
     position: relative;
     border-radius: 8px;
     overflow: hidden; /* Ensures clip-path works correctly */
@@ -53,7 +53,7 @@
     align-items: center;
     justify-content: flex-start; /* Align text to start */
     padding-left: calc(56% + 1rem); /* Adjusted padding to start text from arrow tip */
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: #333;
     box-sizing: border-box;
     z-index: 0; /* Ensure it's behind materialLeft */
@@ -78,7 +78,7 @@
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 0.8em; /* Adjusted font size */
+    font-size: 0.75em; /* Adjusted font size */
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     z-index: 2;
 }
@@ -106,3 +106,5 @@
 .viton { background-color: #d9534e; } /* Red */
 .epdm { background-color: #5cb85c; } /* Green */
 .hnbr { background-color: #f0ad4e; } /* Orange */
+.silicon { background-color: #E57373; } /* Reddish-orange */
+.teflon { background-color: #e0e0e0; color: #212529; } /* Light grey with dark text */
