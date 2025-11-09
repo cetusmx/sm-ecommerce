@@ -13,10 +13,13 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
     const allProducts = queryClient.getQueryData(['products']) || [];
 
     // Paso 1: Crear un índice de búsqueda normalizado y memorizado
+    /*
     const searchIndex = useMemo(() => {
         console.log("Creando índice de búsqueda con stems y sinónimos...");
         return allProducts.map(product => normalizeProductForSearch(product));
     }, [allProducts]);
+    */
+    const searchIndex = []; // Declare searchIndex as an empty array when commented out
 
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
@@ -26,7 +29,7 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
             return;
         }
         updateAutocompleteResults(debouncedSearchQuery);
-    }, [debouncedSearchQuery, searchIndex]); // Depender también del searchIndex
+    }, [debouncedSearchQuery]); // Depender también del searchIndex
 
     // Paso 2: Nueva función de búsqueda que utiliza el índice
     const updateAutocompleteResults = (query) => {
