@@ -46,21 +46,21 @@ const applyProductRules = (product) => {
 };
 
 export const fetchProducts = async () => {
+  console.log("fetchProducts: START fetching products."); // Log start
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
   const products = await response.json();
 
-  return products
-    .filter(product => product.ultima_compra != null && 
+  const processedProducts = products
+    .filter(product => product.ultima_compra != null &&
                        !product.observaciones?.toLowerCase().includes('revisar') &&
                        product.precio > product.ultimo_costo)
     .map(applyProductRules);
-  /* return products
-  .filter(product => product.ultima_compra != null)
-    .filter(product => !product.observaciones?.toLowerCase().includes('revisar'))
-    .map(applyProductRules); */
+
+  console.log("fetchProducts: END fetching products. Number of products:", processedProducts.length); // Log end and count
+  return processedProducts;
 };
 
 export const fetchProductByClave = async (clave) => {

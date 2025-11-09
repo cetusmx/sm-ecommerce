@@ -8,9 +8,9 @@ export const calculateArrivalDate = () => {
   const hoursToAdd = currentHour < 12 ? 48 : 72;
   arrival.setHours(now.getHours() + hoursToAdd);
 
-  console.log("Current hour ", currentHour);
+  /* console.log("Current hour ", currentHour);
   console.log("Hours to add ",hoursToAdd);
-  console.log("Arrival ", arrival);
+  console.log("Arrival ", arrival); */
 
   // Adjust for weekends. Aquí ya tengo el día según el horario, ahora checar si no es fin de semana
   const dayOfWeek = arrival.getDay();
