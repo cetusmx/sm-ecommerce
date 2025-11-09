@@ -11,11 +11,14 @@ import ProductosVistos from "@/components/features/product/ProductosVistos";
 import { useAuth } from "@/context/AuthContext";
 import { fetchProducts } from "@/api/productsApi";
 
-const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilter, productFilterKey }) => {
+import { useProductsLoaded } from "@/context/ProductsLoadedContext"; // Import useProductsLoaded
+
+const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilter, productFilterKey }) => { // Removed setAllProductsLoaded from props
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const [globalFilteredProducts, setGlobalFilteredProducts] = useState([]);
   const queryClient = useQueryClient();
+  const { setAllProductsLoaded } = useProductsLoaded(); // Consume setAllProductsLoaded from context
 
   const initialFilters = useMemo(() => ({
     diamInt: searchParams.get('diamInt') || '',
@@ -27,11 +30,13 @@ const HomePage = ({ globalSearchQuery, setGlobalSearchQuery, onClearProductFilte
 
   const [filters, setFilters] = useState(initialFilters);
 
-  const { data: products, isLoading, error } = useQuery({ 
-    queryKey: ['products'], 
-    queryFn: fetchProducts 
+  const { data: products, isLoading, error } = useQuery({
+    queryKey: ['products'],
+    queryFn: fetchProducts,
+    onSuccess: () => { // Add onSuccess callback
+      setAllProductsLoaded(true);
+    },
   });
-
   const { currentUser } = useAuth();
 
   const viewedProducts = queryClient.getQueryData(['productosVistos', currentUser?.email]);

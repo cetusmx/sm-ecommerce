@@ -46,23 +46,40 @@ const applyProductRules = (product) => {
 };
 
 export const fetchProducts = async () => {
-  console.log("fetchProducts: START fetching products."); // Log start
+  const startTime = new Date(); // Record start time
+  console.log("fetchProducts: START fetching products. Time:", startTime.toISOString()); // Log start time
+
+  // Step 1: Fetch from API
+  const fetchStart = new Date();
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
+  const fetchEnd = new Date();
+  console.log("fetchProducts: API Fetch Duration:", fetchEnd.getTime() - fetchStart.getTime(), "ms");
+
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  const products = await response.json();
 
+  // Step 2: Parse JSON
+  const jsonParseStart = new Date();
+  const products = await response.json();
+  const jsonParseEnd = new Date();
+  console.log("fetchProducts: JSON Parse Duration:", jsonParseEnd.getTime() - jsonParseStart.getTime(), "ms");
+
+  // Step 3: Filter and Map
+  const processStart = new Date();
   const processedProducts = products
     .filter(product => product.ultima_compra != null &&
                        !product.observaciones?.toLowerCase().includes('revisar') &&
                        product.precio > product.ultimo_costo)
     .map(applyProductRules);
+  const processEnd = new Date();
+  console.log("fetchProducts: Filter and Map Duration:", processEnd.getTime() - processStart.getTime(), "ms");
 
-  console.log("fetchProducts: END fetching products. Number of products:", processedProducts.length); // Log end and count
+  const endTime = new Date(); // Record end time
+  console.log("fetchProducts: END fetching products. Time:", endTime.toISOString(), "Number of products:", processedProducts.length); // Log end time and count
+  console.log("fetchProducts: Total Duration:", endTime.getTime() - startTime.getTime(), "ms"); // Log total duration
   return processedProducts;
 };
-
 export const fetchProductByClave = async (clave) => {
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/${clave}`);
   if (!response.ok) {
@@ -72,20 +89,54 @@ export const fetchProductByClave = async (clave) => {
     throw new Error('Network response was not ok');
   }
   const product = await response.json();
-  return applyProductRules(product);
+    return applyProductRules(product);
+  };
+   
+  export const fetchProductsByClaves = async (claves) => {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/claves`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ claves }),
+    });
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      return response.json();
+    };  
+  export const fetchSearchResultsByQuery = async (query) => {
+    if (!query) return [];
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/search?query=${query}`);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    // If the API returns an object with a message, assume no results and return an empty array
+    if (data && typeof data === 'object' && !Array.isArray(data) && data.message) {
+      return [];
+    }
+    return data;
 };
- 
 
-export const fetchProductsByClaves = async (claves) => {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/claves`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ claves }),
-  });
+export const fetchRetenesGroup = async (filters) => {
+  const params = new URLSearchParams();
+  // Always include 'Retenes' as the sello
+  params.append('sello', 'Retenes');
+
+  for (const key in filters) {
+    if (filters[key] && filters[key] !== 'Todos' && filters[key] !== 'Pulgadas' && key !== 'sello') { // Exclude 'sello' from dynamic appending as it's already set
+      params.append(key, filters[key]);
+    }
+  }
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/filtrar?${params.toString()}`); // Reuse the /productos/filtrar endpoint
   if (!response.ok) {
     throw new Error('Network response was not ok');
   }
-  return response.json();
+  const data = await response.json();
+  // Ensure it always returns an array, similar to fetchSearchResultsByQuery
+  if (data && typeof data === 'object' && !Array.isArray(data) && data.message) {
+    return [];
+  }
+  return data;
 };

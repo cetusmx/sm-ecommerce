@@ -1,38 +1,52 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query'; // Import useQuery
+import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import useDebounce from '@/hooks/useDebounce';
 import { normalizeProductForSearch, getCanonicalStems } from '@/config/searchDictionary';
-import { fetchProducts } from '@/api/productsApi'; // Import fetchProducts
+import { fetchSearchResultsByQuery } from '@/api/productsApi'; // Remove fetchProducts import
+// import { useProductsLoaded } from '@/context/ProductsLoadedContext'; // Remove context import
 
 const SearchInputWithDropdown = ({ onFullSearch }) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
-    const queryClient = useQueryClient();
     const navigate = useNavigate();
+    // const { allProductsLoaded } = useProductsLoaded(); // Remove context consumption
 
-    // Use useQuery directly to get stable product data
-    const { data: allProducts = [] } = useQuery({
-        queryKey: ['products'],
-        queryFn: fetchProducts,
+    // Remove: Fetch all products when allProductsLoaded is true
+    // const { data: allProducts = [] } = useQuery({
+    //     queryKey: ['products'],
+    //     queryFn: fetchProducts,
+    //     enabled: allProductsLoaded,
+    // });
+    // console.log("SearchInputWithDropdown: allProducts reference", allProducts);
+
+    const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+    // Fetch search results from API (permanent setup)
+    const { data: searchResultsFromApi = [] } = useQuery({
+        queryKey: ['searchResultsApi', debouncedSearchQuery],
+        queryFn: () => fetchSearchResultsByQuery(debouncedSearchQuery),
+        enabled: debouncedSearchQuery.trim() !== '', // Only fetch from API if query exists
     });
-    console.log("SearchInputWithDropdown: allProducts reference", allProducts); // Log allProducts reference
+    console.log("SearchInputWithDropdown: searchResultsFromApi", searchResultsFromApi); // Keep this log for now, user might want to remove it later
+
+    // Determine the data source for the search index (always searchResultsFromApi)
+    const currentDataSource = searchResultsFromApi || []; // Ensure it's always an array
+    // console.log("SearchInputWithDropdown: currentDataSource type:", typeof currentDataSource, "value:", currentDataSource); // Remove this log
 
     // Paso 1: Crear un índice de búsqueda normalizado y memorizado
     const searchIndex = useMemo(() => {
-        //console.log("Creando índice de búsqueda con stems y sinónimos..."); // Commented out
-        return allProducts.map(product => normalizeProductForSearch(product));
-    }, [allProducts]);
-    console.log("SearchInputWithDropdown: searchIndex reference", searchIndex); // Log searchIndex reference
-
-    const debouncedSearchQuery = useDebounce(searchQuery, 300);
+        // console.log("Creando índice de búsqueda con stems y sinónimos...");
+        return currentDataSource.map(product => normalizeProductForSearch(product));
+    }, [currentDataSource]);
+    console.log("SearchInputWithDropdown: searchIndex reference", searchIndex);
 
     useEffect(() => {
         console.log("SearchInputWithDropdown: useEffect running. debouncedSearchQuery:", debouncedSearchQuery, "searchIndex:", searchIndex);
         // Only proceed if there are products to search through
-        if (allProducts.length === 0) {
+        if (currentDataSource.length === 0) { // Use currentDataSource here
             // Only set if not already empty to prevent infinite loop
-            if (searchResults.length > 0) {
+            if (searchResults.length !== 0) {
                 setSearchResults([]);
             }
             return;
@@ -40,13 +54,13 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
 
         if (debouncedSearchQuery.trim() === '') {
             // Only set if not already empty to prevent infinite loop
-            if (searchResults.length > 0) {
+            if (searchResults.length !== 0) {
                 setSearchResults([]);
             }
             return;
         }
         updateAutocompleteResults(debouncedSearchQuery);
-    }, [debouncedSearchQuery, searchIndex, allProducts, searchResults]); // Add searchResults to dependencies
+    }, [debouncedSearchQuery, searchIndex, currentDataSource, searchResults]); // Use currentDataSource here
 
     // Paso 2: Nueva función de búsqueda que utiliza el índice
     const updateAutocompleteResults = (query) => {

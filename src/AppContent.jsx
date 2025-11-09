@@ -19,6 +19,7 @@ import OringsPage from './pages/OringsPage';
 import RetenesPage from './pages/RetenesPage';
 import SearchPage from './pages/SearchPage'; // Import SearchPage
 import Layout from './components/layout/Layout';
+import { ProductsLoadedProvider } from '@/context/ProductsLoadedContext'; // Import ProductsLoadedProvider
 
 const fetchProductosVistos = async (email) => {
   if (!email) return [];
@@ -44,6 +45,7 @@ function AppContent() {
 
   const [globalSearchQuery, setGlobalSearchQuery] = useState('');
   const [productFilterKey, setProductFilterKey] = useState(0); // Key to force ProductFilter re-render
+  const [allProductsLoaded, setAllProductsLoaded] = useState(false); // New state for allProductsLoaded
 
   const handleGlobalSearch = (query) => {
     setGlobalSearchQuery(query);
@@ -65,24 +67,31 @@ function AppContent() {
     <PayPalScriptProvider options={initialOptions}>
       <CartProvider>
         <ScrollToTop />
-        <Routes>
-          <Route path="/" element={<Layout onFullSearch={handleGlobalSearch} />}>
-            <Route index element={<HomePage globalSearchQuery={globalSearchQuery} setGlobalSearchQuery={setGlobalSearchQuery} onClearProductFilter={handleClearProductFilter} />} />
-            <Route path="login" element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route path="orders" element={<Pedido />} />
-            <Route path="pedido" element={<Pedido />} />
-            <Route path="producto/:clave" element={<ProductDetailPage />} />
-            <Route path="address-form" element={<AddressFormPage />} />
-            <Route path="user-addresses" element={<UserAddressesPage />} />
-            <Route path="cart" element={<CartPage />} />
-            <Route path="checkout" element={<CheckoutPage />} />
-            <Route path="/retenes" element={<RetenesPage />} />
-            <Route path="/search" element={<SearchPage />} />
-            <Route path="grupo/orings-respaldos" element={<OringsPage />} />
-            <Route path="grupo/:groupName" element={<ProductGroupPage />} />
-          </Route>
-        </Routes>
+        <ProductsLoadedProvider value={{ allProductsLoaded, setAllProductsLoaded }}> {/* Provide context */}
+          <Routes>
+            <Route path="/" element={<Layout onFullSearch={handleGlobalSearch} />}>
+              <Route index element={<HomePage
+                globalSearchQuery={globalSearchQuery}
+                setGlobalSearchQuery={setGlobalSearchQuery}
+                onClearProductFilter={handleClearProductFilter}
+                // setAllProductsLoaded={setAllProductsLoaded} // No longer passed as prop
+              />} />
+              <Route path="login" element={<Login />} />
+              <Route path="signup" element={<SignUp />} />
+              <Route path="orders" element={<Pedido />} />
+              <Route path="pedido" element={<Pedido />} />
+              <Route path="producto/:clave" element={<ProductDetailPage />} />
+              <Route path="address-form" element={<AddressFormPage />} />
+              <Route path="user-addresses" element={<UserAddressesPage />} />
+              <Route path="cart" element={<CartPage />} />
+              <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="/retenes" element={<RetenesPage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route path="grupo/orings-respaldos" element={<OringsPage />} />
+              <Route path="grupo/:groupName" element={<ProductGroupPage />} />
+            </Route>
+          </Routes>
+        </ProductsLoadedProvider>
       </CartProvider>
     </PayPalScriptProvider>
   );
