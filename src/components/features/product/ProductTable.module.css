@@ -66,6 +66,7 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
+    /* Removed position: relative; as addedMessage will no longer be absolute */
 }
 
 .quantityInput {
@@ -78,11 +79,10 @@
 }
 
 .addedMessage {
-    color: #007bff;
+    color: #ff001e; /* Changed to match SearchResults.module.css */
     font-size: 0.8rem;
     font-weight: 500;
-    position: absolute;
-    bottom: -5px;
+    margin-top: 5px;
 }
 
 .noProducts {

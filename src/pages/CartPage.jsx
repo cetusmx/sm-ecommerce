@@ -24,7 +24,7 @@ const CartPage = () => {
       newDeliveryInfos[item.clave] = getDeliveryInfo(item, item.quantity);
     });
     setDeliveryInfos(newDeliveryInfos);
-  }, [cart]);
+  }, [cart, new Date().toDateString()]); // Add new Date().toDateString() to dependencies
 
   const { data: viewedProducts } = useQuery({
     queryKey: ['productosVistos', currentUser?.email],

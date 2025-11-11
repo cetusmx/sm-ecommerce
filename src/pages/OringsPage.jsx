@@ -2,9 +2,9 @@ import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { fetchOringsRespaldos } from '@/api/productsApi';
-import { FiChevronLeft, FiXCircle } from 'react-icons/fi';
+import { FiChevronLeft, FiXCircle, FiFilter } from 'react-icons/fi';
 import styles from './OringsPage.module.css';
-import AnuncioPuntual from '@/components/common/AnuncioPuntual';
+import PromoProductDisplay from '@/components/common/PromoProductDisplay';
 import MaterialIllustrator from '@/components/features/product/MaterialIllustrator';
 import OringsSearchResults from '@/components/features/product/OringsSearchResults';
 
@@ -83,16 +83,7 @@ const OringsPage = () => {
         return groups.sort((a, b) => a - b);
     }, [metricOringSections]);
 
-    const placeholderProductData = {
-        id: 'placeholder-promo',
-        clave: 'PLACEHOLDER',
-        descripcion: 'Producto en Promoción',
-        precio: '99.99',
-        imageUrl: '/Sugeridos/KIT.jpg',
-        slogan: '¡Gran Oferta!',
-        originalPrice: '120.00',
-        productData: { /* minimal data for cart */ }
-    };
+
 
     // Click handlers now update the URL search params
     const handleSystemClick = (system) => {
@@ -164,7 +155,7 @@ const OringsPage = () => {
             <div className={styles.leftColumn}>
                 <aside className={styles.sidebar}>
                     <h2 className={styles.mainFilterTitle}>Orings y Respaldos</h2>
-                    <h3 className={styles.filterTitle}>Sistema de medición</h3>
+                    <h3 className={styles.filterTitle}><FiFilter className={styles.filterIcon} /> Sistema de medición</h3>
                     <div className={styles.filterButtonContainer}>
                         {selectedMeasurementSystem === null && (
                             <>
@@ -360,14 +351,7 @@ const OringsPage = () => {
                 </aside>
                 <div className={styles.promoSection}>
                     <hr className={styles.divider} />
-                    <AnuncioPuntual
-                        key={placeholderProductData.id}
-                        imageUrl={placeholderProductData.imageUrl}
-                        slogan={placeholderProductData.slogan}
-                        precio={placeholderProductData.precio}
-                        originalPrice={placeholderProductData.originalPrice}
-                        productData={placeholderProductData.productData}
-                    />
+                    <PromoProductDisplay />
                 </div>
             </div>
             <main className={styles.mainContent}>

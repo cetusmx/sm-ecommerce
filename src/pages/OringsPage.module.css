@@ -35,6 +35,14 @@
     color: #333;
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
+    display: flex; /* Add flex display */
+    align-items: center; /* Align items vertically */
+    gap: 0.5rem; /* Space between icon and text */
+}
+
+.filterIcon {
+    font-size: 1.2em; /* Adjust size as needed */
+    /* You can add color or other styles here if necessary */
 }
 
 .filterButtonContainer {

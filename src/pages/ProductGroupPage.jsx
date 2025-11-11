@@ -10,88 +10,11 @@ import AnuncioPuntual from '@/components/common/AnuncioPuntual';
 import ProductosPromocion from '@/components/features/product/ProductosPromocion';
 import styles from './ProductGroupPage.module.css';
 import MaterialFilterBar from '@/components/features/product/MaterialFilterBar';
+import PromoProductDisplay from '@/components/common/PromoProductDisplay'; // Import PromoProductDisplay
 
 import ScrollToTopButton from '@/components/common/ScrollToTopButton';
 
-// Helper function to fetch promotional products
-const fetchProductosPromocion = async () => {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/productospromocion`);
-    if (!response.ok) {
-        throw new Error('Network response was not ok for promotional products');
-    }
-    return response.json();
-};
 
-// --- PromotionalProduct Component (Optimized) ---
-const PromotionalProduct = ({ allProducts }) => {
-    const { data: promotionalProducts, isLoading: isLoadingPromotions, error: errorPromotions } = useQuery({
-        queryKey: ['promotionalProducts'],
-        queryFn: fetchProductosPromocion,
-    });
-
-    if (isLoadingPromotions) {
-        return <div className={styles.promoLoading}>Cargando promoción...</div>;
-    }
-
-    if (errorPromotions || !promotionalProducts || promotionalProducts.length === 0 || !allProducts) {
-        return null;
-    }
-
-    let originalProduct = null;
-    const promoProduct = promotionalProducts.find(promo => {
-        originalProduct = allProducts.find(p => p.clave === promo.clave);
-        return !!originalProduct;
-    });
-
-    if (!promoProduct || !originalProduct) {
-        return null;
-    }
-
-    let discountedPrice = parseFloat(originalProduct.precio);
-    const discount = parseFloat(promoProduct.descuento);
-
-    if (!isNaN(discount) && discount > 0 && discount <= 100) {
-        discountedPrice = discountedPrice * (1 - discount / 100);
-    } else {
-        discountedPrice = originalProduct.precio;
-    }
-
-    const productWithDiscount = {
-        ...promoProduct,
-        precio: discountedPrice.toFixed(2),
-        originalPrice: originalProduct.precio,
-        productData: {
-            ...originalProduct,
-            precio: discountedPrice.toFixed(2),
-        },
-    };
-
-    let imageUrl;
-    if (originalProduct.categoria === "Herramientas" || originalProduct.categoria === "Accesorios" || originalProduct.categoria === "Estuches" || originalProduct.categoria === "Accesorios hidráulicos") {
-        imageUrl = `/Sugeridos/${originalProduct.clave}.jpg`;
-    } else {
-        imageUrl = `/Perfiles/${originalProduct.linea}.jpg`;
-    }
-
-    const productDataForCart = {
-        ...productWithDiscount.productData,
-        imageUrl: imageUrl,
-    };
-
-    return (
-        <div className={styles.promoContainer}>
-             <hr className={styles.divider} />
-            <AnuncioPuntual
-                key={productWithDiscount.id}
-                imageUrl={imageUrl}
-                slogan={productWithDiscount.slogan || `¡${productWithDiscount.descuento}% de descuento!`}
-                precio={productWithDiscount.precio}
-                originalPrice={productWithDiscount.originalPrice}
-                productData={productDataForCart}
-            />
-        </div>
-    );
-};
 
 // --- Dynamic Filter Configuration ---
 const filterConfig = {
@@ -693,7 +616,7 @@ const ProductGroupPage = () => {
                             <ProductosPromocion />
                         )}
                     </aside>
-                    {hasSubFilters && <PromotionalProduct allProducts={products} />}
+                    {hasSubFilters && <PromoProductDisplay />}
                 </div>
                 <main className={styles.mainContent}>
                     {!hasSubFilters && <h2 className={styles.mainContentTitle}>{currentGroup.title}</h2>}

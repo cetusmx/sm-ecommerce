@@ -74,11 +74,11 @@ const ProductTable = ({ products }) => {
 
     addItem(productToAdd, quantity);
 
-    setAddedMessage((prev) => ({ ...prev, [product.clave]: "Agregado" }));
+    setAddedMessage((prev) => ({ ...prev, [product.clave]: "Agregado al carrito" }));
 
     setTimeout(() => {
       setAddedMessage((prev) => ({ ...prev, [product.clave]: null }));
-    }, 2000);
+    }, 3000);
   };
 
   const formatCurrency = (value) => {
