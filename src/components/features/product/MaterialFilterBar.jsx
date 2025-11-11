@@ -5,6 +5,7 @@ const materialLabelMap = {
     'FKM': 'Vitón',
     'NBR': 'Nitrilo',
     'NBRH': 'Nitrilo Hidrogenado',
+    'PTFE': 'Teflón',
     'VMQ': 'Silicón',
     'EPDM': 'EPDM',
     'POL': 'Poliuretano',
@@ -22,7 +23,14 @@ const MaterialFilterBar = ({ availableMaterials, materialFilters, onMaterialChan
             <div className={styles.buttonsContainer}>
                 {availableMaterials.map(material => {
                     const isSelected = materialFilters.includes(material);
-                    const label = materialLabelMap[material] || material;
+                    
+                    // Logic to handle combined material + hardness
+                    const parts = material.split(' ');
+                    const materialCode = parts[0];
+                    const hardness = parts.length > 1 ? ` ${parts.slice(1).join(' ')}` : '';
+                    const friendlyName = materialLabelMap[materialCode] || materialCode;
+                    const label = `${friendlyName}${hardness}`;
+
                     return (
                         <button
                             key={material}

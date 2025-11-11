@@ -1,20 +1,17 @@
 .filterBarContainer {
-    margin: 10px 0 20px 0; /* Reduced top margin */
-    padding: 15px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-    display: flex; /* New */
-    align-items: center; /* New */
-    gap: 15px; /* New */
+    margin: 0 0 0 0;
+    padding: 0 0 5px 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .title {
-    margin: 0; /* New */
-    font-size: 0.95rem; /* Reduced size */
+    margin: 0;
+    font-size: 0.9rem; /* Further reduced size */
     font-weight: 600;
     color: #333;
-    white-space: nowrap; /* Prevent title from wrapping */
+    white-space: nowrap;
 }
 
 .buttonsContainer {
@@ -24,25 +21,30 @@
 }
 
 .filterButton {
-    padding: 6px 14px; /* Slightly smaller padding */
-    font-size: 0.85rem; /* Reduced size */
-    font-weight: 500;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    background-color: #fff;
+    padding: 2px 4px; /* Minimal padding */
+    font-size: 0.8rem; /* Further reduced size */
+    font-weight: 400; /* Lighter font weight */
+    border: none; /* No border */
+    background-color: transparent; /* No background */
     cursor: pointer;
     transition: all 0.2s ease-in-out;
     color: #555;
+    border-radius: 4px; /* Subtle radius */
 }
 
 .filterButton:hover {
-    background-color: #e9ecef;
-    border-color: #adb5bd;
+    color: #000;
 }
 
 .filterButton.selected {
-    background-color: #007bff;
-    color: #fff;
-    border-color: #007bff;
-    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+    font-weight: 700; /* Bold */
+    color: #007bff;
+    background-color: transparent; /* Ensure no background on selected */
+    border-color: transparent; /* Ensure no border on selected */
+    box-shadow: none; /* Ensure no shadow on selected */
+    cursor: default; /* No pointer on selected */
+}
+
+.filterButton.selected:hover {
+    text-decoration: none; /* No underline on hover for selected */
 }

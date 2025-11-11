@@ -37,8 +37,13 @@ const CartItem = ({ item, deliveryInfo }) => {
         <img src={imageUrl} alt={item.descripcion} className={styles.image} />
         <div className={styles.productDetails}>
           <span className={styles.description}>{item.descripcion}</span>
-          <span className={styles.price}>Precio: ${parseFloat(item.precio).toFixed(2)}</span>
-          <span style={{fontSize:"0.70em"}}>SKU: {item.clave}</span>
+          <span className={styles.price}>Total por partida: ${parseFloat(item.precio * item.quantity).toFixed(2)}</span>
+          <span style={{fontSize:"0.70em"}}>Clave: {item.clave}</span>
+          {item.cant_por_empaque > 1 && (
+              <p className={styles.packageInfo}>
+                  Son {item.cant_por_empaque} piezas por empaque, estás adquiriendo {item.quantity / (item.cant_por_empaque || 1)} empaque(s).
+              </p>
+          )}
           <div className={styles.deliveryInfoContainer}>
             <p className={`${styles.deliveryMessage} notification-info-color`}>
                 {deliveryInfo.message} <strong>{deliveryInfo.date}</strong>
@@ -55,7 +60,8 @@ const CartItem = ({ item, deliveryInfo }) => {
               value={item.quantity}
               onChange={handleQuantityChange}
               className={styles.quantityInput}
-              min="0"
+              min={item.cantidad_minima || 1}
+              step={item.cant_por_empaque || 1}
             />
           </div>
           <button onClick={() => removeItem(item.clave)} className={styles.removeButton}>

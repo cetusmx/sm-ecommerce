@@ -3,12 +3,10 @@
     grid-template-columns: 1fr 1fr; /* Two equal columns */
     gap: 1rem; /* Reduced gap */
     padding: 1rem; /* Reduced padding */
-    border: 1px solid #e0e0e0;
-    border-radius: 15px;
-    background-color: #f3f7fa;
-    /* background-color: #fdfdfd; */
+    /* border: 1px solid #e0e0e0; */ /* Removed */
+    background-color: transparent; /* Changed to transparent */
+    /* box-shadow: 0 2px 4px rgba(0,0,0,0.05); */ /* Removed */
     margin-bottom: 2rem;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .fichaTecnicaLeft {

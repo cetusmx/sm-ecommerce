@@ -1,10 +1,12 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
-import { fetchProducts } from '@/api/productsApi';
+import { fetchOringsRespaldos } from '@/api/productsApi';
 import { FiChevronLeft, FiXCircle } from 'react-icons/fi';
 import styles from './OringsPage.module.css';
 import AnuncioPuntual from '@/components/common/AnuncioPuntual';
 import MaterialIllustrator from '@/components/features/product/MaterialIllustrator';
+import OringsSearchResults from '@/components/features/product/OringsSearchResults';
 
 const sectionOptions = [
     { label: 'Sección 1/16 pulgada', value: '0.062' },
@@ -15,16 +17,52 @@ const sectionOptions = [
 ];
 
 const OringsPage = () => {
-    const [selectedMeasurementSystem, setSelectedMeasurementSystem] = useState(null);
-    const [selectedProfile, setSelectedProfile] = useState(null);
-    const [selectedSection, setSelectedSection] = useState(null);
-    const [selectedMetricGroup, setSelectedMetricGroup] = useState(null);
+    const [searchParams, setSearchParams] = useSearchParams();
+    
+    // State is now derived from URL search params
+    const selectedMeasurementSystem = searchParams.get('system');
+    const selectedProfile = searchParams.get('profile');
+    const selectedSection = searchParams.get('section');
+    const selectedMetricGroup = searchParams.get('group');
+
+    const [searchResults, setSearchResults] = useState(null);
     const [showMaterialIllustrator, setShowMaterialIllustrator] = useState(true);
 
     const { data: products, isLoading, error } = useQuery({
-        queryKey: ['products'],
-        queryFn: fetchProducts
+        queryKey: ['orings-respaldos'],
+        queryFn: fetchOringsRespaldos
     });
+
+    // This useEffect handles the filtering logic whenever the URL or products data changes.
+    useEffect(() => {
+        if (selectedSection && products) {
+            setShowMaterialIllustrator(false);
+            const systemFilter = selectedMeasurementSystem === 'Estándar' ? 'std' : 'mm';
+            const profileFilter = selectedProfile === 'Respaldos' ? 'RESPALDO' : 'ORING';
+            
+            const results = products.filter(p => {
+                if (!p.sistema_medicion || !p.perfil || !p.seccion) {
+                    return false;
+                }
+                const systemMatch = p.sistema_medicion.trim().toLowerCase() === systemFilter;
+                const profileMatch = p.perfil.trim().toUpperCase() === profileFilter;
+                const sectionMatch = p.seccion.trim() === selectedSection;
+                
+                return systemMatch && profileMatch && sectionMatch;
+            }).sort((a, b) => { // Add sorting by diam_int
+                const diamIntA = parseFloat(a.diam_int);
+                const diamIntB = parseFloat(b.diam_int);
+                if (isNaN(diamIntA) && isNaN(diamIntB)) return 0;
+                if (isNaN(diamIntA)) return 1; // Push NaN to end
+                if (isNaN(diamIntB)) return -1; // Push NaN to end
+                return diamIntA - diamIntB;
+            });
+            setSearchResults(results);
+        } else {
+            setShowMaterialIllustrator(true);
+            setSearchResults(null);
+        }
+    }, [selectedMeasurementSystem, selectedProfile, selectedSection, products]); // Dependencies drive the search
 
     const metricOringSections = useMemo(() => {
         if (!products) return [];
@@ -56,45 +94,49 @@ const OringsPage = () => {
         productData: { /* minimal data for cart */ }
     };
 
+    // Click handlers now update the URL search params
     const handleSystemClick = (system) => {
-        if (selectedMeasurementSystem === system) {
-            setSelectedProfile(null);
-            setSelectedSection(null);
-            setSelectedMetricGroup(null);
-        } else {
-            setSelectedMeasurementSystem(system);
-            setSelectedProfile(null);
-            setSelectedSection(null);
-            setSelectedMetricGroup(null);
+        const newParams = new URLSearchParams();
+        if (selectedMeasurementSystem !== system) {
+            newParams.set('system', system);
         }
+        setSearchParams(newParams);
     };
 
     const handleProfileClick = (profile) => {
+        const newParams = new URLSearchParams(searchParams);
         if (selectedProfile === profile) {
-            setSelectedSection(null);
-            setSelectedMetricGroup(null);
+            newParams.delete('profile');
+            newParams.delete('section');
+            newParams.delete('group');
         } else {
-            setSelectedProfile(profile);
-            setSelectedSection(null);
-            setSelectedMetricGroup(null);
+            newParams.set('profile', profile);
+            newParams.delete('section');
+            newParams.delete('group');
         }
+        setSearchParams(newParams);
     };
 
     const handleMetricGroupClick = (group) => {
+        const newParams = new URLSearchParams(searchParams);
         if (selectedMetricGroup === group) {
-            setSelectedSection(null);
+            newParams.delete('group');
+            newParams.delete('section');
         } else {
-            setSelectedMetricGroup(group);
-            setSelectedSection(null);
+            newParams.set('group', group);
+            newParams.delete('section');
         }
+        setSearchParams(newParams);
     };
 
     const handleSectionClick = (value) => {
-        const newSection = selectedSection === value ? null : value;
-        setSelectedSection(newSection);
-        if (newSection !== null) {
-            setShowMaterialIllustrator(false);
+        const newParams = new URLSearchParams(searchParams);
+        if (selectedSection === value) {
+            newParams.delete('section');
+        } else {
+            newParams.set('section', value);
         }
+        setSearchParams(newParams);
     };
 
     const renderSectionFilters = (options) => (
@@ -256,22 +298,22 @@ const OringsPage = () => {
                                                                 : `Secciones de ${min} a ${max} mm`;
 
                                                             return (
-                                                                (selectedMetricGroup === null || selectedMetricGroup === group) && (
+                                                                (selectedMetricGroup === null || selectedMetricGroup === group.toString()) && (
                                                                     <div key={group}>
                                                                         <a
                                                                             href="#"
-                                                                            className={`${styles.filterButton} ${selectedMetricGroup === group ? styles.selectedButton : ''} ${selectedMetricGroup === group ? styles.noIndentDeep : ''}`}
+                                                                            className={`${styles.filterButton} ${selectedMetricGroup === group.toString() ? styles.selectedButton : ''} ${selectedMetricGroup === group.toString() ? styles.noIndentDeep : ''}`}
                                                                             onClick={(e) => {
                                                                                 e.preventDefault();
-                                                                                handleMetricGroupClick(group);
+                                                                                handleMetricGroupClick(group.toString());
                                                                             }}
                                                                         >
                                                                             <span className={styles.iconContainer}>
-                                                                                {selectedMetricGroup === group && <FiChevronLeft className={styles.chevron} />}
+                                                                                {selectedMetricGroup === group.toString() && <FiChevronLeft className={styles.chevron} />}
                                                                             </span>
                                                                             <span className={styles.filterText}>{label}</span>
                                                                         </a>
-                                                                        {selectedMetricGroup === group && (
+                                                                        {selectedMetricGroup === group.toString() && (
                                                                             <div className={styles.subFilterContainer} style={{ paddingLeft: '15px' }}>
                                                                                 {sectionsInGroup.map(option => (
                                                                                     (selectedSection === null || selectedSection === option.value) && (
@@ -307,7 +349,7 @@ const OringsPage = () => {
                             <button
                                 className={styles.clearFiltersButton}
                                 onClick={() => {
-                                    handleSystemClick(null); // Reset all
+                                    setSearchParams({}); // Reset all params
                                 }}
                             >
                                 <FiXCircle className={styles.clearIcon} />
@@ -329,8 +371,16 @@ const OringsPage = () => {
                 </div>
             </div>
             <main className={styles.mainContent}>
-                {showMaterialIllustrator && (
-                    <div style={{paddingTop: "30px", paddingBottom: "30px"}}>
+                {searchResults && searchResults.length > 0 && (
+                    <OringsSearchResults results={searchResults} selectedProfile={selectedProfile} />
+                )}
+                {searchResults && searchResults.length === 0 && (
+                    <div style={{padding: "40px", textAlign: "center"}}>
+                        <p>No se encontraron productos con los filtros seleccionados.</p>
+                    </div>
+                )}
+                {!searchResults && showMaterialIllustrator && (
+                    <div>
                         <MaterialIllustrator />
                     </div>
                 )}

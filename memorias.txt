@@ -1,10 +1,12 @@
-Se ha refactorizado el componente `ProductosPorUbicacion` en `src/components/features/home/ProductosPorUbicacion.jsx` para mostrar productos específicos en lugar de categorías. Se ha implementado una lógica de selección de productos basada en los campos `colocado_en` y `categoria` o `perfil`, con un límite de 10 productos por sección y un orden aleatorio.
-
-Se han realizado los siguientes cambios de estilo en `src/components/features/home/ProductosPorUbicacion.module.css`:
-- Cada grupo de productos ahora está en un contenedor con fondo blanco y esquinas no redondeadas.
-- Se ha reducido el tamaño de las imágenes de los productos y el tamaño del texto de la descripción.
-- Se ha reducido el tamaño del título de cada grupo y se ha justificado a la izquierda.
-- Se ha reducido el espacio entre el título de cada grupo y la fila de productos.
-- Se ha implementado un sistema de navegación horizontal con flechas para los productos, ocultando la barra de desplazamiento por defecto y mostrándola al pasar el ratón por encima del contenedor.
-
-Se ha implementado la funcionalidad de suscripción al boletín en `src/components/layout/Footer.jsx` utilizando el endpoint `/boletines` y la función `postBoletin` de `src/api/boletinesService.js`. Se ha mejorado el manejo de errores para mostrar mensajes más amigables en caso de correos electrónicos duplicados y se han ajustado los estilos de los mensajes de éxito y error en `src/components/layout/Footer.module.css` para que el texto sea blanco para éxito y rojo para error, sin fondo.
+- Se ha modificado `src/components/cart/CartItem.jsx` para cambiar la etiqueta "SKU" a "Clave" y añadir un mensaje informativo sobre la cantidad de empaques que se están adquiriendo, calculando los empaques a partir de la cantidad total y la cantidad por empaque.
+- Se ha modificado `src/components/cart/CartItem.jsx` para mover el mensaje de información del empaque debajo de la "Clave" del producto, dentro del div `productDetails`, para mejorar la armonía de estilos y el layout.
+- Se ha modificado `src/components/cart/CartItem.module.css` para añadir una nueva regla CSS para `.packageInfo` para reducir el tamaño del texto, ajustar los márgenes superior e inferior, y darle un color más discreto.
+- Se ha modificado `src/pages/OringsPage.jsx` para pasar la prop `selectedProfile` al componente `OringsSearchResults`.
+- Se ha modificado `src/components/features/product/OringsSearchResults.jsx` para aceptar la prop `selectedProfile` y pasarla al componente `FichaTecnica`.
+- Se ha modificado `src/components/features/product/FichaTecnica.jsx` para aceptar la prop `selectedProfile`, importar `respaldo_schema.jpg`, y usar lógica condicional para mostrar la imagen correcta (`respaldo_schema.jpg` si `selectedProfile` es 'Respaldos', de lo contrario `oring_schema.jpg`).
+- Se ha modificado `src/components/features/product/FichaTecnica.jsx` para extraer dinámicamente la dureza de la prop `selectedMaterial` y mostrarla en la tabla de propiedades técnicas, en lugar de usar la dureza hardcodeada del objeto `materialProperties`.
+- Se ha añadido una entrada para 'PTFE' en el objeto `materialProperties` de `FichaTecnica.jsx` para que la ficha técnica se muestre cuando se seleccione 'Teflón'.
+- Se ha revertido la modificación del botón "Agregar al carrito" en `OringsSearchResults.jsx` a su estado original, incluyendo el texto y el estilo en línea, y se ha revertido la importación de `FaShoppingCart`.
+- Se ha cambiado el texto del botón de "Agregar al carrito" a "Agregar" en `OringsSearchResults.jsx`.
+- Se ha ajustado el estilo del botón 'Agregar' en `OringsSearchResults.jsx` para que coincida con el tamaño de referencia de `ProductTable.jsx`, aplicando `padding: "7px 20px"` y `fontSize:"0.9em"`, manteniendo `transition` y `borderRadius`.
+- Se ha eliminado la propiedad `borderRadius` del estilo en línea del botón 'Agregar' en `OringsSearchResults.jsx` para permitir que el estilo `border-radius` de la clase `sm-btn` se aplique correctamente.

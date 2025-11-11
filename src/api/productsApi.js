@@ -80,6 +80,16 @@ export const fetchProducts = async () => {
   console.log("fetchProducts: Total Duration:", endTime.getTime() - startTime.getTime(), "ms"); // Log total duration
   return processedProducts;
 };
+
+export const fetchOringsRespaldos = async () => {
+  const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/orings-respaldos`);
+  if (!response.ok) {
+    throw new Error('Network response was not ok');
+  }
+  const products = await response.json();
+  return products.map(applyProductRules);
+};
+
 export const fetchProductByClave = async (clave) => {
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/${clave}`);
   if (!response.ok) {

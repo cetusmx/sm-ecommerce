@@ -1,8 +1,8 @@
 /* --- Estilos para Tabletas y Escritorios --- */
 @media (min-width: 768px) {
   .header {
-    /* background-color: #002b59; */
-    background-color: #131921;
+    background-color: #002b59;
+    /* background-color: #131921; */
     /* background-color: #dde6ed; */
     display: grid;
     /* grid-template-columns: repeat(4, 1fr); */ /* Define 4 columnas iguales */

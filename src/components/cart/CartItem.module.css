@@ -37,6 +37,13 @@
   margin: 0.5rem 0;
 }
 
+.packageInfo {
+    font-size: 0.75em; /* Reduced text size */
+    color: #666; /* More discreet color */
+    margin-top: 8px; /* Space from Clave */
+    margin-bottom: 5px; /* Reduced space from delivery info */
+}
+
 .deliveryInfoContainer {
     font-size: 0.75rem;
     margin-top: 10px;

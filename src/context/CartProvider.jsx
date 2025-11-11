@@ -117,17 +117,18 @@ const CartProvider = ({ children }) => {
   // The auto-save useEffect has been removed to adopt an imperative save model.
 
   const addItem = (item, quantity) => {
+    const totalItemsToAdd = quantity * (item.cant_por_empaque || 1);
     let newCart;
     const existingItemIndex = cart.findIndex((i) => i.clave === item.clave);
 
     if (existingItemIndex > -1) {
       newCart = cart.map((cartItem, index) =>
         index === existingItemIndex
-          ? { ...cartItem, quantity: cartItem.quantity + quantity }
+          ? { ...cartItem, quantity: cartItem.quantity + totalItemsToAdd }
           : cartItem
       );
     } else {
-      newCart = [...cart, { ...item, quantity }];
+      newCart = [...cart, { ...item, quantity: totalItemsToAdd }];
     }
     setCart(newCart);
     localStorage.setItem('cart', JSON.stringify(newCart));
@@ -154,10 +155,31 @@ const CartProvider = ({ children }) => {
   };
 
   const updateItemQuantity = (itemClave, newQuantity) => {
+    const itemToUpdate = cart.find(item => item.clave === itemClave);
+    if (!itemToUpdate) return;
+
+    const packageSize = itemToUpdate.cant_por_empaque || 1;
+    const minQuantity = itemToUpdate.cantidad_minima || 1;
+
+    // If the new quantity is not a valid multiple, do not update.
+    // This is a safeguard, as the UI "step" attribute should prevent this.
+    if (newQuantity > 0 && newQuantity % packageSize !== 0) {
+      console.warn(`Invalid quantity ${newQuantity} for ${itemClave}. Must be a multiple of ${packageSize}.`);
+      // Optionally, provide user feedback here
+      return;
+    }
+    
+    // Ensure the quantity is not below the minimum, unless it's being set to 0 to remove it.
+    if (newQuantity > 0 && newQuantity < minQuantity) {
+      // Do not update if below minimum
+      return;
+    }
+
     if (newQuantity <= 0) {
       removeItem(itemClave); // removeItem already handles saving
       return;
     }
+
     const newCart = cart.map((item) =>
       item.clave === itemClave ? { ...item, quantity: newQuantity } : item
     );
