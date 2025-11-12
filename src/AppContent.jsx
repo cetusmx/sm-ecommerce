@@ -16,10 +16,12 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ProductGroupPage from './pages/ProductGroupPage';
 import OringsPage from './pages/OringsPage';
+import KitsTelescopicosPage from './pages/KitsTelescopicosPage'; // Import KitsTelescopicosPage
 import RetenesPage from './pages/RetenesPage';
 import SearchPage from './pages/SearchPage'; // Import SearchPage
 import Layout from './components/layout/Layout';
 import { ProductsLoadedProvider } from '@/context/ProductsLoadedContext'; // Import ProductsLoadedProvider
+import TopBanner from '@/components/common/TopBanner'; // Import TopBanner
 
 const fetchProductosVistos = async (email) => {
   if (!email) return [];
@@ -67,6 +69,7 @@ function AppContent() {
     <PayPalScriptProvider options={initialOptions}>
       <CartProvider>
         <ScrollToTop />
+        <TopBanner /> {/* Place TopBanner here */}
         <ProductsLoadedProvider value={{ allProductsLoaded, setAllProductsLoaded }}> {/* Provide context */}
           <Routes>
             <Route path="/" element={<Layout onFullSearch={handleGlobalSearch} />}>
@@ -85,6 +88,7 @@ function AppContent() {
               <Route path="user-addresses" element={<UserAddressesPage />} />
               <Route path="cart" element={<CartPage />} />
               <Route path="checkout" element={<CheckoutPage />} />
+              <Route path="kits-telescopicos" element={<KitsTelescopicosPage />} /> {/* New route for KitsTelescopicosPage */}
               <Route path="/retenes" element={<RetenesPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="grupo/orings-respaldos" element={<OringsPage />} />

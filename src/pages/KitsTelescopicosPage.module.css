@@ -1,0 +1,179 @@
+.pageContainer {
+    display: flex;
+    align-items: flex-start; /* Align items to the top */
+    gap: 20px;
+    padding: 20px;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.leftColumn {
+    flex: 0 0 280px; /* Fixed width for the entire left column */
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.sidebar {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.mainFilterTitle {
+    font-size: 1.8em; /* Slightly larger than filterTitle */
+    margin-bottom: 15px;
+    color: #d9534e; /* Desired color */
+    text-align: center; /* Center the main title */
+}
+
+.filterTitle {
+    font-size: 1.2em;
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    display: flex; /* Add flex display */
+    align-items: center; /* Align items vertically */
+    gap: 0.5rem; /* Space between icon and text */
+}
+
+.filterIcon {
+    font-size: 1.2em; /* Adjust size as needed */
+    /* You can add color or other styles here if necessary */
+}
+
+.filterButtonContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Prevent items from stretching */
+    gap: 5px; /* Reduced space between buttons */
+    margin-bottom: 15px;
+}
+
+.iconContainer {
+    width: 15px; /* Fixed width for alignment */
+    display: inline-block;
+    text-align: center;
+}
+
+.subFilterContainer {
+    padding-left: 15px; /* Indent by the width of the icon container */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.noIndent {
+    margin-left: -15px; /* Negate the container's padding */
+}
+
+.noIndentDeep {
+    margin-left: -15px; /* Negate one level of padding */
+}
+
+.metricSectionGroup {
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+.metricGroupTitle {
+    font-size: 0.9em;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 5px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #eee;
+}
+
+.metricGroupLinks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 10px; /* row and column gap */
+}
+
+.filterText {
+    /* margin-left is no longer needed */
+}
+
+.chevron {
+    margin-right: 1px; /* Space between icon and text */
+    transform: translateY(-1px); /* Adjust vertical alignment */
+}
+
+a.filterButton {
+    background: none;
+    border: none;
+    padding: 0 0 0 10px; /* Added left padding for border */
+    text-align: left;
+    cursor: pointer;
+    font-size: 1em;
+    color: #212529;
+    text-decoration: none;
+    transition: all 0.2s ease; /* Transition all properties */
+    display: flex;
+    align-items: center;
+}
+
+a.filterButton:hover {
+    color: #d9534e;
+}
+
+a.filterButton.selectedButton {
+    font-weight: 500;
+    background-color: #e0f2f7; /* Light blue background */
+    color: #0056b3; /* Darker blue text */
+    border-left: 4px solid #007bff; /* Blue left border */
+    padding-left: 6px; /* Adjust padding to account for border width */
+}
+
+.clearFiltersButton {
+    background: none;
+    border: none;
+    color: #d9534e; /* Red color for clear action */
+    cursor: pointer;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 15px; /* Space from filters */
+    padding: 0;
+}
+
+.clearFiltersButton:hover {
+    text-decoration: underline;
+}
+
+.clearIcon {
+    font-size: 1.2em;
+}
+
+.clearText {
+    /* No specific styles needed, inherits from button */
+}
+
+.mainContent {
+    flex: 1; /* Takes up the remaining space */
+}
+
+.promoSection {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.divider {
+    border: none;
+    border-top: 1px solid #dad9d9;
+    margin-bottom: 1rem;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
