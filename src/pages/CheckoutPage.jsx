@@ -146,7 +146,7 @@ const CheckoutPage = () => {
   const [isLoadingRates, setIsLoadingRates] = useState(false);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('paypal');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('card');
   const [isCopied, setIsCopied] = useState(false);
   const [clientSecret, setClientSecret] = useState(null);
   const hasFetchedPaymentIntent = useRef(false); // New ref
@@ -430,13 +430,13 @@ const CheckoutPage = () => {
         <div className={styles.paymentMethods}>
           <h4>Selecciona Método de Pago</h4>
           <div className={styles.paymentOptionsContainer}>
-            <div 
+            {/* <div 
               className={`${styles.paymentOption} ${selectedPaymentMethod === 'paypal' ? styles.selected : ''}`}
               onClick={() => setSelectedPaymentMethod('paypal')}
             >
               <FaPaypal className={styles.paymentOptionIcon} />
               <span>PayPal</span>
-            </div>
+            </div> */}
             <div 
               className={`${styles.paymentOption} ${selectedPaymentMethod === 'card' ? styles.selected : ''}`}
               onClick={() => setSelectedPaymentMethod('card')}
@@ -454,7 +454,7 @@ const CheckoutPage = () => {
           </div>
 
           <div className={styles.paymentContentContainer}>
-            {selectedPaymentMethod === 'paypal' && (
+            {/* {selectedPaymentMethod === 'paypal' && (
               <PayPalButtons
                 style={{ layout: "vertical" }}
                 createOrder={(data, actions) => {
@@ -527,7 +527,7 @@ const CheckoutPage = () => {
                   handlePaymentComplete({ error: true, message: "El pago con PayPal fue cancelado." }, 'paypal');
                 }}
               />
-            )}
+            )} */}
             {selectedPaymentMethod === 'card' && (
               clientSecret && stripePromise ? (
                 <Elements options={{ clientSecret }} stripe={stripePromise}>
