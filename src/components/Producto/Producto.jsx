@@ -71,9 +71,9 @@ const Producto = ({ producto, imageUrl }) => {
 
       const urls = [
         finalImageUrl,
-        `${baseImageUrl}1${imageExtension}`,
-        `${baseImageUrl}2${imageExtension}`,
-        `${baseImageUrl}3${imageExtension}`,
+        `${baseImageUrl}-1${imageExtension}`,
+        `${baseImageUrl}-2${imageExtension}`,
+        `${baseImageUrl}-3${imageExtension}`,
       ];
 
       setPotentialImageUrls(urls);
