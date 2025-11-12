@@ -38,6 +38,7 @@ const CheckoutPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const fechasDeEntrega = location.state?.fechasDeEntrega || [];
+  const envioGratis = location.state?.envioGratis || false;
   const folio = useMemo(() => uuidv4(), []);
 
   useEffect(() => {
@@ -157,9 +158,20 @@ const CheckoutPage = () => {
   const [latestDeliveryDate, setLatestDeliveryDate] = useState(null);
 
   const calculateTotal = useMemo(() => {
-    const shippingCost = selectedShippingOption ? selectedShippingOption.totalPrice * numberOfShipments : 0;
+    if (!selectedShippingOption) {
+      return cartTotal;
+    }
+
+    if (envioGratis) {
+      // Si hay envío gratis y se elige más de un envío, se cobra solo uno.
+      const shippingCost = numberOfShipments > 1 ? selectedShippingOption.totalPrice : 0;
+      return cartTotal + shippingCost;
+    }
+
+    // Lógica original si no hay envío gratis
+    const shippingCost = selectedShippingOption.totalPrice * numberOfShipments;
     return cartTotal + shippingCost;
-  }, [cartTotal, selectedShippingOption, numberOfShipments]);
+  }, [cartTotal, selectedShippingOption, numberOfShipments, envioGratis]);
 
   useEffect(() => {
     if (selectedPaymentMethod === 'card' && calculateTotal > 0 && currentUser && !clientSecret && !hasFetchedPaymentIntent.current) {
@@ -417,10 +429,31 @@ const CheckoutPage = () => {
             <span>Subtotal:</span>
             <span>${cartTotal.toFixed(2)}</span>
             </div>
-            <div className={styles.summaryLine}>
-            <span>Envío:{numberOfShipments > 1 && ` (${numberOfShipments} fletes)`}</span>
-            <span>${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2) || '0.00'}</span>
-            </div>
+            {
+              envioGratis && numberOfShipments > 1 ? (
+                <>
+                  <div className={styles.summaryLine}>
+                    <span>Envío 1 (1 flete):</span>
+                    <span>GRATIS</span>
+                  </div>
+                  <div className={styles.summaryLine}>
+                    <span>Envío 2 (1 flete):</span>
+                    <span>${selectedShippingOption?.totalPrice.toFixed(2)}</span>
+                  </div>
+                </>
+              ) : (
+                <div className={styles.summaryLine}>
+                  <span>Envío:{numberOfShipments > 1 && ` (${numberOfShipments} fletes)`}</span>
+                  <span>
+                    {
+                      envioGratis 
+                        ? 'GRATIS'
+                        : `$${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2) || '0.00'}`
+                    }
+                  </span>
+                </div>
+              )
+            }
             <div className={`${styles.summaryLine} ${styles.totalLine}`}>
             <span>Total:</span>
             <span>${calculateTotal.toFixed(2)}</span>

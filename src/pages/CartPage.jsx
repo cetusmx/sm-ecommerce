@@ -18,6 +18,8 @@ const CartPage = () => {
   const { currentUser } = useAuth();
   const [deliveryInfos, setDeliveryInfos] = useState({});
 
+  const FREE_SHIPPING_THRESHOLD = 900;
+
   useEffect(() => {
     const newDeliveryInfos = {};
     cart.forEach(item => {
@@ -38,12 +40,14 @@ const CartPage = () => {
       return;
     }
 
+    const envioGratis = cartTotal >= FREE_SHIPPING_THRESHOLD;
+
     const fechasDeEntrega = Object.keys(deliveryInfos).map(clave => ({
       clave,
       fecha: deliveryInfos[clave].date,
       fechaCorta: deliveryInfos[clave].shortDate,
     }));
-    navigate("/checkout", { state: { fechasDeEntrega } });
+    navigate("/checkout", { state: { fechasDeEntrega, envioGratis } });
   };
 
   const handleClearCart = () => {
