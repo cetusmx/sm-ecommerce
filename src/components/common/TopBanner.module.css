@@ -9,7 +9,7 @@
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   font-size: 0.85rem;
-  color: #333;
+  color: #222;
   text-align: center;
   overflow: hidden;
   position: relative; /* Needed for absolute positioning of messages if desired, or for animation context */

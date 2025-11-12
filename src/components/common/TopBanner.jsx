@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './TopBanner.module.css';
 
 const messages = [
-  "Paga con tarjeta o transferencia",
+  "*** Paga con tarjeta o transferencia ***",
   "Obtén envío gratis en compras mayores a $1,500"
 ];
 
