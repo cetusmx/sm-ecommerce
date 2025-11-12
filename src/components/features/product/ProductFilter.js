@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import styles from './ProductFilter.module.css';
+import { Link } from 'react-router-dom';
 
 const fetchCategories = async () => {
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos/categorias`);
@@ -106,6 +107,12 @@ const ProductFilter = ({ filters, onFilterChange }) => {
             placeholder="ej. 0.25"
           />
         </div>
+      </div>
+      <div className={styles['leyenda-filtros-der']}>
+        <Link to="/kits-telescopicos" style={{textDecoration: "none", justifyItems: "center"}}>
+        <h4>¿Buscas kits</h4>
+        <h6>Telescópicos?</h6>
+        </Link>
       </div>
     </div>
   );

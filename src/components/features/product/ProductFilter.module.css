@@ -17,8 +17,22 @@
   align-items: center;
   width: 15%;
 }
+.leyenda-filtros-der{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 15%;
+}
 
 .leyenda-filtros h4 {
+  padding: 0;
+  margin: 0;
+  color: #033c86;
+  font-weight: 550;
+}
+
+.leyenda-filtros-der h4 {
   padding: 0;
   margin: 0;
   color: #033c86;
@@ -31,13 +45,20 @@
   color: #033c86;
   font-weight: 500;
 }
+
+.leyenda-filtros-der h6 {
+  padding: 0;
+  margin: 0;
+  color: #033c86;
+  font-weight: 500;
+}
 .filter-container {
   display: flex;
   flex-direction: row;
   gap: 15px;
-  width: 90%; 
+  width: 80%; 
   /* margin-left: -10%; */ /* Añade un margen del 10% a la izquierda y derecha para centrar */
-  justify-content: left;
+  justify-content: center;
   padding: 10px 10px; /* Padding vertical, sin padding horizontal ya que lo maneja el margin */
 
   background-color: #dedede;
@@ -118,5 +139,5 @@
 
 .small {
   flex-basis: 12%;
-  min-width: 120px;
+  min-width: 145px;
 }
