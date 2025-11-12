@@ -126,6 +126,30 @@ const ProductTable = ({ products }) => {
           }
 
           const quantity = quantities[product.clave] || 1;
+          const isPromotion = isProductInPromotion(product);
+          let offerPrice = null;
+
+          if (isPromotion) {
+            const allProductsFromCache = queryClient.getQueryData(["products"]);
+            const promotionalProductsFromCache = queryClient.getQueryData([
+              "promotionalProducts",
+            ]);
+
+            const promoDetails = promotionalProductsFromCache?.find(
+              (promo) => promo.clave === product.clave
+            );
+            const originalProduct = allProductsFromCache?.find(
+              (p) => p.clave === product.clave
+            );
+
+            if (promoDetails && originalProduct) {
+              const normalPrice = parseFloat(originalProduct.precio);
+              const discount = parseFloat(promoDetails.descuento);
+              if (!isNaN(discount) && discount > 0 && discount <= 100) {
+                offerPrice = (normalPrice * (1 - discount / 100)).toFixed(2);
+              }
+            }
+          }
 
           return (
             <tr key={product.clave}>
@@ -134,6 +158,7 @@ const ProductTable = ({ products }) => {
                   to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(
                     imageUrl
                   )}`}
+                  state={{ isPromotion, offerPrice }} // Pass promotion info via state
                 >
                   <img
                     src={imageUrl}
