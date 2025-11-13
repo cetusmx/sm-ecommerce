@@ -156,7 +156,7 @@ a.filterButton.selectedButton {
 }
 
 .promoSection {
-    padding: 20px;
+    padding: 0 20px 20px 20px;
     background-color: #f9f9f9;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
@@ -166,6 +166,25 @@ a.filterButton.selectedButton {
     border: none;
     border-top: 1px solid #dad9d9;
     margin-bottom: 1rem;
+}
+
+.productImage{
+    height: 90px;
+    padding: 0 5px 5px 0;
+    margin: 0 5px 5px 0;
+}
+
+.contenedor-der-top {
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  flex: 0 0 23%; /* 25% - 2% gap = 23% width */
+  border-radius: 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes message to top, button to bottom */
+  align-items: center;
+  text-align: center;
 }
 
 @keyframes fadeIn {

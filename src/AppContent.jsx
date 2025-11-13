@@ -16,6 +16,7 @@ import CartPage from './pages/CartPage';
 import CheckoutPage from './pages/CheckoutPage';
 import ProductGroupPage from './pages/ProductGroupPage';
 import OringsPage from './pages/OringsPage';
+import CordonesPage from './pages/CordonesPage';
 import KitsTelescopicosPage from './pages/KitsTelescopicosPage'; // Import KitsTelescopicosPage
 import RetenesPage from './pages/RetenesPage';
 import SearchPage from './pages/SearchPage'; // Import SearchPage
@@ -90,6 +91,7 @@ function AppContent() {
               <Route path="checkout" element={<CheckoutPage />} />
               <Route path="kits-telescopicos" element={<KitsTelescopicosPage />} /> {/* New route for KitsTelescopicosPage */}
               <Route path="/retenes" element={<RetenesPage />} />
+              <Route path="/cordones" element={<CordonesPage />} />
               <Route path="/search" element={<SearchPage />} />
               <Route path="grupo/orings-respaldos" element={<OringsPage />} />
               <Route path="grupo/:groupName" element={<ProductGroupPage />} />
