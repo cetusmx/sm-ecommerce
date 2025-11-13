@@ -292,6 +292,9 @@
   margin-right: 5px;
 }
 
+.productImage{
+    height: 70px;
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .main-container {
