@@ -68,7 +68,7 @@ const KitsTelescopicosPage = () => {
             <div className={styles.leftColumn}>
                 <aside className={styles.sidebar}>
                     <h2 className={styles.mainFilterTitle}>Kits Telescópicos</h2>
-                    <h3 className={styles.filterTitle}>Filtrar por Línea</h3>
+                    <h3 className={styles.filterTitle}>Filtrar por marca</h3>
                     <div className={styles.filterButtonContainer}>
                         {uniqueLines.map(line => (
                             <a
