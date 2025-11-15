@@ -68,9 +68,23 @@ export const fetchProducts = async () => {
   // Step 3: Filter and Map
   const processStart = new Date();
   const processedProducts = products
-    .filter(product => product.ultima_compra != null &&
-                       !product.observaciones?.toLowerCase().includes('revisar') &&
-                       product.precio > product.ultimo_costo)
+    .filter(product => {
+      // The product is kept if it has a last purchase date...
+      const hasLastPurchase = product.ultima_compra !== null;
+
+      // ...OR if it's the special case: no last purchase, but has stock and price.
+      const isSpecialCase = product.ultima_compra === null &&
+                            product.existencia !== 0 &&
+                            product.precio !== 0;
+
+      // It must pass one of the above checks...
+      const passesPrimaryCheck = hasLastPurchase || isSpecialCase;
+
+      // ...and also meet the other two existing conditions.
+      return passesPrimaryCheck &&
+             !product.observaciones?.toLowerCase().includes('revisar') &&
+             product.precio > product.ultimo_costo;
+    })
     .map(applyProductRules);
   const processEnd = new Date();
   console.log("fetchProducts: Filter and Map Duration:", processEnd.getTime() - processStart.getTime(), "ms");

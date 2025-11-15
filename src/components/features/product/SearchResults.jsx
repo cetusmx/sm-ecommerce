@@ -97,7 +97,7 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
         <thead>
           <tr>
             <th style={{width: '10%'}}>Perfil</th>
-            <th style={{width: '13%'}}>SKU</th>
+            <th style={{width: '13%'}}>Clave</th>
             <th style={{width: '7%'}}>DI</th>
             <th style={{width: '7%'}}>DE</th>
             <th style={{width: '7%'}}>Altura</th>
