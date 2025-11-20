@@ -98,7 +98,6 @@ const PromoProductDisplay = () => { // Removed allProducts prop
 
     return (
         <div className={styles.promoContainer}>
-             <hr className={styles.divider} />
             <AnuncioPuntual
                 key={productWithDiscount.id}
                 imageUrl={imageUrl}

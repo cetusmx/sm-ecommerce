@@ -44,11 +44,12 @@ export const searchOrderForFacturacion = async (folio, total) => {
 };
 
 
-export const sendFacturacionDocument = async (folio, file, total) => {
+export const sendFacturacionDocument = async (folio, file, total, email) => {
   const formData = new FormData();
   formData.append('folio', folio);
   formData.append('monto', total);
   formData.append('pdfFile', file);
+  formData.append('email', email); // Añadir el email al FormData
 
   try {
     const response = await fetch(`${API_URL}/facturacion/enviaconstancia`, {

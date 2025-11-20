@@ -214,9 +214,12 @@ const Pedido = () => {
               <span className={styles["header-label"]}>
                 PEDIDO NUM. {orderItems[0].folio}
               </span>
-              <button className={styles["link-button"]}>
+              <Link
+                to={`/facturacion/${orderItems[0].folio}/${orderItems[0].total_pedido}`}
+                className={styles["link-button"]}
+              >
                 Solicitar factura
-              </button>
+              </Link>
             </div>
           </div>
         </div>
