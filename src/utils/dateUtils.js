@@ -14,7 +14,7 @@ export const calculateArrivalDate = () => {
 
   // Adjust for weekends. Aquí ya tengo el día según el horario, ahora checar si no es fin de semana
   const dayOfWeek = arrival.getDay();
-  console.log("Day of week ", dayOfWeek);
+  //console.log("Day of week ", dayOfWeek);
   if (dayOfWeek === 6) { // If it's Saturday
     arrival.setDate(arrival.getDate() + 3); // Move to Monday
   } else if (dayOfWeek === 0) { // If it's Sunday
