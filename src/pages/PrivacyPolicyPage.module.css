@@ -1,0 +1,35 @@
+.container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+}
+
+.content {
+  margin-top: 20px;
+  text-align: justify;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+}
+
+.update {
+  margin-top: 20px;
+  font-style: italic;
+  color: #555;
+}

@@ -217,7 +217,7 @@ const Footer = () => {
           <h3>Información</h3>
         </div>
         <div className={styles.infoLinks}>
-          <p><a href="/politicas-de-privacidad">Políticas de privacidad</a></p>
+          <p><a href="/aviso-de-privacidad">Aviso de privacidad</a></p>
           <p>
             <a href="#" onClick={handleFacturacionClick} className={styles.facturacionToggle}>
               Facturación <FaChevronDown className={`${styles.chevronIcon} ${showFacturacionForm ? styles.chevronOpen : ''}`} />
