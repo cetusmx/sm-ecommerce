@@ -28,6 +28,7 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
         queryFn: () => fetchSearchResultsByQuery(debouncedSearchQuery),
         enabled: debouncedSearchQuery.trim() !== '', // Only fetch from API if query exists
     });
+    console.log("ProductDebug: searchResultsFromApi", searchResultsFromApi);
     console.log("SearchInputWithDropdown: searchResultsFromApi", searchResultsFromApi); // Keep this log for now, user might want to remove it later
 
     // Determine the data source for the search index (always searchResultsFromApi)
@@ -36,8 +37,9 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
 
     // Paso 1: Crear un índice de búsqueda normalizado y memorizado
     const searchIndex = useMemo(() => {
-        // console.log("Creando índice de búsqueda con stems y sinónimos...");
-        return currentDataSource.map(product => normalizeProductForSearch(product));
+        return currentDataSource
+            .filter(product => product.precio !== 0 && product.precio !== null) // Filter out products with precio === 0 or precio === null
+            .map(product => normalizeProductForSearch(product));
     }, [currentDataSource]);
     console.log("SearchInputWithDropdown: searchIndex reference", searchIndex);
 
