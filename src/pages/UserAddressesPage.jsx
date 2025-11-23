@@ -20,7 +20,6 @@ const fetchAddresses = async (userEmail) => {
   }
   const response = await fetch(`${process.env.REACT_APP_API_URL}/domicilios/email/${userEmail}`);
   if (!response.ok) {
-    console.log(response.status);
     if (response.status === 404 || response.status === 500) {
       return [];
     }

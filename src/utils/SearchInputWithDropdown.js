@@ -18,7 +18,6 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
     //     queryFn: fetchProducts,
     //     enabled: allProductsLoaded,
     // });
-    // console.log("SearchInputWithDropdown: allProducts reference", allProducts);
 
     const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
@@ -28,12 +27,9 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
         queryFn: () => fetchSearchResultsByQuery(debouncedSearchQuery),
         enabled: debouncedSearchQuery.trim() !== '', // Only fetch from API if query exists
     });
-    console.log("ProductDebug: searchResultsFromApi", searchResultsFromApi);
-    console.log("SearchInputWithDropdown: searchResultsFromApi", searchResultsFromApi); // Keep this log for now, user might want to remove it later
 
     // Determine the data source for the search index (always searchResultsFromApi)
     const currentDataSource = searchResultsFromApi || []; // Ensure it's always an array
-    // console.log("SearchInputWithDropdown: currentDataSource type:", typeof currentDataSource, "value:", currentDataSource); // Remove this log
 
     // Paso 1: Crear un índice de búsqueda normalizado y memorizado
     const searchIndex = useMemo(() => {
@@ -41,10 +37,8 @@ const SearchInputWithDropdown = ({ onFullSearch }) => {
             .filter(product => product.precio !== 0 && product.precio !== null) // Filter out products with precio === 0 or precio === null
             .map(product => normalizeProductForSearch(product));
     }, [currentDataSource]);
-    console.log("SearchInputWithDropdown: searchIndex reference", searchIndex);
 
     useEffect(() => {
-        console.log("SearchInputWithDropdown: useEffect running. debouncedSearchQuery:", debouncedSearchQuery, "searchIndex:", searchIndex);
         // Only proceed if there are products to search through
         if (currentDataSource.length === 0) { // Use currentDataSource here
             // Only set if not already empty to prevent infinite loop

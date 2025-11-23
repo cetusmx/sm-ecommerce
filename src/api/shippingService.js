@@ -40,7 +40,6 @@ export const getShippingRates = async (originAddress, destinationAddress, parcel
     }
 
     const responseData = await response.json();
-    console.log("Envia.com API Raw Response:", responseData);
     return responseData;
   } catch (error) {
     console.error("Error fetching shipping rates:", error);

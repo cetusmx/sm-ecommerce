@@ -14,7 +14,6 @@ const CartItem = ({ item, deliveryInfo }) => {
     return <CartItemSkeleton />;
   }
 
-  console.log("Item dentro CartItem: ", item)
   // Determine the correct image URL based on category
   const perfilesUrl = `/Perfiles/${item.linea}.jpg`;
   const sugeridosUrl = `/Sugeridos/${item.clave}.jpg`;

@@ -114,7 +114,6 @@ const CheckoutPage = () => {
       if (!orderResponse.ok) {
         throw new Error('Error al crear el pedido');
       }
-      console.log('Pedido creado exitosamente');
 
       // Enganche de la nueva lógica de almacén
       await gestionPedidoEnAlmacen({ tipoLogistica, pedidoItems, folio, shippingAddress });
@@ -130,7 +129,6 @@ const CheckoutPage = () => {
       if (!confirmacionResponse.ok) {
         console.error('Error al enviar el correo de confirmación');
       } else {
-        console.log('Correo de confirmación enviado exitosamente');
       }
       return true;
 
@@ -491,7 +489,6 @@ const CheckoutPage = () => {
               <PayPalButtons
                 style={{ layout: "vertical" }}
                 createOrder={(data, actions) => {
-                  console.log("PayPal: Llamando a /crear-orden-paypal con:", {
                     totalPedido: calculateTotal,
                     folio: folio,
                     emailCliente: currentUser.email,
@@ -510,14 +507,12 @@ const CheckoutPage = () => {
                     }),
                   })
                     .then((response) => {
-                      console.log("PayPal: Respuesta de /crear-orden-paypal:", response);
                       if (!response.ok) {
                         throw new Error(`Error al crear orden PayPal: ${response.statusText}`);
                       }
                       return response.json();
                     })
                     .then((order) => {
-                      console.log("PayPal: Orden creada (ID):", order.id);
                       return order.id;
                     })
                     .catch((error) => {
@@ -527,7 +522,6 @@ const CheckoutPage = () => {
                     });
                 }}
                 onApprove={(data, actions) => {
-                  console.log("PayPal: Pago aprobado en PayPal. Capturando orden:", data.orderID);
                   return fetch(`${process.env.REACT_APP_API_URL}/pagos/capturar-orden-paypal/${data.orderID}`, {
                     method: "POST",
                     headers: {
@@ -536,14 +530,12 @@ const CheckoutPage = () => {
                     body: JSON.stringify({}), // Empty body as per user's instruction, correctly stringified
                   })
                     .then((response) => {
-                      console.log("PayPal: Respuesta de /capturar-orden-paypal:", response);
                       if (!response.ok) {
                         throw new Error(`Error al capturar orden PayPal: ${response.statusText}`);
                       }
                       return response.json();
                     })
                     .then((details) => {
-                      console.log("PayPal: Detalles de captura:", details);
                       handlePaymentComplete({ success: true, message: "¡Pago con PayPal exitoso! Tu pedido ha sido creado." }, 'paypal');
                     })
                     .catch((error) => {
@@ -556,7 +548,6 @@ const CheckoutPage = () => {
                   handlePaymentComplete({ error: true, message: "El pago con PayPal fue cancelado o falló." }, 'paypal');
                 }}
                 onCancel={(data) => {
-                  console.log("PayPal: Pago de PayPal cancelado:", data);
                   handlePaymentComplete({ error: true, message: "El pago con PayPal fue cancelado." }, 'paypal');
                 }}
               />

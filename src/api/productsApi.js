@@ -47,13 +47,11 @@ const applyProductRules = (product) => {
 
 export const fetchProducts = async () => {
   const startTime = new Date(); // Record start time
-  console.log("fetchProducts: START fetching products. Time:", startTime.toISOString()); // Log start time
 
   // Step 1: Fetch from API
   const fetchStart = new Date();
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
   const fetchEnd = new Date();
-  console.log("fetchProducts: API Fetch Duration:", fetchEnd.getTime() - fetchStart.getTime(), "ms");
 
   if (!response.ok) {
     throw new Error('Network response was not ok');
@@ -63,7 +61,6 @@ export const fetchProducts = async () => {
   const jsonParseStart = new Date();
   const products = await response.json();
   const jsonParseEnd = new Date();
-  console.log("fetchProducts: JSON Parse Duration:", jsonParseEnd.getTime() - jsonParseStart.getTime(), "ms");
 
   // Step 3: Filter and Map
   const processStart = new Date();
@@ -87,11 +84,8 @@ export const fetchProducts = async () => {
     })
     .map(applyProductRules);
   const processEnd = new Date();
-  console.log("fetchProducts: Filter and Map Duration:", processEnd.getTime() - processStart.getTime(), "ms");
 
   const endTime = new Date(); // Record end time
-  console.log("fetchProducts: END fetching products. Time:", endTime.toISOString(), "Number of products:", processedProducts.length); // Log end time and count
-  console.log("fetchProducts: Total Duration:", endTime.getTime() - startTime.getTime(), "ms"); // Log total duration
   return processedProducts;
 };
 

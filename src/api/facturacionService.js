@@ -18,15 +18,11 @@ export const searchOrderForFacturacion = async (folio, total) => {
     }
 
     // Debugging logs
-    console.log('Raw total_pedido from backend:', pedidoItems[0].total_pedido);
-    console.log('Raw total from user input:', total);
 
     const orderTotal = parseFloat(pedidoItems[0].total_pedido);
     const userTotal = parseFloat(total);
 
     // Debugging logs
-    console.log('Parsed orderTotal:', orderTotal);
-    console.log('Parsed userTotal:', userTotal);
 
     if (isNaN(orderTotal) || isNaN(userTotal)) {
       throw new Error('El total del pedido o el total ingresado no son números válidos.');

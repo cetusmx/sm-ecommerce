@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
 export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio, shippingAddress }) => {
-  console.log(`Iniciando gestión en almacén para pedido ${folio} con logística: ${tipoLogistica}`);
 
   if (!pedidoItems || pedidoItems.length === 0) {
     console.error("gestiónPedidoEnAlmacen fue llamado sin items de pedido.");
@@ -36,7 +35,6 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
   // 2. Definir funciones auxiliares
   const crearYEnviarRegistroDeEnvio = async (almacen, items) => {
     if (!items || items.length === 0) return;
-    console.log("Dentro crearYEnviarRegistroDeEnvio -> ",items)
     const folioEnvio = `ENV-${uuidv4().substring(0, 8).toUpperCase()}`;
     const envioParaGuardar = {
       folio: folioEnvio,
@@ -53,7 +51,6 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
         cant_por_empaque: item.cant_por_empaque
       })),
     };
-    console.log(`Creando registro de envío para Almacén ${almacen}:`, envioParaGuardar);
     try {
       const responseEnvio = await fetch(`${process.env.REACT_APP_API_URL}/envios`, {
         method: 'POST',
@@ -61,14 +58,12 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
         body: JSON.stringify(envioParaGuardar),
       });
       if (!responseEnvio.ok) throw new Error(`El endpoint /envios respondió con un error: ${responseEnvio.statusText}`);
-      console.log(`Registro de envío para Almacén ${almacen} creado exitosamente.`);
       const responseSurtir = await fetch(`${process.env.REACT_APP_API_URL}/envios/surtir`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(envioParaGuardar),
       });
       if (!responseSurtir.ok) throw new Error(`El endpoint /envios/surtir respondió con un error: ${responseSurtir.statusText}`);
-      console.log(`Envío ${envioParaGuardar.folio} enviado a surtir exitosamente.`);
     } catch (error) {
       console.error(`Error en el proceso de envío para el Almacén ${almacen}:`, error);
     }
@@ -96,7 +91,6 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
 
   // CASO A: El pedido es perfecto (todo tiene existencia suficiente)
   if (itemsSinExistencia.length === 0 && itemsExistenciaInsuf.length === 0) {
-    console.log("Todos los items tienen existencia suficiente. Procediendo con lógica original.");
     
     // --- Lógica Original Intacta ---
     const puedeSurtirCompleto = (almacenId) => {
@@ -107,18 +101,15 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
     };
 
     if (puedeSurtirCompleto('6')) {
-      console.log("ASIGNACIÓN: El Almacén 6 surtirá el pedido completo.");
       await crearYEnviarRegistroDeEnvio('6', pedidoItems);
       return { success: true };
     }
 
     if (puedeSurtirCompleto('1')) {
-      console.log("ASIGNACIÓN: El Almacén 1 surtirá el pedido completo.");
       await crearYEnviarRegistroDeEnvio('1', pedidoItems);
       return { success: true };
     }
 
-    console.log("ASIGNACIÓN: Pedido se divide.");
     const pedidoParaAlmacen1 = [];
     const pedidoParaAlmacen6 = [];
     let esSurtible = true;
@@ -151,7 +142,6 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
 
   } else {
     // CASO B: El pedido tiene items con stock cero o insuficiente
-    console.log("El pedido contiene items con stock cero o/y insuficiente. Aplicando lógica compleja.");
 
     // 1. Asignación directa de items problemáticos a Almacén 1
     let finalPedidoPara1 = [...itemsSinExistencia, ...itemsExistenciaInsuf];
@@ -168,17 +158,14 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
 
         // Intenta asignar todo lo que tiene existencia al Almacén 6
         if (puedeSurtirConExistencia('6')) {
-            console.log("ASIGNACIÓN: Items con existencia van a Almacén 6.");
             finalPedidoPara6.push(...itemsConExistencia);
         } 
         // Intenta asignar todo lo que tiene existencia al Almacén 1
         else if (puedeSurtirConExistencia('1')) {
-            console.log("ASIGNACIÓN: Items con existencia van a Almacén 1.");
             finalPedidoPara1.push(...itemsConExistencia);
         } 
         // Divide los items con existencia entre ambos almacenes
         else {
-            console.log("ASIGNACIÓN: Items con existencia se dividen.");
             for (const item of itemsConExistencia) {
                 const stock6 = stockMap.get(item.clave)?.get('6') || 0;
                 
@@ -196,7 +183,6 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
     }
 
     // 3. Creación final de envíos
-    console.log("Consolidando y creando envíos finales...");
     await Promise.all([
         crearYEnviarRegistroDeEnvio('1', finalPedidoPara1),
         crearYEnviarRegistroDeEnvio('6', finalPedidoPara6)

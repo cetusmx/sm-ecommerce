@@ -17,7 +17,6 @@ const SpecSearchBlock = () => {
 
   const handleSearchSpecs = () => {
     // Lógica para enviar la búsqueda al backend
-    console.log("Buscando con especificaciones:", searchSpecs);
     alert('Búsqueda de producto activada. Revisa la consola.');
   };
 

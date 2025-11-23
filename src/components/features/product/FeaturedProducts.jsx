@@ -10,7 +10,6 @@ const products = [
 
 const FeaturedProducts = () => {
   const handleAddToCart = (productId) => {
-    console.log(`Producto ${productId} añadido al carrito.`);
     // Lógica para actualizar el estado del carrito
     alert('Producto añadido al carrito!');
   };
