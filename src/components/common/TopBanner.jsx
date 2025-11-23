@@ -3,7 +3,7 @@ import styles from './TopBanner.module.css';
 
 const messages = [
   "*** Paga con tarjeta o transferencia ***",
-  "Obtén envío gratis en compras mayores a $900"
+  "Obtén envío gratis en compras mayores a $500"
 ];
 
 const TopBanner = () => {

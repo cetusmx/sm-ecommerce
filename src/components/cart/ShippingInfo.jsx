@@ -22,7 +22,7 @@ const ShippingInfo = ({ cartTotal }) => {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const FREE_SHIPPING_THRESHOLD = 900;
+  const FREE_SHIPPING_THRESHOLD = 500;
 
   // Fetch addresses to set an initial default, but only if no address is already set in the context.
   useQuery({
