@@ -56,7 +56,7 @@ const CheckoutPage = () => {
       setIsPlacingOrder(false);
       
       if (orderSuccess) {
-        setModalState({ isOpen: true, message: "¡Pago exitoso! Tu pedido ha sido creado.", isError: false });
+        setModalState({ isOpen: true, message: "¡Pago exitoso! Tu pedido ha sido creado. Recibirás un correo de confirmación.s", isError: false });
       } else {
         setModalState({ isOpen: true, message: "El pago fue exitoso, pero hubo un error al crear tu pedido. Por favor, contacta a soporte.", isError: true });
       }
@@ -339,7 +339,7 @@ const CheckoutPage = () => {
     if (success) {
       setModalState({
         isOpen: true,
-        message: "¡Tu pedido ha sido colocado exitosamente!",
+        message: "¡Tu pedido ha sido colocado exitosamente! Recibirás un correo de confirmación.",
         isError: false,
         additionalMessage: "No olvides enviar tu comprobante de pago al correo pagos@sealmarket.mx"
       });
