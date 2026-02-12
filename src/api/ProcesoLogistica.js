@@ -69,125 +69,32 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
     }
   };
 
-  // 3. Lógica de Asignación por Casos
+  // 3. Nueva Lógica de Asignación Secuencial y Sin División
+  const almacenesPrioridad = ['7', '1', '6', '5'];
 
-  // Segregar productos en tres grupos
-  const itemsConExistencia = [];
-  const itemsSinExistencia = [];
-  const itemsExistenciaInsuf = [];
-  for (const item of pedidoItems) {
-    const stock1 = stockMap.get(item.clave)?.get('1') || 0;
-    const stock6 = stockMap.get(item.clave)?.get('6') || 0;
-    const totalStock = stock1 + stock6;
-
-    if (totalStock >= item.cantidad) {
-      itemsConExistencia.push(item);
-    } else if (totalStock > 0) {
-      itemsExistenciaInsuf.push(item);
-    } else {
-      itemsSinExistencia.push(item);
-    }
-  }
-
-  // CASO A: El pedido es perfecto (todo tiene existencia suficiente)
-  if (itemsSinExistencia.length === 0 && itemsExistenciaInsuf.length === 0) {
-    
-    // --- Lógica Original Intacta ---
-    const puedeSurtirCompleto = (almacenId) => {
-      for (const item of pedidoItems) {
-        if ((stockMap.get(item.clave)?.get(almacenId) || 0) < item.cantidad) return false;
-      }
-      return true;
-    };
-
-    if (puedeSurtirCompleto('6')) {
-      await crearYEnviarRegistroDeEnvio('6', pedidoItems);
-      return { success: true };
-    }
-
-    if (puedeSurtirCompleto('1')) {
-      await crearYEnviarRegistroDeEnvio('1', pedidoItems);
-      return { success: true };
-    }
-
-    const pedidoParaAlmacen1 = [];
-    const pedidoParaAlmacen6 = [];
-    let esSurtible = true;
-
+  const puedeSurtirCompleto = (almacenId) => {
     for (const item of pedidoItems) {
-      const stock1 = stockMap.get(item.clave)?.get('1') || 0;
-      const stock6 = stockMap.get(item.clave)?.get('6') || 0;
-      if (stock1 + stock6 < item.cantidad) {
-        console.error(`ERROR DE STOCK: Insuficiente para ${item.clave}. Requerido: ${item.cantidad}, Disponible: ${stock1 + stock6}`);
-        esSurtible = false;
-        continue;
+      const stockDisponible = stockMap.get(item.clave)?.get(almacenId) || 0;
+      if (stockDisponible < item.cantidad) {
+        return false; // Este almacén no puede surtir este item, por lo tanto no puede surtir el pedido completo
       }
-      const surtirDe6 = Math.min(item.cantidad, stock6);
-      if (surtirDe6 > 0) pedidoParaAlmacen6.push({ ...item, cantidad: surtirDe6 });
-      const restante = item.cantidad - surtirDe6;
-      if (restante > 0) pedidoParaAlmacen1.push({ ...item, cantidad: restante });
     }
+    return true; // Si el bucle termina, el almacén puede surtir todos los items
+  };
 
-    if (!esSurtible) {
-      console.error("El pedido no puede ser surtido en su totalidad por falta de existencias.");
-      return { error: true, message: "Existencias insuficientes." };
+  // Iterar sobre la lista de prioridad para encontrar un almacén que pueda surtir todo
+  for (const almacenId of almacenesPrioridad) {
+    if (puedeSurtirCompleto(almacenId)) {
+      console.log(`Pedido completo asignado al Almacén ${almacenId} por tener stock suficiente.`);
+      await crearYEnviarRegistroDeEnvio(almacenId, pedidoItems);
+      return { success: true };
     }
-
-    await Promise.all([
-      crearYEnviarRegistroDeEnvio('1', pedidoParaAlmacen1),
-      crearYEnviarRegistroDeEnvio('6', pedidoParaAlmacen6)
-    ]);
-
-    return { success: true };
-
-  } else {
-    // CASO B: El pedido tiene items con stock cero o insuficiente
-
-    // 1. Asignación directa de items problemáticos a Almacén 1
-    let finalPedidoPara1 = [...itemsSinExistencia, ...itemsExistenciaInsuf];
-    let finalPedidoPara6 = [];
-
-    // 2. Procesar el grupo de items con existencia suficiente
-    if (itemsConExistencia.length > 0) {
-        const puedeSurtirConExistencia = (almacenId) => {
-            for (const item of itemsConExistencia) {
-                if ((stockMap.get(item.clave)?.get(almacenId) || 0) < item.cantidad) return false;
-            }
-            return true;
-        };
-
-        // Intenta asignar todo lo que tiene existencia al Almacén 6
-        if (puedeSurtirConExistencia('6')) {
-            finalPedidoPara6.push(...itemsConExistencia);
-        } 
-        // Intenta asignar todo lo que tiene existencia al Almacén 1
-        else if (puedeSurtirConExistencia('1')) {
-            finalPedidoPara1.push(...itemsConExistencia);
-        } 
-        // Divide los items con existencia entre ambos almacenes
-        else {
-            for (const item of itemsConExistencia) {
-                const stock6 = stockMap.get(item.clave)?.get('6') || 0;
-                
-                const surtirDe6 = Math.min(item.cantidad, stock6);
-                if (surtirDe6 > 0) {
-                    finalPedidoPara6.push({ ...item, cantidad: surtirDe6 });
-                }
-
-                const restante = item.cantidad - surtirDe6;
-                if (restante > 0) {
-                    finalPedidoPara1.push({ ...item, cantidad: restante });
-                }
-            }
-        }
-    }
-
-    // 3. Creación final de envíos
-    await Promise.all([
-        crearYEnviarRegistroDeEnvio('1', finalPedidoPara1),
-        crearYEnviarRegistroDeEnvio('6', finalPedidoPara6)
-    ]);
-
-    return { success: true };
   }
+
+  // Si el bucle termina, significa que ningún almacén pudo surtir el pedido completo.
+  // Se aplica la regla final: asignar todo al Almacén 7.
+  console.log(`Ningún almacén pudo surtir el pedido completo. Asignando por defecto al Almacén 7 para resurtido.`);
+  await crearYEnviarRegistroDeEnvio('7', pedidoItems);
+
+  return { success: true };
 };

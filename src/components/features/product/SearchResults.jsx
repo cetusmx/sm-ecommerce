@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SearchResults.module.css';
-import StockStatus from './StockStatus';
-import { calculateArrivalDate, formatToShortDate } from '../../../utils/dateUtils';
 import { useCart } from '@/hooks/useCart'; // Import useCart
 import { FaAngleDoubleUp } from 'react-icons/fa';
-import AvisoEscasez from '../../common/AvisoEscasez';
 
 const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
   const { addItem } = useCart(); // Get addItem from cart context
   const [quantities, setQuantities] = useState({}); // State for quantities
   const [addedMessage, setAddedMessage] = useState({}); // State for added message
-  const [isScarcityModalOpen, setIsScarcityModalOpen] = useState(false);
-  const [scarcityMessage, setScarcityMessage] = useState('');
   const [showScroll, setShowScroll] = useState(false);
 
   useEffect(() => {
@@ -30,34 +25,29 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
     };
   }, [showScroll]);
 
+  // New Rule: Filter out products that have ultima_compra but price is 0
+  const filteredForDisplay = results.filter(product => {
+    if (product.ultima_compra && product.precio == 0) {
+      return false;
+    }
+    return true;
+  });
+
   const scrollTop = () => {
     window.scrollTo({top: 0, behavior: 'smooth'});
   };
 
-  const handleQuantityChange = (product, value) => {
+  const handleQuantityChange = (clave, value) => {
     const newQuantity = Math.max(0, Number(value));
     setQuantities(prevQuantities => ({
       ...prevQuantities,
-      [product.clave]: newQuantity
+      [clave]: newQuantity
     }));
-
-    if (newQuantity > product.existencia) {
-      setScarcityMessage(`La cantidad solicitada (${newQuantity}) excede la existencia (${product.existencia}).`);
-      setIsScarcityModalOpen(true);
-    } else {
-      setIsScarcityModalOpen(false);
-      setScarcityMessage('');
-    }
   };
 
   const handleAddToCart = (product) => {
     const quantity = quantities[product.clave] || 1;
-
-    if (quantity > product.existencia) {
-      setScarcityMessage(`La cantidad solicitada (${quantity}) excede la existencia (${product.existencia}).`);
-      setIsScarcityModalOpen(true);
-      return; // Prevent adding to cart if quantity exceeds stock
-    }
+    // Removed validation against product.existencia
 
     addItem(product, parseInt(quantity));
     setAddedMessage(prevMessages => ({
@@ -109,67 +99,52 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
           </tr>
         </thead>
         <tbody>
-          {results.map((product) => {
-           const needsStockStatus = (product.precio == 0 || product.existencia == 0) && product.ultima_compra;
-            const arrivalDate = needsStockStatus ? formatToShortDate(calculateArrivalDate()) : null;
-
-            return (
-              <tr style={{borderBottom: "1px solid #ddd"}} key={product.clave}>
-                <td >
-                  <Link to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}> 
-                    <img 
-                      src={`/Perfiles/${product.linea}.jpg`} 
-                      alt={product.descripcion} 
-                      className={styles.productImage} 
-                    />
-                    {/* <p style={{textDecoration: "underline", fontSize: "0.8em"}}>Ver detalles</p> */}
-                  </Link>
-                </td>
-                <td>
-                  <Link style={{textDecoration:"underline", color: "#212c59"}} to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}>
-                  {product.clave}
-                  </Link>
-                </td>
-                <td style={{fontWeight:500}}>{product.diam_int}</td>
-                <td style={{fontWeight:500}}>{product.diam_ext}</td>
-                <td style={{fontWeight:500}}>{product.altura}</td>
-                <td style={{fontWeight:500}}>{product.marca}</td>
-                <td>
-                  {needsStockStatus ? (
-                    <StockStatus arrivalDate={arrivalDate} />
-                  ) : (
-                    formatCurrency(product.precio)
-                  )}
-                </td>
-                <td>{product.unidad}</td>
-                <td>{product.cant_por_empaque}</td>
-                <td className={styles.actionsCell}>
-                  <input 
-                    type="number" 
-                    min="1" 
-                    value={quantities[product.clave] || 1} 
-                    onChange={(e) => handleQuantityChange(product, e.target.value)}
-                    className={styles.quantityInput} 
+          {filteredForDisplay.map((product) => (
+            <tr style={{borderBottom: "1px solid #ddd"}} key={product.clave}>
+              <td >
+                <Link to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}> 
+                  <img 
+                    src={`/Perfiles/${product.linea}.jpg`} 
+                    alt={product.descripcion} 
+                    className={styles.productImage} 
                   />
-                  <button 
-                    onClick={() => handleAddToCart(product)}
-                     className="sm-btn sm-btn-primary"
-                     style={{padding:"8px 12px", fontSize:"0.8rem", transition: "background-color 0.2s"}}
-                  >
-                    Agregar al carrito
-                  </button>
-                  {addedMessage[product.clave] && <div className={styles.addedMessage}>{addedMessage[product.clave]}</div>}
-                </td>
-              </tr>
-            );
-          })}
+                </Link>
+              </td>
+              <td>
+                <Link style={{textDecoration:"underline", color: "#212c59"}} to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}>
+                {product.clave}
+                </Link>
+              </td>
+              <td style={{fontWeight:500}}>{product.diam_int}</td>
+              <td style={{fontWeight:500}}>{product.diam_ext}</td>
+              <td style={{fontWeight:500}}>{product.altura}</td>
+              <td style={{fontWeight:500}}>{product.marca}</td>
+              <td>
+                {formatCurrency(product.precio)}
+              </td>
+              <td>{product.unidad}</td>
+              <td>{product.cant_por_empaque}</td>
+              <td className={styles.actionsCell}>
+                <input 
+                  type="number" 
+                  min="1" 
+                  value={quantities[product.clave] || 1} 
+                  onChange={(e) => handleQuantityChange(product.clave, e.target.value)}
+                  className={styles.quantityInput} 
+                />
+                <button 
+                  onClick={() => handleAddToCart(product)}
+                   className="sm-btn sm-btn-primary"
+                   style={{padding:"8px 12px", fontSize:"0.8rem", transition: "background-color 0.2s"}}
+                >
+                  Agregar al carrito
+                </button>
+                {addedMessage[product.clave] && <div className={styles.addedMessage}>{addedMessage[product.clave]}</div>}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
-      <AvisoEscasez
-        isOpen={isScarcityModalOpen}
-        onClose={() => setIsScarcityModalOpen(false)}
-        message={scarcityMessage}
-      />
       {showScroll && (
         <button onClick={scrollTop} className={styles.scrollTopButton}>
           <FaAngleDoubleUp />
