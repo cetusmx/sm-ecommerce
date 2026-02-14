@@ -5,10 +5,10 @@
 .wrapper {
     position: absolute;
     /* --- NEW POSITIONING AND SIZING --- */
-    top: 50%; /* Centrado verticalmente */
-    transform: translateY(-50%); /* Ajuste para centrado perfecto */
-    left: 80px; /* 80px desde el borde izquierdo */
-    width: calc(100vw / 5); /* Una quinta parte del ancho de pantalla */
+    top: 40%; /* Centrado verticalmente */
+    transform: translateY(-40%); /* Ajuste para centrado perfecto */
+    left: 180px; /* 80px desde el borde izquierdo */
+    width: calc(100vw / 4); /* Una quinta parte del ancho de pantalla */
     max-width: 350px; /* Opcional: Un máximo para que no sea demasiado grande en pantallas muy anchas */
     /* --- END NEW POSITIONING AND SIZING --- */
     z-index: 10;
