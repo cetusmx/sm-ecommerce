@@ -169,8 +169,8 @@ const CheckoutPage = () => {
     }
 
     // Lógica original si no hay envío gratis
-    const shippingCost = selectedShippingOption.totalPrice * numberOfShipments;
-    return cartTotal + shippingCost;
+    //const shippingCost = selectedShippingOption.totalPrice * numberOfShipments;
+    //return cartTotal + shippingCost;
   }, [cartTotal, selectedShippingOption, numberOfShipments, envioGratis]);
 
   useEffect(() => {
