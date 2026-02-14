@@ -37,7 +37,7 @@ const CallToAction = () => {
             ¡Envío <span>Gratis!</span>
           </h1>
           <p className={styles.description}>
-            En todas tus compras hoy. Recibe tus productos en la puerta de tu casa sin costo adicional.
+            En todas tus compras hoy. Recibe tus productos en la puerta de tu taller sin costo adicional.
           </p>
 
           {/* CTA Button */}
