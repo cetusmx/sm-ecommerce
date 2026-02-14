@@ -4,6 +4,7 @@ import styles from "./HeroSection.module.css";
 import banner2 from "@/assets/banner1.jpg";
 import banner3 from "@/assets/banner3.jpg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import CallToAction from './CallToAction';
 
 const HeroSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -54,6 +55,9 @@ const HeroSection = () => {
           <FaChevronRight />
         </button>
       </div>
+      
+      <CallToAction />
+
       <div className={styles['carousel-indicators']}>
         {images.map((_, index) => (
           <button
