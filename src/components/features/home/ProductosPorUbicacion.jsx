@@ -4,7 +4,7 @@ import styles from './ProductosPorUbicacion.module.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const ProductCard = ({ product }) => {
-  const imageUrl = product.IMAGE_URL || `/Perfiles/${product.linea}.jpg`;
+  const imageUrl = product.IMAGE_URL || `/Perfiles/${product.perfil}.png`; 
   return (
     <Link to={`/producto/${product.clave}`} className={styles.productCard}>
       <img src={imageUrl} alt={product.descripcion} className={styles.productImage} />

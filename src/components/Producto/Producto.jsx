@@ -56,7 +56,7 @@ const Producto = ({ producto, imageUrl }) => {
   // Effect to set up images when producto is available
   useEffect(() => {
     if (producto) {
-      let finalImageUrl = imageUrl || `/Sugeridos/${producto.clave}.jpg`;
+      let finalImageUrl = imageUrl || `/Sugeridos/${producto.perfil}.png`; 
       if (producto.linea === "HER") {
         finalImageUrl = `/Sugeridos/${producto.clave}.jpg`;
       }

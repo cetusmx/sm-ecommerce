@@ -62,10 +62,6 @@ export const fetchProducts = async () => {
   const products = await response.json();
   const jsonParseEnd = new Date();
 
-  // --- TEMPORARY LOG FOR NEW FIELD VERIFICATION ---
-  console.log("Productos recibidos de la API (primeros 5):", products.slice(0, 5));
-  // -------------------------------------------------
-
   // Step 3: Filter and Map
   const processStart = new Date();
   const processedProducts = products

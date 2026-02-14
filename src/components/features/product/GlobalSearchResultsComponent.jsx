@@ -111,16 +111,16 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
           {filteredForDisplay.map((product) => (
             <tr key={product.clave}>
               <td>
-                <Link to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}> 
+                <Link to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.perfil}.png`)}`}>
                   <img 
-                    src={`/Perfiles/${product.linea}.jpg`} 
+                    src={`/Perfiles/${product.perfil}.png`} 
                     alt={product.descripcion} 
                     className={styles.productImage} 
                   />
                 </Link>
               </td>
               <td>
-                <Link style={{textDecoration:"underline", color: "#212c59"}} to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.linea}.jpg`)}`}>
+                <Link style={{textDecoration:"underline", color: "#212c59"}} to={`/producto/${product.clave}?imageUrl=${encodeURIComponent(`/Perfiles/${product.perfil}.png`)}`}>
                 {product.clave}
                 </Link>
                 </td>

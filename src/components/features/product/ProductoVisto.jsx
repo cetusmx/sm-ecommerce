@@ -27,7 +27,7 @@ const ProductoVisto = ({ viewedProduct }) => {
   if (error) return <div className={styles.container}>Error: {error.message}</div>;
   if (!product) return null; // Should not happen if error handling is correct
 
-  const imageUrl = `/Perfiles/${product.linea}.jpg`; // Assuming image based on linea
+  const imageUrl = `/Perfiles/${product.perfil}.png`; // Assuming image based on linea 
   const imageUrl2 = `/Sugeridos/${product.clave}.jpg`; // Assuming image based on linea
 
   return (
