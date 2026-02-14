@@ -126,7 +126,7 @@ const CartPage = () => {
             >
               Proceder al Pago
             </button>
-            <ShippingInfo cartTotal={cartTotal} />
+            {/* <ShippingInfo cartTotal={cartTotal} /> */}
           </div>
         )}
       </div>
