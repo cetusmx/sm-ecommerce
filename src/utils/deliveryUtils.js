@@ -9,6 +9,17 @@ export const getDeliveryInfo = (producto, quantity) => {
   const requestedAmount = numericQuantity * (producto.cant_por_empaque || 1);
   let warningMessage = '';
 
+  // --- INICIO DE MODIFICACIÓN TEMPORAL: Forzar siempre el escenario "En Stock" ---
+  const deliveryDate = calculateDeliveryDate();
+  return {
+    message: 'Entrega para el día',
+    date: formatToSpanishDate(deliveryDate),
+    shortDate: formatToYYYYMMDD(deliveryDate),
+    warning: '',
+  };
+  // --- FIN DE MODIFICACIÓN TEMPORAL ---
+
+  /* --- LÓGICA ORIGINAL DESACTIVADA ---
   // Escenario 3: No hay existencia inicial
   if (stock === 0) {
     const arrivalDate = calculateArrivalDate();
@@ -42,4 +53,5 @@ export const getDeliveryInfo = (producto, quantity) => {
       warning: '',
     };
   }
+  */
 };
