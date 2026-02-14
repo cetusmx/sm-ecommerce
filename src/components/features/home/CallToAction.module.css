@@ -5,8 +5,8 @@
 .wrapper {
     position: absolute;
     /* --- NEW POSITIONING AND SIZING --- */
-    top: 25%; /* Centrado verticalmente */
-    transform: translateY(-25%); /* Ajuste para centrado perfecto */
+    top: 20%; /* Centrado verticalmente */
+    transform: translateY(-20%); /* Ajuste para centrado perfecto */
     left: 180px; /* 80px desde el borde izquierdo */
     width: calc(100vw / 4); /* Una quinta parte del ancho de pantalla */
     max-width: 350px; /* Opcional: Un máximo para que no sea demasiado grande en pantallas muy anchas */
@@ -113,7 +113,7 @@
     font-weight: 800; /* font-extrabold */
     letter-spacing: -0.025em; /* tracking-tight */
     margin-bottom: 0.5rem; /* mb-2 */
-    margin-top: 1rem;
+    margin-top: 0.5rem;
 }
 
 .headline span {

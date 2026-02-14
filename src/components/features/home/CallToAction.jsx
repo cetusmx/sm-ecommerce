@@ -21,7 +21,7 @@ const CallToAction = () => {
 
         {/* Close Button */}
         <button className={styles.closeButton} onClick={() => setIsVisible(false)}>
-          <span className="material-icons" style={{ fontSize: '20px' }}>cerrar</span>
+          <span className="material-icons" style={{ fontSize: '20px' }}>x</span>
         </button>
 
         {/* Card Content */}
