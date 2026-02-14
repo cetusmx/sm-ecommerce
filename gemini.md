@@ -38,6 +38,8 @@ Evita introducir nuevas dependencias externas, a menos que sea absolutamente nec
 
 -Utiliza siempre el idioma español para interactuar con el usuario.
 
+-Analiza el componente src/pages/ProductDetailPage.jsx y brinda un reporte al usuario.
+
 
 
 \##Consideraciones finales

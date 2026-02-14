@@ -49,7 +49,7 @@ const Producto = ({ producto, imageUrl }) => {
   useEffect(() => {
     if (deliveryInfo.warning) {
       setModalMessage(deliveryInfo.warning);
-      setIsWarningModalOpen(true); // Use renamed state
+      // setIsWarningModalOpen(true); // Deshabilitado temporalmente
     }
   }, [deliveryInfo.warning]);
 

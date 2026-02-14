@@ -48,7 +48,7 @@ const applyProductRules = (product) => {
 export const fetchProducts = async () => {
   const startTime = new Date(); // Record start time
 
-  // Step 1: Fetch from API
+  // Step 1: Fetch from API 
   const fetchStart = new Date();
   const response = await fetch(`${process.env.REACT_APP_API_URL}/productos`);
   const fetchEnd = new Date();
@@ -61,6 +61,10 @@ export const fetchProducts = async () => {
   const jsonParseStart = new Date();
   const products = await response.json();
   const jsonParseEnd = new Date();
+
+  // --- TEMPORARY LOG FOR NEW FIELD VERIFICATION ---
+  console.log("Productos recibidos de la API (primeros 5):", products.slice(0, 5));
+  // -------------------------------------------------
 
   // Step 3: Filter and Map
   const processStart = new Date();
