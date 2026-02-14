@@ -12,6 +12,7 @@
     max-width: 350px; /* Opcional: Un máximo para que no sea demasiado grande en pantallas muy anchas */
     /* --- END NEW POSITIONING AND SIZING --- */
     z-index: 10;
+    margin-bottom: 70px;
 }
 
 .card {
