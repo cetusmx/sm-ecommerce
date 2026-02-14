@@ -5,8 +5,8 @@
 .wrapper {
     position: absolute;
     /* --- NEW POSITIONING AND SIZING --- */
-    top: 30%; /* Centrado verticalmente */
-    transform: translateY(-30%); /* Ajuste para centrado perfecto */
+    top: 25%; /* Centrado verticalmente */
+    transform: translateY(-25%); /* Ajuste para centrado perfecto */
     left: 180px; /* 80px desde el borde izquierdo */
     width: calc(100vw / 4); /* Una quinta parte del ancho de pantalla */
     max-width: 350px; /* Opcional: Un máximo para que no sea demasiado grande en pantallas muy anchas */
@@ -109,10 +109,11 @@
 .headline {
     color: white;
     font-size: 2.25rem; /* text-4xl */
-    line-height: 1; /* leading-tight */
+    line-height: 1.2; /* leading-tight */
     font-weight: 800; /* font-extrabold */
     letter-spacing: -0.025em; /* tracking-tight */
     margin-bottom: 0.5rem; /* mb-2 */
+    margin-top: 1rem;
 }
 
 .headline span {
