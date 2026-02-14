@@ -35,7 +35,10 @@ const ArticuloRelacionado = ({ producto, isSelected, onSelectionChange }) => {
       <div className={styles.infoContainer}>
         <Link to={`/producto/${producto.clave}`} className={styles.link}>
           <p className={styles.descripcion}>
-            {producto.descripcion} | DI - {producto.diam_int} | DE - {producto.diam_ext} | Altura - {producto.altura}
+            {producto.descripcion}
+            {producto.linea !== "HER" && (
+              ` | DI - ${producto.diam_int} | DE - ${producto.diam_ext} | Altura - ${producto.altura}`
+            )}
           </p>
         </Link>
         <div className={styles.priceRow}>
