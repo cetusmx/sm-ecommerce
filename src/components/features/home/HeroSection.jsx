@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import styles from "./HeroSection.module.css";
 /* import banner1 from "@/assets/banner1.jpg"; */
 import banner2 from "@/assets/banner1.jpg";
-import banner3 from "@/assets/banner3.jpg";
+import banner3 from "@/assets/banner4.jpeg";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import CallToAction from './CallToAction';
 
