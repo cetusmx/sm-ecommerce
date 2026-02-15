@@ -34,7 +34,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
 
   // 2. Definir funciones auxiliares
   const crearYEnviarRegistroDeEnvio = async (almacen, items) => {
-    console.log('Datos que llegan a crearYEnviarRegistroDeEnvio (items):', items); // Added console.log
+    //console.log('Datos que llegan a crearYEnviarRegistroDeEnvio (items):', items); // Added console.log
     if (!items || items.length === 0) return;
     const folioEnvio = `ENV-${uuidv4().substring(0, 8).toUpperCase()}`;
     const envioParaGuardar = {
@@ -88,7 +88,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
   // Iterar sobre la lista de prioridad para encontrar un almacén que pueda surtir todo
   for (const almacenId of almacenesPrioridad) {
     if (puedeSurtirCompleto(almacenId)) {
-      console.log(`Pedido completo asignado al Almacén ${almacenId} por tener stock suficiente.`);
+      //console.log(`Pedido completo asignado al Almacén ${almacenId} por tener stock suficiente.`);
       await crearYEnviarRegistroDeEnvio(almacenId, pedidoItems);
       return { success: true };
     }
