@@ -436,8 +436,13 @@ const CheckoutPage = () => {
                     {
                       envioGratis 
                         ? 'GRATIS'
-                        : `$${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2) || '0.00'}`
+                        : `test $${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2) || '0.00'}`
                     }
+                    {/* {
+                      envioGratis 
+                        ? 'GRATIS'
+                        : `$${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2) || '0.00'}`
+                    } */}
                   </span>
                 </div>
               )
