@@ -6,7 +6,7 @@ import '@/styles/global.css';
 
 const OrderItem = ({ item }) => {
   const navigate = useNavigate();
-  const perfilesUrl = `/Perfiles/${item.linea}.jpg`;
+  const perfilesUrl = `/Perfiles/${item.perfil}.png`;
   const sugeridosUrl = `/Sugeridos/${item.clave}.jpg`;
   const imageUrl = (item.categoria === 'Herramientas' || item.categoria === 'Accesorios')
     ? sugeridosUrl
