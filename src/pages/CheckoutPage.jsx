@@ -431,12 +431,12 @@ const CheckoutPage = () => {
                 </>
               ) : (
                 <div className={styles.summaryLine}>
-                  <span>Envío:{numberOfShipments > 1 && ` (${numberOfShipments} fletes)`}</span>
+                  <span>Envío (Gratis):{numberOfShipments > 1 && ` (${numberOfShipments} fletes)`}</span>
                   <span>
                     {
                       envioGratis 
                         ? 'GRATIS'
-                        : `test $${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2) || '0.00'}`
+                        : `($${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2)}) 0.00}`
                     }
                     {/* {
                       envioGratis 
