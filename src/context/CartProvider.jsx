@@ -72,7 +72,7 @@ const CartProvider = ({ children }) => {
         if (!cartToHydrate) return [];
         return cartToHydrate.map(cartItem => {
           const fullProduct = allProducts.find(p => p.clave === cartItem.clave);
-          console.log("Productocompleto: ",fullProduct);
+          //console.log("Productocompleto: ",fullProduct);
           if (fullProduct) {
             const priceToKeep = fullProduct.precio !== cartItem.precio ? cartItem.precio : fullProduct.precio;
             // Preserve all fields from the original cart item, and update with fresh data
