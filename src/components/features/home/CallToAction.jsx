@@ -29,7 +29,7 @@ const CallToAction = () => {
           {/* Urgency Tag */}
           <div className={styles.tag} title="Aplican restricciones">
             <span className={styles.pulse}></span>
-            <span>Oferta Limitada</span>
+            <span>Oferta Limitada*</span>
           </div>
 
           {/* Headline */}
