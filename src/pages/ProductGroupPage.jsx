@@ -171,8 +171,10 @@ const materialLabelMap = {
 // --- Main ProductGroupPage Component (Dynamic) ---
 const ProductGroupPage = () => {
     const { groupName } = useParams();
+    console.log('groupName:', groupName);
     const [searchParams, setSearchParams] = useSearchParams();
     const currentGroup = filterConfig[groupName] || {};
+    console.log('currentGroup for herramientas:', currentGroup);
     const [isMounted, setIsMounted] = useState(false);
 
     const [expandedFilters, setExpandedFilters] = useState([]);
@@ -213,6 +215,7 @@ const ProductGroupPage = () => {
             queryKey: ['products'],
             queryFn: fetchProducts
         });
+        console.log('Raw products from API:', products);
     
         // Sync all filter states with URL search params
         useEffect(() => {
@@ -403,14 +406,14 @@ const ProductGroupPage = () => {
             if (currentGroup.linea) {
                 filtered = filtered.filter(product => product.linea && product.linea.trim() === currentGroup.linea);
             }
-            if (currentGroup.category) {
-                filtered = filtered.filter(product => product.categoria && product.categoria.trim() === currentGroup.category);
-            }
-
-
-    
-            return filtered;
-        }, [products, hierarchicalFilters, legacyFilters, currentGroup, groupName]);
+                        if (currentGroup.category) {
+                            filtered = filtered.filter(product => product.categoria && product.categoria.trim() === currentGroup.category);
+                        }
+            
+                        console.log(`[DEBUG] Products for group '${groupName}' (after dimensional filters):`, filtered);
+                
+                        return filtered;
+                    }, [products, hierarchicalFilters, legacyFilters, currentGroup, groupName]);
     
         const sortedProducts = useMemo(() => {
             let sortableProducts = [...dimensionallyFilteredProducts];
@@ -567,6 +570,7 @@ const ProductGroupPage = () => {
         if (error) return <div>Ocurrió un error: {error.message}</div>;
     
         const hasSubFilters = (currentGroup.filters && currentGroup.filters.length > 0) || currentGroup.hierarchy;
+        console.log('hasSubFilters:', hasSubFilters);
         const areFiltersActive = Object.keys(hierarchicalFilters).length > 0 || legacyFilters.length > 0 || materialFilters.length > 0;
     
         return (
