@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './SearchResults.module.css';
 import { useCart } from '@/hooks/useCart'; // Import useCart
+import { fetchProductByClave } from '@/api/productsApi'; // Import fetchProductByClave
 import { FaAngleDoubleUp } from 'react-icons/fa';
 
 const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
@@ -45,21 +46,40 @@ const GlobalSearchResultsComponent = ({ results, searchQuery }) => {
     }));
   };
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = async (product) => {
     const quantity = quantities[product.clave] || 1;
-    // Removed validation against product.existencia
+    
+    try {
+      // Fetch the full product details to ensure we have all fields
+      const fullProduct = await fetchProductByClave(product.clave);
+      
+      // Now add the complete product object to the cart
+      addItem(fullProduct, parseInt(quantity));
 
-    addItem(product, parseInt(quantity));
-    setAddedMessage(prevMessages => ({
-      ...prevMessages,
-      [product.clave]: 'Agregado al carrito'
-    }));
-    setTimeout(() => {
       setAddedMessage(prevMessages => ({
         ...prevMessages,
-        [product.clave]: ''
+        [product.clave]: 'Agregado al carrito'
       }));
-    }, 3000);
+      setTimeout(() => {
+        setAddedMessage(prevMessages => ({
+          ...prevMessages,
+          [product.clave]: ''
+        }));
+      }, 3000);
+    } catch (error) {
+      console.error("Error fetching full product details before adding to cart:", error);
+      // Optionally, show an error message to the user
+      setAddedMessage(prevMessages => ({
+        ...prevMessages,
+        [product.clave]: 'Error al agregar'
+      }));
+       setTimeout(() => {
+        setAddedMessage(prevMessages => ({
+          ...prevMessages,
+          [product.clave]: ''
+        }));
+      }, 3000);
+    }
   };
 
   if (results.length === 0) {

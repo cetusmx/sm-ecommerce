@@ -21,11 +21,24 @@ export const calculateArrivalDate = () => {
 };
  
 export const calculateDeliveryDate = (startDate = new Date()) => {
-  let deliveryDate = new Date(startDate);
+  let deliveryDate = new Date(startDate); // Work with a mutable copy
+
+  // --- Regla especial: Si es fin de semana, tratar como si el pedido se hiciera el lunes ---
+  let adjustedStartDate = new Date(startDate); // Use a new variable for adjustment
+  const startDayOfWeek = adjustedStartDate.getDay();
+
+  if (startDayOfWeek === 6) { // Si es Sábado
+    adjustedStartDate.setDate(adjustedStartDate.getDate() + 2); // Mover a Lunes
+  } else if (startDayOfWeek === 0) { // Si es Domingo
+    adjustedStartDate.setDate(adjustedStartDate.getDate() + 1); // Mover a Lunes
+  }
+  deliveryDate = adjustedStartDate; // Update deliveryDate with the adjusted start date
+  // --- Fin de la regla especial ---
+
 
   // Check if the start date is today and if the time is past the cutoff (12 PM)
-  const isToday = startDate.toDateString() === new Date().toDateString();
-  if (isToday && startDate.getHours() >= 12) {
+  const isToday = deliveryDate.toDateString() === new Date().toDateString(); // Use the adjusted deliveryDate
+  if (isToday && deliveryDate.getHours() >= 12) { // Use the adjusted deliveryDate
     deliveryDate.setDate(deliveryDate.getDate() + 1); // Start counting from tomorrow
   }
 

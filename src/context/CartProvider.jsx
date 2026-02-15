@@ -72,9 +72,12 @@ const CartProvider = ({ children }) => {
         if (!cartToHydrate) return [];
         return cartToHydrate.map(cartItem => {
           const fullProduct = allProducts.find(p => p.clave === cartItem.clave);
+          console.log("Productocompleto: ",fullProduct);
           if (fullProduct) {
             const priceToKeep = fullProduct.precio !== cartItem.precio ? cartItem.precio : fullProduct.precio;
-            return { ...fullProduct, quantity: cartItem.quantity, precio: priceToKeep };
+            // Preserve all fields from the original cart item, and update with fresh data
+            // This ensures fields like 'perfil' and 'existencia' added from the product page are not lost
+            return { ...cartItem, ...fullProduct, quantity: cartItem.quantity, precio: priceToKeep };
           }
           return cartItem; // Instead of null, return the original item to prevent data loss
         }).filter(Boolean); // Filter out any nulls

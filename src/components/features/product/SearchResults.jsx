@@ -46,6 +46,7 @@ const SearchResults = ({ results, searchUpdateId, selectedCategory }) => {
   };
 
   const handleAddToCart = (product) => {
+    console.log('Producto (SearchResults) antes de addItem:', product); // Added console.log
     const quantity = quantities[product.clave] || 1;
     // Removed validation against product.existencia
 

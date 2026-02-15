@@ -34,6 +34,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
 
   // 2. Definir funciones auxiliares
   const crearYEnviarRegistroDeEnvio = async (almacen, items) => {
+    console.log('Datos que llegan a crearYEnviarRegistroDeEnvio (items):', items); // Added console.log
     if (!items || items.length === 0) return;
     const folioEnvio = `ENV-${uuidv4().substring(0, 8).toUpperCase()}`;
     const envioParaGuardar = {
@@ -48,7 +49,9 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
         cantidad: item.cantidad, 
         descripcion: item.descripcion,
         unidad: item.unidad_salida,
-        cant_por_empaque: item.cant_por_empaque
+        cant_por_empaque: item.cant_por_empaque,
+        perfil: item.perfil || null,
+        existencia: item.existencia || 0
       })),
     };
     try {

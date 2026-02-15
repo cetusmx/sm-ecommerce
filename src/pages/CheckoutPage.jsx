@@ -99,6 +99,8 @@ const CheckoutPage = () => {
         metodo_pago: paymentMethod, 
         costo_envio: selectedShippingOption ? selectedShippingOption.totalPrice : 0,
         total_pedido: calculateTotal,
+        perfil: item.perfil || null,
+        existencia: item.existencia || 0,
       };
     });
  
@@ -391,7 +393,7 @@ const CheckoutPage = () => {
     }
     return (
         <div className={styles.paymentStep}>
-        <h2>Paso 2: Pago y Resumen del Pedido</h2>
+        <h2>Pago y Resumen del Pedido</h2>
         <h3>Resumen del Pedido</h3>
         <div className={styles.orderSummary}>
             {deliveryPreference === 'single' && latestDeliveryDate && (

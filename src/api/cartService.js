@@ -39,6 +39,8 @@ export const saveUserCart = async (email, cart) => {
       cantidad: String(item.quantity),
       precio: item.precio,
       fecha: item.fecha || new Date().toISOString(),
+      perfil: item.perfil || null,
+      existencia: item.existencia || 0,
     }));
 
     const response = await fetch(`${API_URL}/${email}`, {

@@ -28,6 +28,17 @@ const CartPage = () => {
     setDeliveryInfos(newDeliveryInfos);
   }, [cart, new Date().toDateString()]); // Add new Date().toDateString() to dependencies
 
+  // Console log para visualizar el contenido del carrito en CartPage
+  useEffect(() => {
+    if (cart && cart.length > 0) {
+      console.log('Cart en CartPage después de cargarse:', cart);
+      cart.forEach(item => {
+        console.log(`- Producto ${item.clave}: perfil=${item.perfil}, existencia=${item.existencia}`);
+      });
+    } else if (cart && cart.length === 0) {
+      console.log('Cart en CartPage está vacío.');
+    }
+  }, [cart]); // Depende del carrito
   const { data: viewedProducts } = useQuery({
     queryKey: ['productosVistos', currentUser?.email],
     queryFn: () => fetchProductosVistos(currentUser?.email),
