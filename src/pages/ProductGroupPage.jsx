@@ -406,9 +406,11 @@ const ProductGroupPage = () => {
             if (currentGroup.category) {
                 filtered = filtered.filter(product => product.categoria && product.categoria.trim() === currentGroup.category);
             }
+
+
     
             return filtered;
-        }, [products, hierarchicalFilters, legacyFilters, currentGroup]);
+        }, [products, hierarchicalFilters, legacyFilters, currentGroup, groupName]);
     
         const sortedProducts = useMemo(() => {
             let sortableProducts = [...dimensionallyFilteredProducts];

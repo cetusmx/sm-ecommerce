@@ -36,7 +36,7 @@ const CartPage = () => {
         //console.log(`- Producto ${item.clave}: perfil=${item.perfil}, existencia=${item.existencia}`);
       });
     } else if (cart && cart.length === 0) {
-      console.log('Cart en CartPage está vacío.');
+      //console.log('Cart en CartPage está vacío.');
     }
   }, [cart]); // Depende del carrito
   const { data: viewedProducts } = useQuery({
