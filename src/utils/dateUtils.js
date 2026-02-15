@@ -30,7 +30,7 @@ export const calculateDeliveryDate = (startDate = new Date()) => {
   }
 
   let businessDays = 0;
-  while (businessDays < 2) {
+  while (businessDays < 1) { // Changed from 2 to 1 business day for delivery
     deliveryDate.setDate(deliveryDate.getDate() + 1);
     const dayOfWeek = deliveryDate.getDay();
     if (dayOfWeek !== 0 && dayOfWeek !== 6) { // 0 = Sunday, 6 = Saturday

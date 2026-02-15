@@ -156,23 +156,10 @@ const CheckoutPage = () => {
   const [latestDeliveryDate, setLatestDeliveryDate] = useState(null);
 
   const calculateTotal = useMemo(() => {
-    if (!selectedShippingOption) {
-      return cartTotal;
-    }
-
-    if (envioGratis) {
-      // Si hay envío gratis, el costo de envío siempre es 0 para el cálculo total final.
-      // Código anterior para referencia:
-      const shippingCost = numberOfShipments > 1 ? selectedShippingOption.totalPrice : 0;
-      return cartTotal + shippingCost;
-      //return cartTotal;
-    }
+    // Según el requerimiento, el total es siempre el subtotal del carrito. 
+    // El costo del envío se muestra en el resumen, pero no se suma al total a pagar.
     return cartTotal;
-    
-    // Lógica original si no hay envío gratis
-    //const shippingCost = selectedShippingOption.totalPrice * numberOfShipments;
-    //return cartTotal + shippingCost;
-  }, [cartTotal, selectedShippingOption, numberOfShipments, envioGratis]);
+  }, [cartTotal]);
 
   useEffect(() => {
     if (selectedPaymentMethod === 'card' && calculateTotal > 0 && currentUser && !clientSecret && !hasFetchedPaymentIntent.current) {
@@ -404,7 +391,7 @@ const CheckoutPage = () => {
     }
     return (
         <div className={styles.paymentStep}>
-        <h2>Paso 3: Pago y Resumen del Pedido</h2>
+        <h2>Paso 2: Pago y Resumen del Pedido</h2>
         <h3>Resumen del Pedido</h3>
         <div className={styles.orderSummary}>
             {deliveryPreference === 'single' && latestDeliveryDate && (
