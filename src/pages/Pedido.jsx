@@ -172,6 +172,7 @@ const Pedido = () => {
         ...item,
         linea: productInfo?.linea,
         categoria: productInfo?.categoria,
+        perfil: productInfo?.perfil,
       };
     });
 
