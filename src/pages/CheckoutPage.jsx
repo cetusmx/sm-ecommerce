@@ -436,7 +436,7 @@ const CheckoutPage = () => {
                     {
                       envioGratis 
                         ? 'GRATIS'
-                        : `($${(selectedShippingOption?.totalPrice * numberOfShipments).toFixed(2)}) 0.00}`
+                        : `$0.00`
                     }
                     {/* {
                       envioGratis 
