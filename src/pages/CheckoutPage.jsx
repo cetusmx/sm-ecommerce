@@ -163,11 +163,12 @@ const CheckoutPage = () => {
     if (envioGratis) {
       // Si hay envío gratis, el costo de envío siempre es 0 para el cálculo total final.
       // Código anterior para referencia:
-      // const shippingCost = numberOfShipments > 1 ? selectedShippingOption.totalPrice : 0;
-      // return cartTotal + shippingCost;
-      return cartTotal;
+      const shippingCost = numberOfShipments > 1 ? selectedShippingOption.totalPrice : 0;
+      return cartTotal + shippingCost;
+      //return cartTotal;
     }
-
+    return cartTotal;
+    
     // Lógica original si no hay envío gratis
     //const shippingCost = selectedShippingOption.totalPrice * numberOfShipments;
     //return cartTotal + shippingCost;
