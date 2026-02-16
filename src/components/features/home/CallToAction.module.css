@@ -111,7 +111,7 @@
     font-size: 2.25rem; /* text-4xl */
     line-height: 1.2; /* leading-tight */
     font-weight: 800; /* font-extrabold */
-    letter-spacing: -0.025em; /* tracking-tight */
+    letter-spacing: 0.025em; /* tracking-tight -0.025em */
     margin-bottom: 0.5rem; /* mb-2 */
     margin-top: 0.5rem;
 }
