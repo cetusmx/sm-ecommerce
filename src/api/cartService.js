@@ -67,12 +67,12 @@ export const saveUserCart = async (email, cart) => {
 export const clearCartInDB = async (email) => {
   if (!email) return;
   try {
-    const response = await fetch(`${API_URL}/${email}`, {
+    /* const response = await fetch(`${API_URL}/${email}`, {
       method: 'DELETE',
     });
     if (!response.ok) {
       throw new Error('Error al borrar el carrito en la BD');
-    }
+    } */
   } catch (error) {
     console.error("Error clearing cart in DB:", error);
   }
