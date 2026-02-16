@@ -12,8 +12,8 @@ const fetchCategories = async () => {
 };
 
 const excludedCategories = [
-  "Accesorios", "Adhesivos", "Estuches", "Gato", "Graseras", 
-  "Guías telescópicos", "Herramientas", "Kits telescópicos", 
+  "Accesorios", "Adhesivos", "Estuches", "Gato", "Graseras",
+  "Guías telescópicos", "Herramientas", "Kits telescópicos",
   "Pernos", "Seguros externos", "Seguros internos", "Accesorios hidráulicos", "Cordones"
 ];
 
@@ -21,7 +21,7 @@ const ProductFilter = ({ filters, onFilterChange }) => {
   const { data: categories, isLoading, error } = useQuery({
     queryKey: ['categories'],
     queryFn: fetchCategories,
-    select: (fetchedCategories) => 
+    select: (fetchedCategories) =>
       fetchedCategories.filter(category => !excludedCategories.includes(category)),
   });
 

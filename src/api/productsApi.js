@@ -80,7 +80,7 @@ export const fetchProducts = async () => {
       // ...and also meet the other two existing conditions.
       return passesPrimaryCheck &&
              !product.observaciones?.toLowerCase().includes('revisar') &&
-             product.precio > product.ultimo_costo;
+             product.precio > 0; // Se mantiene la corrección del usuario aquí.
     })
     .map(applyProductRules);
   const processEnd = new Date();
