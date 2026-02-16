@@ -43,7 +43,7 @@ export const saveUserCart = async (email, cart) => {
       existencia: item.existencia || 0,
     }));
 
-    const response = await fetch(`${API_URL}/${email}`, {
+    /* const response = await fetch(`${API_URL}/${email}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -53,7 +53,7 @@ export const saveUserCart = async (email, cart) => {
 
     if (!response.ok) {
       throw new Error('Error al guardar el carrito con PUT');
-    }
+    } */
 
   } catch (error) {
     console.error("Error saving cart to API with PUT:", error);
