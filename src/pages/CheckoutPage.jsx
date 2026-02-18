@@ -88,6 +88,7 @@ const CheckoutPage = () => {
         email: currentUser.email,
         nombreTitular: currentUser.displayName || currentUser.email,
         enviar_a: shippingAddress.nombre_completo,
+        tipo_logistica: tipoLogistica || null,
         clave: item.clave,
         descripcion: item.descripcion,
         cantidad: item.quantity,
