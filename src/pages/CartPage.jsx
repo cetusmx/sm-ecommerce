@@ -31,7 +31,7 @@ const CartPage = () => {
   // Console log para visualizar el contenido del carrito en CartPage
   useEffect(() => {
     if (cart && cart.length > 0) {
-      console.log('Cart en CartPage después de cargarse:', cart);
+      //console.log('Cart en CartPage después de cargarse:', cart);
       cart.forEach(item => {
         //console.log(`- Producto ${item.clave}: perfil=${item.perfil}, existencia=${item.existencia}`);
       });
