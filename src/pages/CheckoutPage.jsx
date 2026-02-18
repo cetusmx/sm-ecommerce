@@ -104,6 +104,7 @@ const CheckoutPage = () => {
         total_pedido: calculateTotal,
         perfil: item.perfil || null,
         existencia: item.existencia || 0,
+        categoria: item.categoria || 'Sin categoria',
       };
     });
 
