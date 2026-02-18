@@ -76,7 +76,7 @@ const CheckoutPage = () => {
 
   // New function to encapsulate order creation and email sending
   const createOrderInDB = async (paymentMethod, tipoLogistica) => {
-    console.log("Iniciando createOrderInDB. Estado de shippingAddress:", shippingAddress);
+    //console.log("Iniciando createOrderInDB. Estado de shippingAddress:", shippingAddress);
     if (!products) {
       setError("No se pudieron cargar los datos de los productos. Intente de nuevo.");
       return false;

@@ -96,7 +96,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
 
   // Si el bucle termina, significa que ningún almacén pudo surtir el pedido completo.
   // Se aplica la regla final: asignar todo al Almacén 7.
-  console.log(`Ningún almacén pudo surtir el pedido completo. Asignando por defecto al Almacén 7 para resurtido.`);
+  //console.log(`Ningún almacén pudo surtir el pedido completo. Asignando por defecto al Almacén 7 para resurtido.`);
   await crearYEnviarRegistroDeEnvio('7', pedidoItems);
 
   return { success: true };
