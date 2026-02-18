@@ -76,6 +76,7 @@ const CheckoutPage = () => {
 
   // New function to encapsulate order creation and email sending
   const createOrderInDB = async (paymentMethod, tipoLogistica) => {
+    console.log("Iniciando createOrderInDB. Estado de shippingAddress:", shippingAddress);
     if (!products) {
       setError("No se pudieron cargar los datos de los productos. Intente de nuevo.");
       return false;
@@ -105,6 +106,8 @@ const CheckoutPage = () => {
         existencia: item.existencia || 0,
       };
     });
+
+    console.log("Payload para la API de pedidos (pedidoItems):", JSON.stringify(pedidoItems, null, 2));
  
     try {
       const orderResponse = await fetch(`${process.env.REACT_APP_API_URL}/pedidos`, {
