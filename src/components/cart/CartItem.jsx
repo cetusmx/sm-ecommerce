@@ -13,6 +13,7 @@ const CartItem = ({ item, deliveryInfo }) => {
   if (!deliveryInfo || !item.descripcion) {
     return <CartItemSkeleton />;
   }
+console.log("Item: ", item);
 
   // Determine the correct image URL based on category
   const perfilesUrl = `/Perfiles/${item.perfil}.png`;
