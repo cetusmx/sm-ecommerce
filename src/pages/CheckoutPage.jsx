@@ -107,7 +107,7 @@ const CheckoutPage = () => {
       };
     });
 
-    console.log("Payload para la API de pedidos (pedidoItems):", JSON.stringify(pedidoItems, null, 2));
+    //console.log("Payload para la API de pedidos (pedidoItems):", JSON.stringify(pedidoItems, null, 2));
  
     try {
       const orderResponse = await fetch(`${process.env.REACT_APP_API_URL}/pedidos`, {
