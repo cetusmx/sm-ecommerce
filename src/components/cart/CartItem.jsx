@@ -18,7 +18,7 @@ const CartItem = ({ item, deliveryInfo }) => {
   // Determine the correct image URL based on category
   const perfilesUrl = `/Perfiles/${item.perfil}.png`;
   const sugeridosUrl = `/Sugeridos/${item.clave}.jpg`;
-  const imageUrl = (item.categoria === 'Herramientas' || item.categoria === 'Accesorios' || item.categoria === 'Estuches' || item.categoria === 'Accesorios hidráulicos')
+  const imageUrl = (item.categoria === 'Herramientas' || item.categoria === 'Accesorios' || item.categoria === 'Estuches' || item.categoria === 'Accesorios hidráulicos' || item.categoria === 'Adhesivos')
     ? sugeridosUrl
     : perfilesUrl;
 
