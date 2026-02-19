@@ -7,7 +7,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
     return { error: true, message: "No se proporcionaron items para procesar." };
   }
 
-  console.log("pedidoItems variable; ", pedidoItems);
+  //console.log("pedidoItems variable; ", pedidoItems);
 
   // 1. Obtener existencias y procesar datos
   const claves = pedidoItems.map(item => item.clave);
@@ -46,7 +46,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
       estado_envio: 'Pendiente de surtido',
       tipo_logistica: tipoLogistica,
       destino: shippingAddress,
-      total: items.total_pedido,
+      total: items[0].total_pedido,
       items_envio: items.map(item => ({ 
         clave: item.clave, 
         cantidad: item.cantidad, 
