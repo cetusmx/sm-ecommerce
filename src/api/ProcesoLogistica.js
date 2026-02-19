@@ -58,7 +58,6 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
       })),
     };
     try {
-       //console.log('Datos de envio antes de /envios:', envioParaGuardar); // Added console.log
 
       const responseEnvio = await fetch(`${process.env.REACT_APP_API_URL}/envios`, {
         method: 'POST',
