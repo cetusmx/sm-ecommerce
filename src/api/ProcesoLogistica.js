@@ -36,7 +36,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
 
   // 2. Definir funciones auxiliares
   const crearYEnviarRegistroDeEnvio = async (almacen, items) => {
-    console.log('Datos que llegan a crearYEnviarRegistroDeEnvio (items):', items); // Added console.log
+    //console.log('Datos que llegan a crearYEnviarRegistroDeEnvio (items):', items); // Added console.log
     if (!items || items.length === 0) return;
     const folioEnvio = `ENV-${uuidv4().substring(0, 8).toUpperCase()}`;
     const envioParaGuardar = {
@@ -58,6 +58,8 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
       })),
     };
     try {
+       console.log('Datos de envio antes de /envios:', envioParaGuardar); // Added console.log
+
       const responseEnvio = await fetch(`${process.env.REACT_APP_API_URL}/envios`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
