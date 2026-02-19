@@ -7,6 +7,8 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
     return { error: true, message: "No se proporcionaron items para procesar." };
   }
 
+  console.log("pedidoItems variable; ", pedidoItems);
+
   // 1. Obtener existencias y procesar datos
   const claves = pedidoItems.map(item => item.clave);
   let existenciasData;
@@ -34,7 +36,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
 
   // 2. Definir funciones auxiliares
   const crearYEnviarRegistroDeEnvio = async (almacen, items) => {
-    //console.log('Datos que llegan a crearYEnviarRegistroDeEnvio (items):', items); // Added console.log
+    console.log('Datos que llegan a crearYEnviarRegistroDeEnvio (items):', items); // Added console.log
     if (!items || items.length === 0) return;
     const folioEnvio = `ENV-${uuidv4().substring(0, 8).toUpperCase()}`;
     const envioParaGuardar = {
