@@ -44,6 +44,7 @@ export const gestionPedidoEnAlmacen = async ({ tipoLogistica, pedidoItems, folio
       estado_envio: 'Pendiente de surtido',
       tipo_logistica: tipoLogistica,
       destino: shippingAddress,
+      total: items.total_pedido,
       items_envio: items.map(item => ({ 
         clave: item.clave, 
         cantidad: item.cantidad, 
