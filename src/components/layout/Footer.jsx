@@ -129,10 +129,10 @@ const Footer = () => {
           <div className={styles.infoItem}>
             <p>Somos una empresa dedicada a proveer soluciones de sellado de alta calidad para la industria.</p>
           </div>
-          <div className={styles.infoItem}>
+          {/* <div className={styles.infoItem}>
             <FaPhone className={styles.infoIcon} />
             <p className={styles.highlightText}>+52 618 230 3777</p>
-          </div>
+          </div> */}
           <div className={styles.infoItem}>
             <FaEnvelope className={styles.infoIcon} />
             <p className={styles.highlightText}>contacto@sealmarket.mx</p>
