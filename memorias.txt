@@ -11,3 +11,6 @@ Resumen de actividades - 2026-09-17:
 - Se examinó el flujo de pago en src/pages/CheckoutPage.jsx, notando alta complejidad y deuda técnica (código de PayPal comentado, lógica mezclada de UI y de negocio).
 - Se elaboró un reporte inicial con recomendaciones para las siguientes etapas de trabajo, pendiente de autorización por parte del usuario para proceder.
 - Se autorizó y aplicó un fix urgente en src/pages/CheckoutPage.jsx para resolver el error "No existe servicio de paquetería", flexibilizando la búsqueda del servicio DHL de Envia.com.
+- Se corrigió la configuración de rutas en `jsconfig.json` para resolver advertencias de deprecación en VS Code.
+- Se actualizó el texto promocional del componente `TopBanner.jsx` por solicitud del usuario.
+- Se modificó la tarjeta CallToAction en el Home, cambiando "Oferta Limitada*" por "CONTACTANOS", eliminando su tooltip, y actualizando el título ("¡Envíos a todo México!") y su descripción.

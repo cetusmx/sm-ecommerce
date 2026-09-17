@@ -27,17 +27,17 @@ const CallToAction = () => {
         {/* Card Content */}
         <div className={styles.content}>
           {/* Urgency Tag */}
-          <div className={styles.tag} title="Aplican restricciones">
+          <div className={styles.tag}>
             <span className={styles.pulse}></span>
-            <span>Oferta Limitada*</span>
+            <span>CONTACTANOS</span>
           </div>
 
           {/* Headline */}
           <h1 className={styles.headline}>
-            ¡Envío <span>Gratis!</span>
+            ¡Envíos a todo <span>México!</span>
           </h1>
           <p className={styles.description}>
-            En todas tus compras hoy. Recibe tus productos en la puerta de tu taller sin costo adicional.
+            Compra hoy y recibe tus productos en la puerta de tu taller.
           </p>
 
           {/* CTA Button */}

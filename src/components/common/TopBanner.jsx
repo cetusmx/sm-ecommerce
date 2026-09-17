@@ -3,7 +3,7 @@ import styles from './TopBanner.module.css';
 
 const messages = [
   "*** Paga con tarjeta o transferencia ***",
-  "--> Envío gratis por tiempo limitado <--"
+  "--> Envíos a todo México <--"
 ];
 
 const TopBanner = () => {
