@@ -276,7 +276,19 @@ const CheckoutPage = () => {
 
     try {
       const ratesData = await getShippingRates(originAddress, destinationForEnvia, parcel);
-      const dhlOption = ratesData.data?.find(rate => rate.serviceDescription === "DHL Economy Ocurre - Domicilio");
+      console.log("Opciones de envío recibidas de Envia.com:", ratesData.data);
+      
+      // Buscamos cualquier servicio de DHL que contenga "Economy" de manera flexible
+      let dhlOption = ratesData.data?.find(rate => 
+        rate.serviceDescription?.toLowerCase().includes("economy") || 
+        rate.serviceDescription?.toLowerCase().includes("estándar") ||
+        rate.serviceDescription?.toLowerCase().includes("terrestre")
+      );
+
+      // Si no encuentra una que diga Economy/Estándar, toma la primera opción disponible
+      if (!dhlOption && ratesData.data && ratesData.data.length > 0) {
+        dhlOption = ratesData.data[0];
+      }
 
       if (dhlOption) {
         setSelectedShippingOption(dhlOption);

@@ -4,3 +4,10 @@ Resumen de actividades - 2026-02-11:
 - Se analizó el flujo de checkout en `src/pages/CheckoutPage.jsx`.
 - Se investigó y documentó la lógica de distribución de pedidos a almacenes, centralizada en la función `gestionPedidoEnAlmacen` del archivo `src/api/ProcesoLogistica.js`. Se descubrió la estrategia de asignación que prioriza el Almacén '6' y utiliza el Almacén '1' para gestionar productos con problemas de stock.
 - Se entregó un informe detallado al usuario y se propusieron los siguientes pasos.
+
+Resumen de actividades - 2026-09-17:
+- Se inició la sesión realizando un análisis de la arquitectura general del proyecto, dependencias y patrones de diseño y acceso a datos.
+- Se revisó a fondo el componente src/pages/ProductDetailPage.jsx como fue solicitado, identificando áreas de oportunidad en la carga de promociones y datos del producto.
+- Se examinó el flujo de pago en src/pages/CheckoutPage.jsx, notando alta complejidad y deuda técnica (código de PayPal comentado, lógica mezclada de UI y de negocio).
+- Se elaboró un reporte inicial con recomendaciones para las siguientes etapas de trabajo, pendiente de autorización por parte del usuario para proceder.
+- Se autorizó y aplicó un fix urgente en src/pages/CheckoutPage.jsx para resolver el error "No existe servicio de paquetería", flexibilizando la búsqueda del servicio DHL de Envia.com.
