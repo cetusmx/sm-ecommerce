@@ -276,16 +276,17 @@ const CheckoutPage = () => {
 
     try {
       const ratesData = await getShippingRates(originAddress, destinationForEnvia, parcel);
-      console.log("Opciones de envío recibidas de Envia.com:", ratesData.data);
+      // console.log("Opciones de envío recibidas de Envia.com:", ratesData.data);
       
-      // Buscamos cualquier servicio de DHL que contenga "Economy" de manera flexible
-      let dhlOption = ratesData.data?.find(rate => 
-        rate.serviceDescription?.toLowerCase().includes("economy") || 
-        rate.serviceDescription?.toLowerCase().includes("estándar") ||
-        rate.serviceDescription?.toLowerCase().includes("terrestre")
-      );
+      // Buscamos específicamente el servicio "ground_od" (Terrestre Ocurre a Domicilio)
+      let dhlOption = ratesData.data?.find(rate => rate.service === "ground_od");
 
-      // Si no encuentra una que diga Economy/Estándar, toma la primera opción disponible
+      // Si no está disponible "ground_od", buscamos "ground" normal como respaldo
+      if (!dhlOption) {
+        dhlOption = ratesData.data?.find(rate => rate.service === "ground");
+      }
+
+      // Último respaldo: tomar la primera opción disponible para no bloquear la compra
       if (!dhlOption && ratesData.data && ratesData.data.length > 0) {
         dhlOption = ratesData.data[0];
       }
